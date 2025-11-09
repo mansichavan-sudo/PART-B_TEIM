@@ -13,7 +13,8 @@ from django.utils import timezone
 from .models import VoiceTemplate, Campaign, CallLog
 from .serializers import VoiceTemplateSerializer, CampaignSerializer, CallLogSerializer
 from .tasks import send_campaign_calls
-from .services.twilio_service import make_call
+from .services.provider import make_call
+
 
 # ---------------------------
 #  API / Backend Views
@@ -53,10 +54,11 @@ class TestCallView(APIView):
         try:
             sid = make_call(
                 to_number=phone,
-                say_text=text,
-                from_number=None,
-                voice=template.tts_voice,
-                language=template.language
+             #   say_text=text,
+             #   from_number=None,
+              #  voice=template.tts_voice,
+              #  language=template.language,
+                variable_values=placeholders
             )
             return Response({"status":"initiated", "twilio_sid": sid})
         except Exception as e:

@@ -76,3 +76,5 @@ def display_meeting(request):
     }
     
     return render(request, 'schedule_meetings/display_meeting.html', context)
+
+

@@ -29,10 +29,15 @@ urlpatterns = [
     path('generate_invoice/', include('generate_invoice.urls')),
     path("chat_app/", include("chat_app.urls")),
     path("dashboard/", include("dashboard.urls")),
+    path('api/', include('recommender.urls')),
+
 
     # AI Calling frontend
     path("ai-calling/", include("ai_calling.urls")),  # <--- add this
 
     # AI Calling API
     path("api/ai-calling/", include("ai_calling.api_urls")),
+    path('', include('recommender.urls')),
+
+
 ]

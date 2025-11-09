@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-center mb-4">🐞 Pest Recommendations Dashboard</h3>
+
+    {% if recommendations %}
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Customer ID</th>
+                <th>Base Product</th>
+                <th>Recommended Product</th>
+                <th>Type</th>
+                <th>Confidence Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rec in recommendations %}
+            <tr>
+                <td>{{ rec.customer_id }}</td>
+                <td>{{ rec.base_product }}</td>
+                <td>{{ rec.recommended_product }}</td>
+                <td>{{ rec.type }}</td>
+                <td>{{ rec.score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-center text-muted">No pest recommendations found.</p>
+    {% endif %}
+</div>
+{% endblock %}

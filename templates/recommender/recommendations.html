@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">🧠 AI Product Recommendations</h2>
+
+    <!-- Customer Selection -->
+    <form method="get" action="{% url 'api_recommendations' %}" class="mb-4">
+        <label for="customer_id" class="form-label">Select Customer:</label>
+        <select id="customer_id" name="customer_id" class="form-select" style="max-width: 400px;" onchange="this.form.submit()">
+            {% for customer in customers %}
+                <option value="{{ customer.0 }}" {% if selected_customer == customer.0 %}selected{% endif %}>
+                    {{ customer.1 }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- Recommendations Table -->
+    {% if recommendations %}
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Base Product</th>
+                    <th>Recommended Product</th>
+                    <th>Confidence Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rec in recommendations %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ rec.base_product }}</td>
+                        <td>{{ rec.recommended_product }}</td>
+                        <td>{{ rec.confidence_score|floatformat:2 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No recommendations available for this customer.</p>
+    {% endif %}
+</div>
+{% endblock %}

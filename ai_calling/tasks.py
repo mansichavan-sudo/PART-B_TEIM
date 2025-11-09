@@ -2,7 +2,7 @@
 from celery import shared_task
 from django.utils import timezone
 from .models import Campaign, CallLog, VoiceTemplate
-from .services.twilio_service import make_call
+from .services.provider import make_call
 from django.conf import settings
 import requests
 import time
@@ -71,9 +71,11 @@ def send_campaign_calls(self, campaign_id, leads=None):
             log.save(update_fields=["attempts", "started_at", "status"])
             try:
                 text_to_say = fill_template(template.voice_script, lead if isinstance(lead, dict) else {})
-                twilio_sid = make_call(to_number=phone, say_text=text_to_say,
-                                       from_number=campaign.caller_id or getattr(settings, "TWILIO_DEFAULT_CALLER", None),
-                                       voice=template.tts_voice, language=campaign.language)
+                twilio_sid = make_call(
+                to_number=phone,
+                variable_values=lead if isinstance(lead, dict) else {}  # lead dict with placeholders
+                                      )
+
                 log.twilio_sid = twilio_sid
                 log.status = "success"
                 log.finished_at = timezone.now()

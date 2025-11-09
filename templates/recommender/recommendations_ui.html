@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Product Recommendations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .card { border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .section-title { font-weight: 600; color: #333; margin-top: 20px; }
+        textarea { min-height: 120px; }
+    </style>
+</head>
+<body class="p-4">
+    <div class="container mt-4">
+        <div class="card p-4">
+            <h2 class="text-center mb-4">🤖 AI Product Recommendation System</h2>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="recTabs" role="tablist">
+                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#content">Content-Based</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#personalized">AI Personalized</a></li>
+            </ul>
+
+            <div class="tab-content mt-4">
+                <!-- ================= CONTENT-BASED TAB ================= -->
+                <div class="tab-pane fade show active" id="content">
+                    <div class="mb-3">
+                        <label for="product" class="form-label fw-bold">Select a Product:</label>
+                        <select id="product" class="form-select">
+                            <option value="">-- Select Product --</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="getRecommendations()">Get Recommendations</button>
+
+                    <hr>
+                    <h4 class="section-title">Recommended Products:</h4>
+                    <ul id="recommendation-list" class="list-group mt-2"></ul>
+                </div>
+
+                <!-- ================= AI PERSONALIZED TAB ================= -->
+                <div class="tab-pane fade" id="personalized">
+                    <div class="card p-4 mt-3">
+                        <h5>🤖 AI Personalized Recommendations</h5>
+                        <input type="number" id="personalized-customer" class="form-control mb-3" placeholder="Enter Customer ID">
+                        <input type="number" id="personalized-product" class="form-control mb-3" placeholder="Enter Last Purchased Product ID">
+                        <button class="btn btn-primary" onclick="getPersonalized()">Get Personalized Message</button>
+                        <div id="personalized-result" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- ================= MESSAGE TEMPLATE SECTION ================= -->
+            <h4 class="section-title">Suggested Message Templates:</h4>
+            <div class="mb-3">
+                <label for="messageTemplate" class="form-label">Choose Template:</label>
+                <select id="messageTemplate" class="form-select">
+                    <option value="">Select Message Template</option>
+                    {% for t in templates %}
+                        <option value="{{ t.message }}">{{ t.title }} ({{ t.template_type }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <label for="messagePreview" class="form-label">Preview & Customize Message:</label>
+            <textarea id="messagePreview" class="form-control" placeholder="Your message will appear here..."></textarea>
+
+            <button class="btn btn-success mt-3" id="sendBtn">Send to Customer</button>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load all products on page load
+        document.addEventListener("DOMContentLoaded", async () => {
+            const dropdown = document.getElementById('product');
+            try {
+                const response = await fetch('/api/products/');
+                const data = await response.json();
+                data.products.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p;
+                    option.textContent = p;
+                    dropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error loading products:", error);
+            }
+        });
+
+        // Fetch content-based recommendations
+        async function getRecommendations() {
+            const product = document.getElementById('product').value;
+            const list = document.getElementById('recommendation-list');
+            list.innerHTML = '<li class="list-group-item">Loading...</li>';
+
+            if (!product) {
+                list.innerHTML = '<li class="list-group-item text-danger">Please select a product.</li>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/recommendations/?product=${encodeURIComponent(product)}`);
+                const data = await response.json();
+                list.innerHTML = '';
+
+                if (data.error) {
+                    list.innerHTML = `<li class="list-group-item text-danger">${data.error}</li>`;
+                } else {
+                    data.recommended_products.forEach(p => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.textContent = p;
+                        list.appendChild(li);
+                    });
+                }
+            } catch (error) {
+                list.innerHTML = '<li class="list-group-item text-danger">Error fetching recommendations.</li>';
+            }
+        }
+
+        // Fetch personalized AI message
+        async function getPersonalized() {
+            const customerId = document.getElementById('personalized-customer').value;
+            const productId = document.getElementById('personalized-product').value;
+            const resultDiv = document.getElementById('personalized-result');
+            resultDiv.innerHTML = '<p class="text-muted">Generating personalized message...</p>';
+
+            if (!customerId || !productId) {
+                resultDiv.innerHTML = '<p class="text-danger">Please enter both Customer ID and Product ID.</p>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/send-message/${customerId}/${productId}/`);
+                const data = await res.json();
+
+                if (data.error) {
+                    resultDiv.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                    return;
+                }
+
+                document.getElementById('messagePreview').value = data.message;
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <strong>Preview:</strong> ${data.message}
+                    </div>
+                `;
+            } catch (err) {
+                resultDiv.innerHTML = `<p class="text-danger">Error: ${err.message}</p>`;
+            }
+        }
+
+        // Template preview
+        document.getElementById('messageTemplate').addEventListener('change', function() {
+            document.getElementById('messagePreview').value = this.value;
+        });
+
+        // Utility function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Send message handler
+        document.getElementById("sendBtn").addEventListener("click", async () => {
+            const message = document.getElementById("messagePreview").value;
+            const customerId = document.getElementById("personalized-customer").value || 1;
+
+            if (!message.trim()) {
+                alert("Please select or write a message before sending!");
+                return;
+            }
+
+            try {
+                const res = await fetch("/send-message/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken"),
+                    },
+                    body: JSON.stringify({ customer_id: customerId, message: message }),
+                });
+
+                const data = await res.json();
+                if (data.status === "success") {
+                    alert("✅ Message sent successfully!");
+                } else {
+                    alert("⚠️ Failed: " + (data.error || "Unknown error"));
+                }
+            } catch (err) {
+                alert("❌ Error sending message: " + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

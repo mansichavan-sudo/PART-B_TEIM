@@ -1,0 +1,8 @@
+{
+  "phone": "+919876543210",
+  "template_id": 1,
+  "placeholders": {
+    "Name": "Prachi",
+    "Product": "Demo"
+  }
+}

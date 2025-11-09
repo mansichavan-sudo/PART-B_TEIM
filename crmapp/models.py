@@ -109,62 +109,46 @@ class Product(models.Model):
         self.delete()
 
 
-
-
-
 class quotation(models.Model):
-    quantity=models.IntegerField()
-    price=models.FloatField()
-    termsandcondition=models.CharField(max_length=200)
-    servicetype_q=models.CharField(max_length=5000)
-    total_amount = models.FloatField(null=True, blank=True, editable=False)  # Make it readonly
-    discount = models.FloatField(null=True, blank=True)  # percentage discount
-    company_name = models.CharField(max_length=100 , null=True)
+    quantity = models.IntegerField()
+    price = models.FloatField()
+    termsandcondition = models.CharField(max_length=200)
+    servicetype_q = models.CharField(max_length=5000)
+    total_amount = models.FloatField(null=True, blank=True, editable=False)
+    discount = models.FloatField(null=True, blank=True)
+    company_name = models.CharField(max_length=100, null=True)
     company_email = models.EmailField(null=True)
-    company_contact_no = models.CharField(max_length=15 , default=0)
+    company_contact_no = models.CharField(max_length=15, default=0)
     quotation_date = models.DateField(default=timezone.now)
-    company_address = models.CharField(max_length=2000 , null=True)
-    subject = models.CharField(max_length=200 , null=True)
+    company_address = models.CharField(max_length=2000, null=True)
+    subject = models.CharField(max_length=200, null=True)
     total_amount_with_gst = models.FloatField(null=True, blank=True)
-    termsandcondition = models.CharField(max_length=200 , null=True)
     gst_checkbox = models.BooleanField(default=False)
     customer = models.ForeignKey(customer_details, on_delete=models.CASCADE, null=True, blank=True)
-    version = models.IntegerField(default=1)  # Added version field
-    status = models.CharField(max_length=20, default='active')  # Added status field
-
-
-    def save(self, *args, **kwargs):
-        self.total_amount = self.quantity * self.price  # Calculate total amount
-        super().save(*args, **kwargs)
-
+    version = models.IntegerField(default=1)
+    status = models.CharField(max_length=20, default='active')
 
     def save(self, *args, **kwargs):
+        # Step 1: calculate total
+        self.total_amount = self.quantity * self.price
+
+        # Step 2: discount
+        discounted_amount = self.total_amount
+        if self.discount:
+            discounted_amount -= self.total_amount * (self.discount / 100)
+
+        # Step 3: GST handling
         if self.gst_checkbox:
+            self.total_amount_with_gst = discounted_amount * 1.18
             self.gst_status = "GST"
         else:
-            self.gst_status = "NON-GST"
-        super().save(*args, **kwargs)
-   
-
-
-    def save(self, *args, **kwargs):
-        if self.discount:
-            discounted_amount = self.total_amount - (self.total_amount * (self.discount / 100))
-        else:
-            discounted_amount = self.total_amount
-
-
-        if self.gst_checkbox:
-            self.total_amount_with_gst = discounted_amount * 1.18  # Adding 18% GST
-        else:
             self.total_amount_with_gst = discounted_amount
-
+            self.gst_status = "NON-GST"
 
         super().save(*args, **kwargs)
-
 
     class Meta:
-        ordering = ['-version']  # Order quotations by the latest version
+        ordering = ['-version']
 
 
 

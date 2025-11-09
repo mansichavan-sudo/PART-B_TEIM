@@ -192,6 +192,7 @@ urlpatterns = [
     path('send-group-whatsapp/<str:lead_type>/', views.send_group_lead_whatsapp, name='send_group_lead_whatsapp'),
     path('send-quotation-whatsapp/<int:id>/', views.send_quotation_pdf_on_whatsapp, name='send_quotation_pdf_on_whatsapp'),
     path('send-quotation-email/<int:id>/', views.send_quotation_email, name='send_quotation_email'),
+    
 ]
 
 
