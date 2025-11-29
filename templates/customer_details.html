@@ -1,0 +1,463 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Playfair+Display:wght@600&display=swap"
+        rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Customer Details</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0fbff;
+            color: #333;
+
+        }
+
+        .main-container {
+            margin-top: 50px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .card-registration :hover {
+            box-shadow: 0px 0px 10px white;
+        }
+
+        .card-registration {
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(3, 174, 210, 0.2);
+            width: 100%;
+            max-width: 800px;
+            margin-top: 25px;
+            margin-bottom: 100px;
+        }
+
+        h3 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: #03AED2;
+            margin-bottom: 30px;
+        }
+
+        h6 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            color: #007a99;
+            text-align: center;
+        }
+
+        .form-outline input {
+            border-radius: 10px;
+            border: 1px solid #b2e4ef;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+        }
+
+        .form-outline input:focus {
+            border-color: #03AED2;
+            outline: none;
+            box-shadow: 0 0 8px rgba(3, 174, 210, 0.2);
+        }
+
+        .btn-info {
+            background-color: #03AED2;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-info:hover {
+            background-color: #027994;
+            box-shadow: 0 4px 15px rgba(3, 174, 210, 0.4);
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        label {
+            margin-top: 10px !important;
+            color: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin-top: 100px;
+            }
+
+            .card {
+                margin-left: 0;
+
+                max-width: 100%;
+                padding: 20px;
+                /* Add some padding for better appearance */
+            }
+
+            .open-sidebar .card {
+                margin-left: 300px;
+                /* Adjust content when sidebar is open */
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'sidebar.html' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <div class="main-container">
+        <div class="card   card-registration  ">
+            <div class="card-body">
+                <span onclick="window.location.href='/index'"
+                    style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i
+                        class="fas fa-house-chimney"></i></span>
+                <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;"
+                    class="mb-4">X</span>
+
+                <h3 class="mt-4 mb-3">Customer Details</h3>
+                <div class="col-md-12">
+                    <p style="color: red; text-align: center;">{{msg1}}</p>
+                </div>
+                <!-- Include Bootstrap 5 CSS -->
+
+                <form method="POST" id="multiStepForm">
+                    {% csrf_token %}
+                    <div id="step1" class="step">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Primary Contact No <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="primarycontact"
+                                    placeholder="Primary Contact No" pattern="\d{10}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Customer ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="customerid" value="{{ customerid }}"
+                                    readonly required>
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                <label>Full Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="fullname" placeholder="Full Name"
+                                    required><br>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Primary Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" name="primaryemail" placeholder="Primary Email"
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Secondary Email</label>
+                                <input type="email" class="form-control" name="secondaryemail"
+                                    placeholder="Secondary Email">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Secondary Contact No</label>
+                                <input type="text" class="form-control" name="secondarycontact"
+                                    placeholder="Secondary Contact No" pattern="\d{10}">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-4">
+                                    <label>Customer Type<span class="star">*</span></label>
+                                    <select name="customer_type" class="form-control" id="customer_type_select" onchange="toggleOrganizationFields()">
+                                      <option value="Individual" {% if customer_type == 'Individual' %}selected{% endif %}>Individual</option>
+                                      <option value="Organization" {% if customer_type == 'Organization' %}selected{% endif %}>Organization</option>
+                                    </select>
+
+                                  </div>
+                                    <div class="or_name col-md-4 mb-4" style="display: none;">
+                                      <label>Name <span class="star">*</span></label>
+                                      <input type="text" name="or_name"  class="form-control">
+                                    </div>
+                                    <div class="or_contact col-md-4 mb-4" style="display: none;">
+                                      <label>Contact <span class="star">*</span></label>
+                                      <input type="number" name="or_contact" class="form-control">
+                                    </div>
+                            
+
+                                    <div class="col-md-4 mb-3">
+                                        <label>Contact Person Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="contactperson"
+                                            placeholder="Contact person name" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label>Designation <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="designstion" placeholder="Designation"
+                                            required>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                 
+                            <div class="col-12 d-flex justify-content-center  "> <button type="button" class="btn btn-primary float-end"
+                                       onclick="nextStep()" style="width: 200px">Next</button></div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div id="step2" class="step d-none">
+                        <h5 class="text-center">Shift To Party</h5>
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label>Shift To Party Address <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="shifttopartyaddress"
+                                    placeholder="Shift To Party Address" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>City <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="shifttopartycity" placeholder="City"
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>State / Province <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="shifttopartystate"
+                                    placeholder="State / Province" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Postal / Zip Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="shifttopartypostal" placeholder="Zip Code"
+                                    required>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3 col-12">
+                                <button type="button" class="btn btn-secondary   mt-2" onclick="prevStep()"
+                                    style="width: 100%;">Previous</button>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <button type="button" class="btn btn-primary    mt-2" onclick="nextStep()"
+                                    style="width: 100%;">Next</button>
+                            </div>
+                            <div class="col-md-3"></div>
+
+                        </div>
+                    </div>
+
+                    <div id="step3" class="step d-none">
+                        <h5 class="text-center"> Sold To Party</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Sold To Party Address <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="soldtopartyaddress"
+                                    placeholder="Sold To Party Address" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>City <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="soldtopartycity" placeholder="City"
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>State / Province <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="soldtopartystate"
+                                    placeholder="State / Province" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Postal / Zip Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="soldtopartypostal" placeholder="Zip Code"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3 col-12">
+                                <button type="button" class="btn btn-secondary  " onclick="prevStep()"
+                                    style="width: 100%;">Previous</button>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <input type="submit" class="btn btn-success   " value="Submit" style="width: 100%;">
+                            </div>
+                            <div class="col-md-3"></div>
+
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="/display_customer" class="btn btn-outline-info">View Customer Records</a>
+                        <p class="text-danger mt-2">{{ msg1 }}</p>
+                    </div>
+                </form>
+
+                <!-- Step form JS -->
+
+                <script>
+                    $(document).ready(function () {
+                        $('input[name="primarycontact"]').on('change', function () {
+                            const mobile = $(this).val();
+                            if (mobile.length === 10) {
+                                $.ajax({
+                                    url: "",
+                                    data: {
+                                        'primarycontact': mobile
+                                    },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.status === 'exists') {
+                                            const data = response.data;
+                                            $('input[name="fullname"]').val(data.fullname);
+                                            $('input[name="primaryemail"]').val(data.primaryemail);
+                                            $('input[name="secondarycontact"]').val(data.secondarycontact);
+                                            $('input[name="contactperson"]').val(data.contactperson);
+                                            $('input[name="customersegment"]').val(data.customersegment);
+                                            $('input[name="shifttopartyaddress"]').val(data.shifttopartyaddress);
+                                            $('input[name="shifttopartycity"]').val(data.shifttopartycity);
+                                            $('input[name="soldtopartyaddress"]').val(data.soldtopartyaddress);
+                                            $('input[name="soldtopartycity"]').val(data.soldtopartycity);
+                                            $('select[name="customer_type"]').val(data.customer_type || 'Individual');
+                                            $('input[name="or_name"]').val(data.or_name);
+                                            $('input[name="or_contact"]').val(data.or_contact);
+                                            toggleOrganizationFields();
+                                        } else {
+                                            alert("No lead data found for this number.");
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                <script>
+                    let currentStep = 0;
+                    const steps = document.querySelectorAll('.step');
+
+                    function showStep(index) {
+                        steps.forEach((step, i) => {
+                            step.classList.toggle('d-none', i !== index);
+                        });
+                    }
+
+                    function nextStep() {
+                        if (currentStep < steps.length - 1) {
+                            currentStep++;
+                            showStep(currentStep);
+                        }
+                    }
+
+                    function prevStep() {
+                        if (currentStep > 0) {
+                            currentStep--;
+                            showStep(currentStep);
+                        }
+                    }
+
+                    // Initialize
+                    showStep(currentStep);
+                </script>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+<!-- customer type -->
+ <script>
+    function toggleOrganizationFields() {
+  const selectValue = document.getElementById('customer_type_select').value;
+  const orgFields = document.querySelectorAll('.or_name, .or_contact'); // multiple classes
+  
+  orgFields.forEach(field => {
+    field.style.display = (selectValue === 'Organization') ? 'block' : 'none';
+  });
+}
+
+// Run on page load
+window.onload = function () {
+  toggleOrganizationFields();
+}
+
+</script>
+
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:100px;">
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

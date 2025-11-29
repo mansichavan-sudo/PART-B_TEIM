@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #383838;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #000000;
+            margin: 0;
+        }
+        .header p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #444;
+            margin: 5px 0;
+        }
+        .details {
+            display: flex;
+            justify-content:space-between;
+            margin-bottom: 20px;
+        }
+        .company-info, .customer-info {
+            width: 48%; 
+        }
+        .details p {
+            font-size: 14px;
+            color: #333;
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .details strong {
+            color: #000000;
+        }
+        .quotation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .quotation-table th, .quotation-table td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+        }
+        .quotation-table th {
+            background-color: #212121;
+            color: white;
+            font-weight: bold;
+        }
+        .total-section {
+            margin-top: 10px;
+            text-align: right;
+            font-size: 12px;
+        }
+        .total-section p {
+            font-size: 12px;
+            margin: 5px 0;
+            padding: 0px;
+        }
+        .total-section strong {
+            color: #2d2d2d;
+        }
+        .terms {
+            margin-left: 20px;
+            margin-top: 20px;
+            padding-top: 10px;
+            padding-bottom: 2px;
+            font-size: 12px;
+            color: #333;
+        }
+        .terms p {
+            margin: 0;
+        }
+        .terms strong {
+            color: #000000;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #2e2e2e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+
+                    <!-- Logo Section -->
+                    <td style="width: 35%; text-align: left; vertical-align: middle;margin-top: 0;">
+                        <img src="{{ logo_path }}" alt="Logo" style="max-width: 100px; height: auto;">
+                    </td>
+
+                    <td style="width: 65%; text-align:right; vertical-align: middle;">
+                        <div style="padding: 0; margin: 0;">
+                            
+                            <!-- <h1 style="margin: 0 0 10px 0; padding: 0; font-size: 50px; color: #3c99fc; line-height: 1;">Quotation</h1> -->
+                            
+                            <p style="margin: 0; padding: 0; font-size: 14px;color: #1f1f1f;">Seva Facility Services Pvt Ltd<br>
+                                4th Floor , Office 406, Biz Building Ravet, Pune 412 101<br>
+                                sales@sevafacility.com,info@sevafacility.com<br>
+                                9112003300<br>
+                                GSTIN: 27AAWCS8490D1ZM<br>
+                                PAN No: AAWCS8490D
+                            </p>
+                        </div>
+                    </td>
+                    
+                    
+                </tr>
+            </table>
+        </div>
+
+        <div class="details">
+
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 60%; text-align: left; vertical-align: middle;margin-top: 0; line-height: 1;" class="company-info">
+                        <p><strong>Company:</strong> {{ quotation.company_name }}</p>
+                        <p><strong>Email:</strong> {{ quotation.company_email }}</p>
+                        <p><strong>Contact No:</strong> {{ quotation.company_contact_no }}</p>
+                        <p><strong>Address:</strong> {{ quotation.company_address }}</p>
+                        <p><strong>Customer Name:</strong> {{ quotation.customer.firstname }} {{quotation.customer.lastname}}</p>
+                        <p><strong>Customer Email:</strong> {{ quotation.customer.primaryemail }}</p>
+                        <p><strong>Shift to party Address: </strong> {{ quotation.customer.shifttopartyaddress }}</p>
+                        <p><strong>Sold to party Address: </strong> {{ quotation.customer.soldtopartyaddress }}</p>
+                    </td>
+
+                    <td style="width: 40%; text-align:right; vertical-align: middle;" class="customer-info">
+                        <h1 style="margin: 0 0 10px 0; padding: 0; font-size: 40px; color: #000000; line-height: 1;">Quotation</h1>
+                        <p><strong>Quotation Date:</strong> {{ quotation.quotation_date }}</p>
+
+                    </td>
+                </tr>
+                
+            </table>
+
+            <div style="margin-left: 20px;">
+                <p><strong>Subject: </strong> Quotation for the {{ quotation.servicetype_q }} service</p>
+                <p><strong>We Thank You for your enquiry for the {{ quotation.servicetype_q }} Service and we are pleased to give the quotation accordingly as below.</strong></p>
+            </div>
+
+        </div>
+
+        <table class="quotation-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Price/Unit (Rs.)</th>
+                    <th>Total (Rs.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ quotation.servicetype_q }}</td>
+                    <td>{{ quotation.quantity }}</td>
+                    <td>{{ quotation.price }}</td>
+                    <td>{{ quotation.total_amount }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total-section">
+
+            <p><strong>Total Amount (Before Discount):</strong> Rs.{{ quotation.total_amount }}</p>
+            <p><strong>Discount:</strong> {{ quotation.discount }}%</p>
+            <p><strong>Total Amount (With GST):</strong> Rs.{{ quotation.total_amount_with_gst }}</p>
+        </div>
+
+        <div class="terms">
+            <p><strong>Terms and Conditions:</strong></p>
+            <p>{{ quotation.termsandcondition }}</p>
+        </div>
+
+        <div class="footer">
+            <p>We thank you for opportunity given to serve you & look forward to adding you to our family of customers.</p>
+        </div>
+
+        <p style="margin-left: 20px;margin-top: 5px;"><strong> Thanking You,<br>Seva  Facility Services Pvt Ltd<br>Contact By- Himanshu Rathod +91 77749 18071</strong></p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Product Recommendations</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body { background: #f8f9fa; }
+        .card { border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        textarea { min-height: 140px; }
+        .section-title { font-weight: 600; }
+        .email-section { display: none; }
+    </style>
+</head>
+
+<body class="p-4">
+
+<div class="container mt-4">
+    <div class="card p-4">
+
+        <h2 class="text-center mb-4">🤖 AI Product Recommendation System</h2>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="recTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#content">Content-Based</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#personalized">AI Personalized</a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-4">
+
+            <!-- CONTENT BASED -->
+            <div class="tab-pane fade show active" id="content">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Select Product</label>
+                    <select id="product" class="form-select">
+                        <option value="">-- Select Product --</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="getRecommendations()">Get Recommendations</button>
+
+                <hr>
+
+                <h5 class="section-title">Recommended Products:</h5>
+                <ul id="recommendation-list" class="list-group mt-2"></ul>
+
+            </div>
+
+            <!-- PERSONALIZED -->
+            <div class="tab-pane fade" id="personalized">
+                <div class="card p-4 mt-3">
+                    <h5>AI Personalized Recommendations</h5>
+
+                    <label class="form-label fw-bold">Select Customer</label>
+                    <select id="customerDropdown" class="form-select mb-3">
+                        <option value="">-- Select Customer --</option>
+                    </select>
+
+                    <button class="btn btn-primary" onclick="getPersonalized()">Get Personalized</button>
+
+                    <div id="personalized-result" class="mt-3"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <!-- MESSAGE TEMPLATES -->
+        <h4 class="section-title">📩 Suggested Message Templates</h4>
+
+        <select id="messageTemplate" class="form-select mb-3">
+            <option value="">Select Message Template</option>
+            {% for t in templates %}
+                <option value="{{ t.id }}"
+                        data-body="{{ t.body }}"
+                        data-subject="{{ t.subject }}"
+                        data-type="{{ t.message_type }}">
+                    ({{ t.get_message_type_display }}) {{ t.category }} - {{ t.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- EMAIL SUBJECT -->
+        <div id="emailSubjectDiv" class="email-section mb-3">
+            <label class="form-label fw-bold">Email Subject</label>
+            <input id="emailSubject" class="form-control" placeholder="Subject">
+        </div>
+
+        <!-- MESSAGE BODY -->
+        <label class="form-label fw-bold">Message Body</label>
+        <textarea id="messagePreview" class="form-control"></textarea>
+
+        <button class="btn btn-success mt-3">Send to Customer</button>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadProducts();
+    loadCustomers();
+});
+
+/* ----------------------
+   LOAD PRODUCT LIST
+------------------------ */
+async function loadProducts() {
+    const dropdown = document.getElementById('product');
+    try {
+        const res = await fetch('/api/products/');
+        const data = await res.json();
+        data.products.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p;
+            opt.textContent = p;
+            dropdown.appendChild(opt);
+        });
+    } catch (e) {
+        console.error("Error loading products:", e);
+    }
+}
+
+/* ----------------------
+   LOAD CUSTOMER LIST (FIXED)
+------------------------ */
+async function loadCustomers() {
+    const dropdown = document.getElementById('customerDropdown');
+    try {
+        const res = await fetch('/api/customers/');
+        const data = await res.json();
+
+        data.customers.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.customer_id;         // correct PK
+            opt.textContent = c.customer_name; // correct name
+            dropdown.appendChild(opt);
+        });
+
+    } catch (e) {
+        console.error("Error loading customers:", e);
+    }
+}
+
+/* ----------------------
+   GET CONTENT-BASED RECOMMENDATIONS
+------------------------ */
+function getRecommendations() {
+    const product = document.getElementById('product').value;
+    const list = document.getElementById('recommendation-list');
+
+    if (!product) {
+        list.innerHTML = '<li class="list-group-item text-danger">Select a product.</li>';
+        return;
+    }
+
+    list.innerHTML = '<li class="list-group-item">Loading...</li>';
+
+    fetch(`/api/recommendations/?product=${product}`)
+        .then(res => res.json())
+        .then(data => {
+            list.innerHTML = '';
+            data.recommended_products?.forEach(item => {
+                list.innerHTML += `<li class="list-group-item">${item}</li>`;
+            });
+        });
+}
+
+/* ----------------------
+   GET PERSONALIZED RECOMMENDATIONS
+------------------------ */
+function getPersonalized() {
+    const customerId = document.getElementById('customerDropdown').value;
+    const result = document.getElementById('personalized-result');
+
+    if (!customerId) {
+        result.innerHTML = "<p class='text-danger'>Please select a customer.</p>";
+        return;
+    }
+
+    result.innerHTML = "<p class='text-muted'>Loading...</p>";
+
+    fetch(`/api/recommendations/${customerId}/`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.recommendations?.length) {
+                result.innerHTML = `
+                    <ul class="list-group">
+                        ${data.recommendations.map(item => `<li class='list-group-item'>${item}</li>`).join("")}
+                    </ul>`;
+            } else {
+                result.innerHTML = "<p class='text-danger'>No recommendations found.</p>";
+            }
+        });
+}
+
+/* ----------------------
+   MESSAGE TEMPLATE LOGIC
+------------------------ */
+document.getElementById("messageTemplate").addEventListener("change", function () {
+    const selected = this.options[this.selectedIndex];
+
+    const body = selected.getAttribute("data-body");
+    const subject = selected.getAttribute("data-subject");
+    const type = selected.getAttribute("data-type");
+
+    document.getElementById("messagePreview").value = body ?? "";
+
+    if (type === "email") {
+        document.getElementById("emailSubjectDiv").style.display = "block";
+        document.getElementById("emailSubject").value = subject ?? "";
+    } else {
+        document.getElementById("emailSubjectDiv").style.display = "none";
+    }
+});
+
+</script>
+
+</body>
+</html>

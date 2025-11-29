@@ -1,0 +1,8 @@
+python manage.py runserver
+
+celery -A crm worker -l info --pool=solo    ## only for development 
+
+celery -A crm beat -l info
+
+redis-server -: sudo service redis-server start
+                redis-cli

@@ -1,0 +1,169 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Technician</title>
+    <style>
+ 
+    </style>
+</head>
+<body>
+
+        {% include 'sidebar.html' %}
+
+
+    <div class="main">
+        <div class="container">
+
+            <div class="row" style="margin-top: 100px;">
+
+                <div class="col-md-2"></div>
+                <div class="col-md-8 bg-light rounded ">
+                          <div class="bt">
+                <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4 mt-2"><i class="fas fa-house-chimney"></i></span>
+                <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4 mt-2">X</span>
+            </div>
+                    <form method="post" class="p-4">
+                        {% csrf_token %}
+                                            <h3 style="text-align: center;">Edit Technician</h3>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                  <label>First Name <span class="star">*</span></label>
+                        <input type="text" name="first_name" value="{{ technician.first_name }}" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                        <label>Last Name <span class="star">*</span></label>
+                        <input type="text" name="last_name" value="{{ technician.last_name }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                        <label>Email <span class="star">*</span></label>
+                        <input type="email" name="email" value="{{ technician.email }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                                  <label>Contact Number <span class="star">*</span></label>
+                        <input type="text" name="contact_number" value="{{ technician.contact_number }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                                        <label>Address <span class="star">*</span></label>
+                        <input type="text" name="address" value="{{ technician.address }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                                        <label>City <span class="star">*</span></label>
+                        <input type="text" name="city" value="{{ technician.city }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                                        <label>State <span class="star">*</span></label>
+                        <input type="text" name="state" value="{{ technician.state }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                                        <label>Postal Code <span class="star">*</span></label>
+                        <input type="text" name="postal_code" value="{{ technician.postal_code }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                
+                        <label>Date of Joining <span class="star">*</span></label>
+                        <input type="date" name="date_of_joining" value="{{ technician.date_of_joining|date:'Y-m-d' }}" class="form-control" required>
+                
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                                <label>Change Password (Optional) </label>
+                        <input type="password" name="password" placeholder="Leave blank to keep current password" class="form-control">
+                
+                            </div>
+                         </div>
+                      
+                
+                
+                
+      
+
+<div class="row mt-3 mb-3">
+<div class="col-md-3"></div>
+<div class="col-md-3">
+<a href="technicians/">
+    <button class="btn btn-info w-100">Back TO List</button>
+</a>
+</div>
+<div class="col-md-3">
+                                <button class="btn btn-success w-100" type="submit">Submit</button>
+
+</div>
+</div>
+<div class="col-md-3"></div>
+
+        
+                    </form>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </div>
+  
+
+     <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+    <div class="row p-3">
+      <div class="col-md-12 text-center">
+        <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+          © 2025. Powered by
+          <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+            style="height: 20px; vertical-align: middle;">
+          <a href="http://www.chronoanalytics.in/"
+            style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+            Solution</a>
+          All Rights Reserved.
+        </p>
+      </div>
+      <div class="col-md-12 text-center">
+        <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+          © 2025. Marketed by
+          <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+          All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+      menuItems.forEach(item => {
+        item.addEventListener('click', function () {
+          const submenu = this.querySelector('.submenu');
+          const arrow = this.querySelector('.arrow-down');
+
+          // Hide all other submenus
+          menuItems.forEach(otherItem => {
+            if (otherItem !== this) {
+              const otherSubmenu = otherItem.querySelector('.submenu');
+              const otherArrow = otherItem.querySelector('.arrow-down');
+              if (otherSubmenu) {
+                otherSubmenu.style.display = 'none';
+                if (otherArrow.classList.contains('arrow-up')) {
+                  otherArrow.classList.remove('arrow-up');
+                }
+              }
+            }
+          });
+
+          // Toggle current submenu
+          if (submenu) {
+            submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+            arrow.classList.toggle('arrow-up');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

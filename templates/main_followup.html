@@ -1,0 +1,505 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main Follow-up</title>
+    <style>
+        .lead-type {
+            padding: 5px 10px;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .Hot { background-color: green; }
+        .Warm { background-color: orange; }
+        .Cold { background-color: lightblue; color: black; }
+        .Not\ Interested { background-color: yellow; color: black; }
+        .Loss\ of\ Order { background-color: red; }
+
+        #followup-history {
+            display: none;
+            position: fixed;
+            top: 80px;
+            right: 0px;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        .fblow{
+ 
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 1px solid rgb(80, 16, 177);
+            /*Script MT */
+            font-weight: 400;
+        
+
+        }
+        /* Slide-in panel */
+.history-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    max-width: 300px;
+    height: 100vh;
+    background: #ffffffee;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+    transition: right 0.4s ease-in-out;
+    z-index: 9999;
+    overflow-y: auto;
+    backdrop-filter: blur(6px);
+    border-left: 4px solid #6a11cb;
+}
+
+.history-panel.active {
+    right: 0;
+}
+
+/* Header Styling */
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    position: fixed;
+    top: -1%;
+    z-index: 100;
+}
+
+/* Close Button */
+.close-btn {
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #ff4d4d;
+}
+
+/* Content Styling */
+.history-content {
+    padding: 20px;
+}
+
+.history-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.4s ease;
+}
+
+/* Scrollbar */
+.history-panel::-webkit-scrollbar {
+    width: 0px;
+}
+
+.history-panel::-webkit-scrollbar-thumb {
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+
+/* Fade animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .history-panel {
+        width: 100%;
+        border-left: none;
+        border-top: 6px solid #6a11cb;
+        top: auto;
+        bottom: 0;
+        height: 90vh;
+    }
+
+    .history-header {
+        font-size: 15px;
+        padding: 12px 16px;
+    }
+
+    .history-card {
+        font-size: 14px;
+    }
+}
+
+    </style>
+    <script>
+        function toggleAgencyName() {
+            const donePestControl = document.getElementById('done_pest_control').value;
+            document.getElementById('agency_name_div').style.display = donePestControl === 'Yes' ? 'block' : 'none';
+        }
+
+        function toggleHistory() {
+            const historyDiv = document.getElementById('followup-history');
+            historyDiv.style.display = historyDiv.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+    </script>
+
+        {% include 'sidebar.html' %}
+
+
+    <div class="main">
+  <div class="container" style="margin-top: 100px;">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 bg-light shadow rounded">
+            <div class="bt">
+                <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4 mt-2"><i class="fas fa-house-chimney"></i></span>
+                <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4 mt-2">X</span>
+            </div>
+            <h5 class="mt-5 text-center fblow">Follow-up {{ followup_count }} for <span class="">{{ lead.customername }}</span></h5>
+
+            <form method="post" class="mt-2 mb-3" style="padding: 0 30px;" >
+                {% csrf_token %}
+                <div class="card mb-4 border-0" style="background-color: #f8f9fa; border-radius: 10px;">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Customer Name</label>
+                            <div class="form-control bg-white border-0">{{ lead.customername }}</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Primary Contact</label>
+                            <div class="form-control bg-white border-0">{{ lead.primarycontact }}</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Secondary Contact</label>
+                            <div class="form-control bg-white border-0">{{ lead.secondarycontact }}</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Type of Lead</label>
+                            <div class="lead-type {{ lead.typeoflead }} text-center">{{ lead.typeoflead }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Have Done Pest Control Earlier?</label>
+                        <select name="done_pest_control" id="done_pest_control" onchange="toggleAgencyName()" class="form-control">
+                            <option value="No" {% if previous_followup.done_pest_control == "No" %}selected{% endif %}>No</option>
+                            <option value="Yes" {% if previous_followup.done_pest_control == "Yes" %}selected{% endif %}>Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div id="agency_name_div" style="display: {% if previous_followup.done_pest_control == 'Yes' %}block{% else %}none{% endif %};">
+                            <label>Agency Name:</label>
+                            <input type="text" name="agency_name" value="{{ previous_followup.agency_name }}" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Onsite Infestation Done?</label>
+                        <select name="onsite_infestation" class="form-control">
+                            <option value="Yes" {% if previous_followup.onsite_infestation == "Yes" %}selected{% endif %}>Yes</option>
+                            <option value="No" {% if previous_followup.onsite_infestation == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Level of Infestation:</label>
+                        <select name="infestation_level" class="form-control">
+                            <option value="Low" {% if previous_followup.infestation_level == "Low" %}selected{% endif %}>Low</option>
+                            <option value="Medium" {% if previous_followup.infestation_level == "Medium" %}selected{% endif %}>Medium</option>
+                            <option value="High" {% if previous_followup.infestation_level == "High" %}selected{% endif %}>High</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Type of Lead:</label>
+                        <select name="typeoflead" class="form-control">
+                            <option value="Hot" {% if previous_followup.typeoflead == "Hot" %}selected{% endif %}>Hot</option>
+                            <option value="Warm" {% if previous_followup.typeoflead == "Warm" %}selected{% endif %}>Warm</option>
+                            <option value="Cold" {% if previous_followup.typeoflead == "Cold" %}selected{% endif %}>Cold</option>
+                            <option value="Not Interested" {% if previous_followup.typeoflead == "Not Interested" %}selected{% endif %}>Not Interested</option>
+                            <option value="Loss of Order" {% if previous_followup.typeoflead == "Loss of Order" %}selected{% endif %}>Loss of Order</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Follow-up Remark:</label>
+                        <select name="followup_remark" id="followup_remark" class="form-control" onchange="toggleNextFollowupDateField()">
+                            <option value="Call not received" {% if previous_followup.followup_remark == "Call not received" %}selected{% endif %}>Call not received</option>
+                            <option value="Give next Follow up date" {% if previous_followup.followup_remark == "Give next Follow up date" %}selected{% endif %}>Give next Follow up date</option>
+                            <option value="Call Out of Coverage Area" {% if previous_followup.followup_remark == "Call Out of Coverage Area" %}selected{% endif %}>Call Out of Coverage Area</option>
+                        </select>
+                    </div>
+
+                    <div id="next_followup_div" class="col-md-6" style="display: {% if previous_followup.followup_remark == 'Give next Follow up date' %}block{% else %}none{% endif %};">
+                        <label>Next Follow-up Date:</label>
+                        <input type="date" class="form-control" name="next_followup_date" value="{{ previous_followup.next_followup_date|date:'Y-m-d' }}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Order Status:</label>
+                        <select name="order_status" id="order_status" onchange="toggleNextFollowupDate()" class="form-control">
+                            <option value="Not Closed" {% if previous_followup.order_status == "Not Closed" %}selected{% endif %}>Not Closed</option>
+                            <option value="Close Win" {% if previous_followup.order_status == "Close Win" %}selected{% endif %}>Close Win</option>
+                            <option value="Close Loss" {% if previous_followup.order_status == "Close Loss" %}selected{% endif %}>Close Loss</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Follow-up Comment:</label>
+                        <textarea name="followup_comment" rows="3" cols="40" class="form-control">{{ previous_followup.followup_comment }}</textarea>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <button type="button" onclick="toggleHistory()" class="btn btn-info text-center w-100 shadow mt-2">View Follow-up History</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-success w-100 shadow mt-2">Submit Follow-up</button>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+<script>
+    function toggleAgencyName() {
+        const control = document.getElementById("done_pest_control");
+        const agencyDiv = document.getElementById("agency_name_div");
+        agencyDiv.style.display = control.value === "Yes" ? "block" : "none";
+    }
+
+    function toggleNextFollowupDateField() {
+        const remark = document.getElementById("followup_remark").value;
+        const nextFollowupDiv = document.getElementById("next_followup_div");
+        nextFollowupDiv.style.display = remark === "Give next Follow up date" ? "block" : "none";
+    }
+
+    function toggleNextFollowupDate() {
+        // Keep this function if you want to add logic for order_status in future.
+    }
+</script>
+
+<script>
+    function toggleAgencyName() {
+        var select = document.getElementById('done_pest_control');
+        var agencyDiv = document.getElementById('agency_name_div');
+        if (select.value === 'Yes') {
+            agencyDiv.style.display = 'block';
+        } else {
+            agencyDiv.style.display = 'none';
+        }
+    }
+
+    function toggleNextFollowupDate() {
+        var status = document.getElementById('order_status').value;
+        var nextFollowupDiv = document.getElementById('next_followup_div');
+        if (status === 'Close Win' || status === 'Close Loss') {
+            nextFollowupDiv.style.display = 'none';
+        } else {
+            nextFollowupDiv.style.display = 'block';
+        }
+    }
+
+    // Run on page load to set initial state
+    window.onload = function () {
+        toggleAgencyName();
+        toggleNextFollowupDate();
+    }
+</script>
+
+
+<!-- Updated Follow-up History Section -->
+<div id="followup-history" class="history-panel">
+             <span class="close-btn text-start text-danger" onclick="toggleHistory()">X</span>
+
+        <h5 class="fblow">Follow-up History for {{ lead.customername }}</h5>
+    
+    <div class="history-content mb-5">
+        {% for f in followups %}
+        <div class="history-card text-dark">
+            <p class="fblow"><strong>Follow-up {{ forloop.counter }}</strong></p>
+            <ul>
+                <li><strong>Pest Control:</strong> {{ f.done_pest_control }}</li>
+                {% if f.agency_name %}<li><strong>Agency:</strong> {{ f.agency_name }}</li>{% endif %}
+                <li><strong>Infestation Done:</strong> {{ f.onsite_infestation }}</li>
+                <li><strong>Level:</strong> {{ f.infestation_level }}</li>
+                <li><strong>Type of Lead:</strong> {{ f.typeoflead }}</li>
+                <li><strong>Remark:</strong> {{ f.followup_remark }}</li>
+                <li><strong>Comment:</strong> {{ f.followup_comment }}</li>
+                <li><strong>Next Follow-up:</strong> {{ f.next_followup_date }}</li>
+                <li><strong>Status:</strong> {{ f.order_status }}</li>
+                <li><strong>Date:</strong> {{ f.created_at }}</li>
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+   
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const deleteLinks = document.querySelectorAll('.delete-link');
+            const confirmationModal = document.getElementById('confirmationModal');
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+            const deleteForm = document.getElementById('deleteForm');
+            let deleteUrl = '';
+
+            deleteLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    deleteUrl = this.getAttribute('href');
+                    deleteForm.setAttribute('action', deleteUrl);
+                    confirmationModal.style.display = 'block';
+                });
+            });
+
+            cancelDeleteButton.addEventListener('click', function () {
+                confirmationModal.style.display = 'none';
+            });
+        });
+
+        function openModal(lead_id) {
+            fetch(/get_lead_details/${lead_id}/)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('modal-content').innerHTML = html;
+                    document.getElementById('modal').classList.add('active');
+                });
+
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+    </script>
+
+    <script>
+        window.addEventListener('load', function () {
+            const form = document.querySelector('form'); // your form element
+            form.addEventListener('submit', function () {
+                // Delay reload to allow form submission to complete
+                setTimeout(() => {
+                    if (window.opener) {
+                        window.opener.location.reload();
+                        window.close();
+                    }
+                }, 1000);
+            });
+        });
+    </script>
+
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:400px;">
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div> 
+</body>
+</html>  

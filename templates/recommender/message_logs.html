@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Logs</title>
+    <style>
+        body { font-family: Arial; background: #f9f9f9; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        th { background: #007bff; color: white; }
+        tr:nth-child(even) { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>📜 Sent Message Logs</h2>
+    <table>
+        <tr>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Message</th>
+            <th>API Response</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.customer_name }}</td>
+            <td>{{ log.phone }}</td>
+            <td>{{ log.status }}</td>
+            <td>{{ log.message_text }}</td>
+            <td>{{ log.api_response|truncatechars:80 }}</td>
+            <td>{{ log.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

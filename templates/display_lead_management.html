@@ -1,0 +1,1108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <title>TEIM CRM</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="{% static 'images/crono.png' %}" type="image/png">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Body Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #dedede;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Title Styling */
+        /* h1 {
+            color: #03AED2;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            padding: 20px;
+            text-align: center;
+        } */
+        h1,
+        .hh {
+            font-family: 'Playfair Display', serif;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid rgb(80, 16, 177);
+        }
+
+        /* Content Layout */
+        .table-wrapper {
+            /* margin-left: 285px; Offset for sidebar */
+            /* max-width: calc(100% - 250px); Account for sidebar */
+            padding: 20px;
+            /* border: 1px solid black ; */
+            background-color: white;
+            border: 1px solid black;
+            padding: 20px;
+            /* border: 1px solid black ; */
+            margin-top: 90px !important;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgb(125, 93, 93);
+            box-shadow: inset 0px 0px 3px rgb(28, 17, 239);
+        }
+
+        .container-table {
+            overflow-x: auto;
+            /* Horizontal scrollbar */
+            width: calc(100%);
+            /* Adjust width to account for scrollbar */
+            margin: auto;
+            max-width: 100%;
+            padding: 0 20px;
+            /* Add padding for spacing */
+
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #7c7c7c;
+            white-space: nowrap;
+            /* Prevent wrapping */
+        }
+
+        th {
+            font-family: "Cardo", serif;
+            font-weight: 500;
+            font-size: 17px;
+            font-style: normal;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        td {
+            font-family: "Outfit", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #cbcaca;
+        }
+
+        /* Button Styling */
+        .btn-like {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: #fff;
+            background-color: #343434;
+            border: none;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .btn-like:hover {
+            background-color: #343434;
+        }
+
+        /* Search Bar Styling */
+        .navbar {
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .pagination li {
+            margin: 10px 5px;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 10px 12px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .pagination .current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-inline .form-control {
+            border: 1px solid #000000;
+            color: #000000;
+        }
+
+        .form-inline .btn-outline-success {
+            color: #000000;
+            border: 1px solid #000000;
+        }
+
+        .form-inline .btn-outline-success:hover {
+            background-color: #707070;
+            color: #ffffff;
+        }
+
+        .edit-delete-buttons {
+            white-space: nowrap;
+            /* Prevent wrapping for buttons */
+            text-align: center;
+            /* Center align buttons */
+        }
+
+        .edit-delete-buttons a {
+            display: inline-block;
+            /* Ensure inline block to prevent overflow */
+            width: auto;
+            /* Set width to auto */
+            margin-right: 5px;
+        }
+
+
+        .btn-like {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            background-color: #28a745;
+            border: 1px solid transparent;
+            color: #fff;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            /* Remove underline */
+        }
+
+        .btn-like.delete-link {
+            background-color: #dc3545;
+        }
+
+        .btn-like:hover,
+        .btn-like.delete-link:hover {
+            background-color: #218838;
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Fixed position ensures it remains relative to the viewport */
+            z-index: 1;
+            /* High z-index to overlay other content */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width for the overlay */
+            height: 100%;
+            /* Full height for the overlay */
+            overflow: hidden;
+            /* Prevent scrolling of background content */
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Dark overlay */
+        }
+
+        .modal-content {
+            position: fixed;
+            /* Fix the modal's position */
+            left: 50%;
+            /* Center horizontally */
+            top: 50%;
+            /* Center vertically */
+            transform: translate(-50%, -50%);
+            /* Adjust for modal's own dimensions */
+            background-color: #ffffff;
+            /* White background for content */
+            width: 50%;
+            /* Adjust modal size */
+            max-width: 600px;
+            /* Restrict maximum width */
+            padding: 30px;
+            /* Padding inside the modal */
+            border-radius: 10px;
+            /* Rounded corners for aesthetics */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            /* Subtle shadow for prominence */
+            text-align: center;
+            /* Center-align text */
+            animation: fadeIn 0.3s ease-in-out;
+            /* Smooth fade-in animation */
+        }
+
+        .modal-buttons {
+            display: flex;
+            /* Use flexbox for buttons */
+            justify-content: center;
+            /* Center-align buttons */
+            gap: 15px;
+            /* Spacing between buttons */
+        }
+
+        .modal-buttons button {
+            padding: 12px 25px;
+            /* Larger buttons for better UI */
+            font-size: 1rem;
+            /* Readable font size */
+            border-radius: 5px;
+            /* Rounded button edges */
+        }
+
+        .view-btn {
+            background-color: #303030;
+            color: rgb(246, 246, 246);
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px;
+            border-color: #000000;
+        }
+
+        #modal {
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            right: -100%;
+            width: 60vh;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 7px rgba(0, 0, 0, 0.2);
+            border-radius: 1px;
+            transition: 0.3s;
+            overflow-y: auto;
+            padding: 20px;
+
+        }
+
+        #modal.active {
+            right: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+
+        /* Style for the dropdown content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            /* box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); */
+            min-width: 100px;
+            z-index: 1;
+            border-radius: 30px;
+        }
+
+        .dropdown-content a {
+            color: rgb(0, 0, 0);
+            padding: 6px 10px;
+            text-decoration: none;
+            display: block;
+        }
+
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+
+        /* Smooth fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* On small screens, set margin to 0 when sidebar is hidden */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                margin-left: 0;
+                margin-top: 10px;
+                max-width: 100%;
+                padding: 20px;
+                /* Add some padding for better appearance */
+            }
+
+            .open-sidebar .table-wrapper {
+                margin-left: 300px;
+                /* Adjust content when sidebar is open */
+            }
+
+            .modal {
+                width: 100% !important;
+                border-radius: 0% !important;
+            }
+
+        }
+
+        .search-form {
+            margin-bottom: 20px;
+            margin-top: 15px;
+        }
+
+        form input {
+            color: #000000;
+            border-radius: 20px;
+            background-color: #ddd;
+            border: 1px solid #075efe;
+            padding: 7px 15px;
+        }
+
+        form input:focus {
+            color: #495057;
+            background-color: #fff;
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+        }
+
+        /* Background and border styling */
+        .form-control.custom-select {
+            background-color: #f0f4ff;
+            /* soft blue shade */
+            border: 1px solid #ccd9ff;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        /* Hover effect */
+        .form-control.custom-select:hover {
+            background-color: #e3ebff;
+            border-color: #4b7bec;
+            /* TeimCRM primary */
+        }
+
+        /* On focus */
+        .form-control.custom-select:focus {
+            border-color: #4b7bec;
+            box-shadow: 0 0 5px rgba(75, 123, 236, 0.5);
+        }
+
+        /* Labels styling */
+        label {
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .datehid {
+
+            color: #3498db !important;
+
+        }
+
+        /* Overall background for filter row */
+        #filterForm {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 1rem;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Small text below filters */
+        .text-muted {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+
+        .date-box {
+            box-shadow: 0px 0px 1px cyan;
+            border-radius: 5px;
+
+            margin: 10px !important;
+
+        }
+
+         .input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .input-wrapper input {
+        padding-right: 2.5rem; /* space for the clear button */
+    }
+
+    .input-wrapper .clear-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .input-wrapper .clear-btn:focus {
+        outline: none;
+    }
+    </style>
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+
+
+    <div class="container-fluid" style="min-height: 100vh !important; margin:0px">
+        <div class="row">
+            <div class="col-md-12  ">
+                <div class="col-12 ">
+                    <div class="table-wrapper addnewshadow">
+                        <h1>Lead Management Records</h1>
+                        <div class="search-form">
+                            <form method="GET" action="{% url 'display_lead_management' %}">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                        <div class="col-md-6 mt-3">
+                                            <div class="input-wrapper">
+                                                <input class="form-control mt-3" type="text" name="search" id="searchInput"
+                                                       value="{{ search_query }}" placeholder="Search by Lead Type / Phone No.">
+                                                {% if search_query %}
+                                                <button type="button" class="clear-btn" onclick="clearSearch()">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="row">
+                                                <div class="col-md-6 col-6">
+                                                    <button type="submit" class="buttonback3 buttonback2">🔍&nbsp;Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 col-12 mt-4">
+                                                <a href="/lead_management_create">
+                                                    <button type="button" class="buttonback">➕ &nbsp;Add Leads</button>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-md-4 col-12 mt-4">
+                                                <a href="{% url 'export_leads_excel' %}">
+                                                    <button type="button" class="buttonback">📤 &nbsp;Export
+                                                        Excel</button>
+                                                </a>
+                                            </div>
+                                            <div class=" col-md-4 col-12 mt-4"><a href="{% url 'import_leads' %}">
+                                                    <button type="button" class="buttonback">📥 &nbsp;Import
+                                                        Leads</button>
+                                                </a>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+
+
+                            </form>
+
+                            <hr class="text-dark">
+
+
+
+                            
+                            <!-- Button to toggle the filter form -->
+                            <button id="toggleFilterBtn" class="btn btn-primary mb-3">Show Filters</button>
+                            <div class="d-flex justify-content-end mb-3">
+                                <div class="count-box text-end">
+                                    <span class="text-primary fw-bold">Records: {{ branch_count }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Container to hold the filter form -->
+                            <div id="filterContainer"
+                                style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.5s ease; opacity: 0;">
+                                <form method="get" id="filterForm" class="row mb-4" style="gap: 10px;">
+                                    <div class="row ">
+                                        <!-- Type of Lead -->
+                                        <div class="col-md-3">
+                                            <label>Type of Lead</label>
+                                            <select name="typeoflead" class="form-control custom-select">
+                                                <option value="">All Lead Types</option>
+                                                {% for type in lead_types %}
+                                                <option value="{{ type }}" 
+                                                {% if request.GET.typeoflead == type %}selected{% endif %}>{{ type }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <!-- Source of Lead -->
+                                        <div class="col-md-3">
+                                            <label>Source of Lead</label>
+                                            <select name="sourceoflead" class="form-control custom-select">
+                                                <option value="">All Sources</option>
+                                                {% for source in sources %}
+                                                <option value="{{ source }}" {% if request.GET.sourceoflead == source %}selected{% endif %}>
+                                                    {{ source }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Customer Type -->
+                                        <div class="col-md-3">
+                                            <label>Customer Type</label>
+                                            <select name="customer_type" class="form-control custom-select">
+                                                <option value="">All Types</option>
+                                                {% for type in c_types %}
+                                                <option value="{{ type }}" {% if request.GET.customer_type == type %}selected{% endif %}>
+                                                    {{ type }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <!-- Segment -->
+                                            <div class="col-md-3">
+                                                <label>Segment</label>
+                                                <select name="segments" class="form-control custom-select">
+                                                    <option value="">All Segments</option>
+                                                    {% for sg in segments %}
+                                                        <option value="{{ sg }}" {% if selected_segment == sg %}selected{% endif %}>
+                                                            {{ sg }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                         
+
+
+                                        <!-- Salesperson -->
+                                        <div class="col-md-3">
+                                            <label>Salesperson</label>
+                                            <select name="salesperson" class="form-control custom-select">
+                                                <option value="">All Salespersons</option>
+                                                {% for sp in salespersons %}
+                                                <option value="{{ sp }}" {% if request.GET.salesperson == sp %}selected
+                                                {% endif %}>{{ sp }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <!-- Branch -->
+                                        <div class="col-md-3">
+                                            <label>Branch</label>
+                                            <select name="branch" class="form-control custom-select">
+                                                <option value="">All Branches</option>
+                                                {% for b in branches %}
+                                                <option value="{{ b }}" {% if request.GET.branch == b %}selected
+                                                {% endif %}>{{ b }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% if branch_count %}
+                                            <small class="text-muted">Total leads in this branch: {{ branch_count }}</small>
+                                            {% endif %}
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <!-- Enquiry Date Section -->
+                                        <div class="col-md-6 ">
+                                            <div class="row date-box p-2">
+                                                <h6 class="text-center datehid">Enquiry Date</h6>
+
+                                                <div class="col-md-6">
+                                                    <label class="text-center">From</label>
+                                                    <input type="date" name="enquiry_from"
+                                                        class="form-control custom-select mb-1"
+                                                        value="{{ request.GET.enquiry_from }}">
+                                                </div>
+                                                <div class="col-md-6 ">
+                                                    <label class="text-center">To</label>
+                                                    <input type="date" name="enquiry_to"
+                                                        class="form-control custom-select"
+                                                        value="{{ request.GET.enquiry_to }}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Follow-up Date Section -->
+                                        <div class="col-md-6 ">
+                                            <div class="row date-box p-2">
+                                                <h6 class="text-center datehid">Follow-up Date</h6>
+
+                                                <div class="col-md-6">
+                                                    <label class="text-center">From</label>
+                                                    <input type="date" name="followup_from"
+                                                        class="form-control custom-select mb-1"
+                                                        value="{{ request.GET.followup_from }}">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="text-center">To</label>
+                                                    <input type="date" name="followup_to"
+                                                        class="form-control custom-select"
+                                                        value="{{ request.GET.followup_to }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-end mt-3">
+                                        <button type="submit" class="btn btn-success">Apply Filters</button>
+                                        <a href="{% url 'display_lead_management' %}" class="btn btn-secondary ms-2">Reset</a>
+
+                                    </div>
+
+                                </form>
+                            </div>
+
+                            <script>
+                                const toggleBtn = document.getElementById('toggleFilterBtn');
+                                const filterContainer = document.getElementById('filterContainer');
+
+                                toggleBtn.addEventListener('click', () => {
+                                    if (filterContainer.style.maxHeight && filterContainer.style.maxHeight !== '0px') {
+                                        // Hide form
+                                        filterContainer.style.maxHeight = '0';
+                                        filterContainer.style.opacity = '0';
+                                        toggleBtn.textContent = 'Show Filters';
+                                    } else {
+                                        // Show form
+                                        filterContainer.style.maxHeight = filterContainer.scrollHeight + 'px';
+                                        filterContainer.style.opacity = '1';
+                                        toggleBtn.textContent = 'Hide Filters';
+                                    }
+                                });
+                            </script>
+
+                            <!-- <script>
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    const filterForm = document.getElementById('filterForm');
+                                    if (filterForm) {
+                                        filterForm.querySelectorAll('select, input').forEach(element => {
+                                            element.addEventListener('change', () => {
+                                                filterForm.submit();
+                                            });
+                                        });
+                                    }
+                                });
+                            </script> -->
+
+
+                        </div>
+
+                        
+                        <div class="container-table">
+                            <div class="auto_actions d-flex justify-content-end align-items-center gap-2 mb-2" style="margin-right: 30px;">
+    
+                                <select name="lead_type" id="lead_type" class="form-control" style="width: 200px;">
+                                    <option value="">Select Lead Type</option>
+                                    {% for i in lead_types %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            
+                                <a href="#" id="sendGroupEmailBtn" class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </a> 
+                            
+                                <a href="#" id="sendGroupWhatsappBtn" class="btn btn-sm btn-success">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a> 
+                            
+                                <a href="" class="btn btn-sm btn-success">
+                                    <i class="fa-solid fa-square-phone"></i>
+                                </a> 
+                            </div>
+                            
+
+                            <table class="table table-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No</th>
+                                        <th>Actions</th>
+                                        <th>Source Of Lead </th>
+                                        <th style="text-align: center;">Sales Person<br>Name</th>
+                                        <th>
+                                            <a style="text-decoration: none; color: #000000;"
+                                                href="?sort=customername&order={% if current_sort == 'customername' and current_order == 'asc' %}desc{% else %}asc{% endif %}">
+                                                Customer Name
+                                                {% if current_sort == 'customername' %}
+                                                {% if current_order == 'asc' %}
+                                                ▲
+                                                {% else %}
+                                                ▼
+                                                {% endif %}
+                                                {% endif %}
+                                            </a>
+                                        </th>
+                                        <th>Lead Type</th>
+                                        <th>Branch</th>
+                                        <th>Enquiry Date</th>
+                                        <th>Contact No.</th>
+                                        <th>Address</th>
+                                        <th>Follow up date </th>
+                                        <!-- <th>Follow Up</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for x in page_obj %}
+                                    <tr>
+                                        <td>
+                                            {{ forloop.counter|add:start_index }}
+
+                                            <div class="dropdown">
+                                                <button class="view-btn" onclick="openModal('{{ x.id }}')"><i
+                                                        class="fas fa-magnifying-glass-plus"></i></button>
+                                                <div class="dropdown-content">
+                                                    <a href="#">View More</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                      <td class="text-nowrap" style="width: 300px; min-width: 300px; max-width: 300px;">
+                                            <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center">
+                                            
+                                               {% if x.latest_followup %}
+                                                    {% if x.latest_followup.order_status == "Close Win" %}
+                                                        <span class="badge bg-success text-white d-inline-block text-center p-1" style="width: 40px;">Close<br>Win</span>
+                                                    {% elif x.latest_followup.order_status == "Close Loss" %}
+                                                        <span class="badge bg-danger text-white d-inline-block text-center p-1" style="width: 40px;">Close<br>Loss</span>
+                                                    {% else %}
+                                                        <a href="{% url 'main_followup_view' x.id %}" 
+                                                           class="btn btn-sm btn-outline-primary text-center" 
+                                                           style="width: 40px;" 
+                                                           title="Follow Up">
+                                                            <i class="fa-solid fa-clipboard-list"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <a href="{% url 'main_followup_view' x.id %}" 
+                                                       class="btn btn-sm btn-outline-primary text-center" 
+                                                       style="width: 40px;" 
+                                                       title="Follow Up">
+                                                        <i class="fa-solid fa-clipboard-list"></i>
+                                                    </a>
+                                                {% endif %}
+                                                
+                                                
+                                                <a href="/edit_lead_management/{{ x.id }}" class="btn btn-sm btn-success" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                            
+                                                <a href="/delete_lead_management/{{ x.id }}" class="btn btn-sm btn-danger delete-link" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                                {% if not x.latest_followup or x.latest_followup.order_status != "Close Win" %}
+                                                <a href="{% url 'send_lead_email' x.id %}" class="btn btn-sm btn-primary">
+                                                    <i class="fa-solid fa-envelope"></i>
+                                                </a> 
+                                                
+                                                <a href="{% url 'send_lead_whatsapp' x.id %}" class="btn btn-sm btn-success">
+                                                    <i class="fa-brands fa-whatsapp"></i>
+                                                </a> 
+                
+                                                <a href="" class="btn btn-sm btn-success">
+                                                    <i class="fa-solid fa-square-phone"></i>
+                                                </a> 
+                                                {% endif %}
+                                            </div>
+                                        </td>
+
+
+                                        <td>{{x.sourceoflead}}</td>
+                                        <td>{{x.salesperson}}</td>
+
+                                        <td>{{x.customername}}</td>
+                                        <td>{{x.typeoflead}}</td>
+                                        <td>{{x.branch}}</td>
+
+                                        <td>{{x.enquirydate}}</td>
+                                        <td>{{x.primarycontact}}</td>
+                                        <td>{{ x.customeraddress|truncatewords:3 }}</td>
+                                        <td>
+                                            {% if x.latest_followup %}
+                                            {% if x.latest_followup.order_status == "Close Win" %}
+                                            NA
+                                            {% elif x.latest_followup.order_status == "Close Loss" %}
+                                            NA
+                                            {% elif x.latest_followup.next_followup_date %}
+                                            {{ x.latest_followup.next_followup_date|date:"d M, Y" }}
+                                            {% else %}
+                                            {{ x.firstfollowupdate|date:"d M, Y" }}
+                                            {% endif %}
+                                            {% else %}
+                                            {{ x.firstfollowupdate|date:"d M, Y" }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+
+
+                            </table>
+                        </div>
+
+                        <div class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li>
+                                    <a href="?page=1{% if query_params %}&{{ query_params }}{% endif %}">&laquo; First</a>
+                                </li>
+                                <li>
+                                    <a href="?page={{ page_obj.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&lsaquo; Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            <span class="current">{{ page_obj.number }}</span>
+                            
+                            {% if page_obj.has_next %}
+                                <li>
+                                    <a href="?page={{ page_obj.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Next &rsaquo;</a>
+                                </li>
+                                <li>
+                                    <a href="?page={{ page_obj.paginator.num_pages }}{% if query_params %}&{{ query_params }}{% endif %}">Last &raquo;</a>
+                                </li>
+                            {% endif %}
+                        </div>
+
+                        {% include 'buttons.html' %}
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="confirmationModal" class="modal">
+                <div class="modal-content">
+                    <form id="deleteForm" method="POST">
+                        {% csrf_token %}
+                        <p class="hh">Are you sure you want to delete this record?</p>
+                        <div>
+                            <input type="password" id="password" name="password" placeholder="Enter Password"
+                                class="form-control" required>
+                        </div>
+                        <div class="modal-buttons">
+                            <button type="submit" id="confirmDeleteButton" class="btn btn-danger mt-5">Yes</button>
+                            <button type="button" id="cancelDeleteButton" class="btn btn-secondary mt-5">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+    <div id="modal">
+        <button class="close-btn" onclick="closeModal()">X</button>
+        <h3 style="font-family: 'Playfair Display', serif;font-weight: 900;text-align: center;">Lead Management Details
+        </h3>
+        <div id="modal-content"></div>
+    </div>
+
+    <!-- Group Email Modal -->
+    <script>
+        document.getElementById("sendGroupEmailBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            let leadType = document.getElementById("lead_type").value;
+            
+            if (!leadType) {
+                alert("Please select a lead type first!");
+                return;
+            }
+            
+            // Redirect with selected lead type
+            window.location.href = `/send-group-email/${leadType}/`;
+        });
+
+        // Group WhatsApp
+        document.getElementById("sendGroupWhatsappBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            let leadType = document.getElementById("lead_type").value;
+            if (!leadType) {
+                alert("Please select a lead type first!");
+                return;
+            }
+            // Redirect to your Django view for group WhatsApp
+            window.location.href = `/send-group-whatsapp/${leadType}/`;
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const deleteLinks = document.querySelectorAll('.delete-link');
+            const confirmationModal = document.getElementById('confirmationModal');
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+            const deleteForm = document.getElementById('deleteForm');
+            let deleteUrl = '';
+
+            deleteLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    deleteUrl = this.getAttribute('href');
+                    deleteForm.setAttribute('action', deleteUrl);
+                    confirmationModal.style.display = 'block';
+                });
+            });
+
+            cancelDeleteButton.addEventListener('click', function () {
+                confirmationModal.style.display = 'none';
+            });
+        });
+
+        function openModal(lead_id) {
+            fetch(`/get_lead_details/${lead_id}/`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('modal-content').innerHTML = html;
+                    document.getElementById('modal').classList.add('active');
+                });
+
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+    </script>
+    <script>
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            input.form.submit();  
+        }
+    </script>
+
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:400px;">
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Detail</title>
+    <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .container {
+            margin-left: 220px;
+            padding: 20px;
+            width: calc(100% - 220px);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-body p {
+            margin-bottom: 10px;
+        }
+
+        .img-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .img-container div {
+            flex: 1 1 calc(50% - 10px);
+            box-sizing: border-box;
+        }
+
+        .img-container img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 5px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #0d64af;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .my-4 {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+
+        a.btn-secondary {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            background-color: #6c757d;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        a.btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        h1 {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid rgb(80, 16, 177);
+        }
+
+        .card:hover {
+            box-shadow: 0px 0px 5px rgb(80, 77, 77);
+        }
+
+        .card {
+            box-shadow: 0px 0px 2px rgb(80, 77, 77, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+
+    <div class="container  p-5 bg-light " style="margin-top: 100px !important;">
+        <span onclick="window.location.href='/index'"
+            style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i
+                class="fas fa-house-chimney"></i></span>
+        <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;"
+            class="mb-4">X</span>
+
+        <h1 class="mt-2 mb-3"> {{ customer.fullname }} <span>- {{ customer.primarycontact }}</span></h1>
+        <div class="card">
+            <div class="card-header">
+                <h2>Work Information</h2>
+            </div>
+            <div class="card-body">
+                <!-- <p><strong>Technician:</strong> {{ work.technician.first_name }} {{ work.technician.last_name }}</p> -->
+                <p><strong>Work:</strong> {% for w in work.work.all %}
+                    {{ w.work_description }}
+                    {% endfor %}
+                </p>
+                <p><strong>Work Address:</strong> {{ customer.shifttopartyaddress }} {{ customer.shifttopartycity }}
+                    {{ customer.shifttopartystate }} {{ customer.shifttopartypostal }}
+                </p>
+                <p><strong>Status:</strong> {{ work.status }}</p>
+                <p><strong>Completion Date and Time:</strong> {{ work.completion_datetime|date:"Y-m-d H:i:s" }}</p>
+            </div>
+            <div class="card mt-4">
+                <div>
+                    <h2>Technicians Assigned</h2>
+                    <ul>
+                        {% for technician in related_technicians %}
+                        <li>{{ technician.first_name }} {{ technician.last_name }}</li>
+                        {% empty %}
+                        <li>No other technicians assigned.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Photos</h2>
+            </div>
+            <div class="card-body">
+                <div class="img-container">
+                    <div>
+                        <p><strong>Photo Before Service:</strong><br>
+                            {% if work.photos_before_service.exists %}
+                            {% for photo in work.photos_before_service.all %}
+                            <img src="{{ photo.file.url }}" alt="Photo Before Service"
+                                style="max-width: 100%; height: auto;">
+                            {% endfor %}
+                            {% else %}
+                        <p>No photos available.</p>
+                        {% endif %}
+                        </p>
+                    </div>
+                    <div>
+
+
+                        <p><strong>Photo After Service:</strong><br>
+                            {% if work.photos_after_service.exists %}
+                            {% for photo in work.photos_after_service.all %}
+                            <img src="{{ photo.file.url }}" alt="Photo Before Service"
+                                style="max-width: 100%; height: auto;">
+                            {% endfor %}
+                            {% else %}
+                        <p>No photos available.</p>
+                        {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <p><strong>Customer Signature Photo:</strong><br>
+                            {% if work.customer_signature_photo %}
+                            <img src="{{ work.customer_signature_photo.url }}" alt="Customer Signature">
+                            {% else %}
+                            No photo available.
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <p><strong>Payment Photo:</strong><br>
+                            {% if work.payment_photos.exists %}
+                            {% for photo in work.payment_photos.all %}
+                            <img src="{{ photo.file.url }}" alt="Photo Before Service"
+                                style="max-width: 100%; height: auto;">
+                            {% endfor %}
+                            {% else %}
+                        <p>No photos available.</p>
+                        {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'admin_completed_work' %}" class="btn btn-outline-info mt-3 mb-3" style="width: 200px;">Back to
+            List</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+    </script>
+    <div class="container-fluid footer  p-4"
+        style="background-color: #f7f7f7; width:100%; margin-top:400px; bottom: 0px;">
+        <div class="row ">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

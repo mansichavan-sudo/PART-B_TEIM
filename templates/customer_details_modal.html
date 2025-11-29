@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details Modal</title>
+    <style>
+        .detail-container {
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        .detail-item strong {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .detail-box {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="detail-container">
+
+        <div class="detail-item">
+            <strong>Customer ID:</strong>
+            <div class="detail-box">{{ customer.customerid }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>First Name:</strong>
+            <div class="detail-box">{{ customer.fullname }}</div>
+        </div>
+
+        <div class="detail-item">
+            <strong>Primary Email:</strong>
+            <div class="detail-box">{{ customer.primaryemail }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Secondary Email:</strong>
+            <div class="detail-box">{{ customer.secondaryemail }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Primary Contact:</strong>
+            <div class="detail-box">{{ customer.primarycontact }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Secondary Contact:</strong>
+            <div class="detail-box">{{ customer.secondarycontact }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Contact Person:</strong>
+            <div class="detail-box">{{ customer.contactperson }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Customer Segment:</strong>
+            <div class="detail-box">{{ customer.customersegment }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Shift to Party Address:</strong>
+            <div class="detail-box">{{ customer.shifttopartyaddress }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Shift to Party City:</strong>
+            <div class="detail-box">{{ customer.shifttopartycity }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Shift to Party State:</strong>
+            <div class="detail-box">{{ customer.shifttopartystate }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Shift to Party Postal:</strong>
+            <div class="detail-box">{{ customer.shifttopartypostal }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sold to Party Address:</strong>
+            <div class="detail-box">{{ customer.soldtopartyaddress }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sold to Party City:</strong>
+            <div class="detail-box">{{ customer.soldtopartycity }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sold to Party State:</strong>
+            <div class="detail-box">{{ customer.soldtopartystate }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sold to Party Postal:</strong>
+            <div class="detail-box">{{ customer.soldtopartypostal }}</div>
+        </div>
+    </div>
+</body>
+
+</html>

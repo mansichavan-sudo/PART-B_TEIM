@@ -1,0 +1,443 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEIM CRM</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="{% static 'images/crono.png' %}" type="image/png">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Verdana, sans-serif;
+
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .background-image {
+            background-image: url("{% static 'images/loginbackground-img.webp' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            min-height: 100vh;
+            width: 100%;
+            margin-top: 90px;
+            padding-bottom: 20PX;
+            box-shadow: 0PX;
+
+ }
+
+
+        .heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 30px;
+            white-space: nowrap;
+            border-radius: 4px 0px 0px 4px;
+            overflow: hidden;
+            border-right: 3px solid white;
+            width: 27ch;
+            animation: typing 3s steps(27) 1s infinite alternate,
+                erase 3s steps(27) 4s infinite alternate;
+            box-shadow: 0px 2px 10px rgb(0, 0, 0), inset 0px 4px 80px rgba(0, 0, 0, 0.3);
+
+        }
+
+        @keyframes typing {
+            0% {
+                width: 0;
+            }
+
+            50% {
+                width: 20ch;
+            }
+        }
+
+        @keyframes erase {
+            50% {
+                width: 20ch;
+            }
+
+            100% {
+                width: 0;
+            }
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 250px;
+        }
+   .left-side,
+        .right-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Media query for mobile devices with a max-width of 480px */
+        @media (max-width: 480px) {
+            .background-image {
+
+                background-size: cover;
+            }
+
+            .heading {
+                font-size: 15px;
+                margin-bottom: 20px;
+                width: 28ch;
+                border-right: 2px solid white;
+                animation: typing 3s steps(28) 1s infinite alternate,
+                    erase 3s steps(28) 4s infinite alternate;
+            }
+
+            .btn {
+                padding: 10px 18px;
+                font-size: 14px;
+                margin: 8px 0;
+            }
+
+            .button-container {
+                max-width: 90%;
+            }
+
+          
+
+
+        }
+
+        /* Navbar Css Start */
+        .navbar {
+            background-color: #F4F4F5;
+            /* Baby Pink */
+            box-shadow: 0px 5px 10px rgb(0, 0, 0);
+            padding: 33px;
+            width: 100%;
+            position: fixed;
+            top: 0%;
+            z-index: 1000;
+
+
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            padding: 0px;
+        }
+
+        .navbar-toggle {
+            border: none;
+        }
+
+
+        .tem {
+            position: absolute;
+            right: 10px;
+            top: 0px;
+        }
+
+
+
+        .navbar-header_logo {
+            position: absolute;
+            left: 10px;
+            top: 0px;
+        }
+
+
+        .teimlms {
+            display: inline-block;
+            position: absolute;
+            left: 47%;
+            top: 35px;
+            font-weight: bold;
+            font-size: 20px;
+            font-family: Algerian;
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid rgb(80, 16, 177);
+            /*Script MT */
+        }
+
+        /*Navbar Css End */
+
+        /* Button styling */
+        .btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5em;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            transform: scale(1.05);
+            color: #fff;
+        }
+
+      
+
+        /*Footer Css Start*/
+        @media screen and (max-width: 768px) {
+
+            .teimlms {
+                display: inline-block;
+                position: absolute;
+                left: 44% !important;
+                top: 63px !important;
+                font-weight: bold;
+                font-size: 10px !important;
+                font-family: Algerian;
+                background: linear-gradient(to right, #2575fc, #6a11cb);
+                /* Gradient definition */
+                -webkit-background-clip: text;
+                /* Clip the gradient to the text boundaries */
+                -webkit-text-fill-color: transparent;
+                border-bottom: 3px solid rgb(80, 16, 177);
+                /*Script MT */
+            }
+
+
+            .tem {
+                position: absolute !important;
+                right: 0px !important;
+                top: 0px !important;
+            }
+            
+        }
+
+        
+
+        
+        /*Footer Css End*/
+        /* General Styling for the Form */
+    .login-form {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 40px;
+        border-radius: 12px;
+        width: 100%;
+        margin-top: -20px;
+        max-width: 400px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+    }
+    .login :hover{
+        transform: scale(1.01);
+
+
+    }
+
+    .login-title {
+        color: white;
+        font-size: 30px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .login-description {
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .highlight-text {
+        background: linear-gradient( #8658e3, #4277e1);
+        /* Gradient definition */
+        -webkit-background-clip: text;
+        /* Clip the gradient to the text boundaries */
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+    }
+
+    /* Input Fields Styling */
+    .input-field {
+        width: 100%;
+        padding: 9px;
+        margin: 12px 0;
+        background: none;
+        border: 1px solid #1c2fad;
+        border-radius: 25px;
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: 0.3s ease;
+    }
+
+    .input-field::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .input-field:focus {
+        border-color: #2ecc71;
+        box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
+    }
+
+    /* Submit Button Styling */
+    .submit-btn {
+        background: linear-gradient(to right, #2575fc, #6a11cb);
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 50px;
+        width: 100%;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        transform: scale(1.05);
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+    }
+
+    /* Link and Error Message Styling */
+    .login-link {
+        color: white;
+        margin-top: 20px;
+    }
+
+    .signup-link {
+        color: #cc582e;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .signup-link:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .login-form {
+            width: 90%;
+            padding: 30px;
+        }
+
+        .login-title {
+            font-size: 26px;
+        }
+
+        .input-field {
+            font-size: 14px;
+            padding: 12px;
+        }
+
+        .submit-btn {
+            font-size: 16px;
+            padding: 12px 25px;
+        }
+    }
+    </style>
+</head>
+
+<body>
+<!-- Navbar Start -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid navbarr">
+            <div class="navbar-header ">
+                
+                <a class="navbar-brand " href="#">
+                    <img src="{% static 'images/Logo.webp' %}" alt="Logo" style="height: 120px;   margin-bottom: 10px; "
+                        class="navbar-header_logo">
+                </a>
+            </div>
+            <div class="teimlms">
+                <span>T E I M  &nbsp;C R M</span>
+            </div>
+
+            <div class="navbar-header tem">
+                
+                <a class="navbar-brand mt-3" href="https://chronoanalytics.in/">
+                    <img src="{% static 'images/crono.png' %}" alt="Logo" style="height: 70px;   margin-bottom: 10px; ">
+                </a>
+            </div>
+            
+        </div>
+    </nav>
+ <!-- Navbar End -->
+
+<!-- Main Content Start -->
+    <div class="container-fluid background-image">
+        <div class="row" >
+            <div class="col-md-3 mt-5"></div>
+            <div class="col-md-6 mt-5 col-12 login" style="width: 100%;">
+                <center>
+                    <form method="POST" class="login-form">
+                        {% csrf_token %}
+                        <h1 style="font-weight: 100;" class="highlight-text">Technician Login</h1>
+                        <p style="color: white;">Please enter your <span style="color: #2ecc71;">Contact Number</span> and <span style="color: #2ecc71;">Password</span></p>
+                        <input type="text" name="contact_number" placeholder="Contact Number" class="input-field">
+                        <input type="password" name="password" placeholder="Password" class="input-field">
+                        <!-- <a class="forgot text-muted" href="#">Forgot password?</a> -->
+                        <input type="submit" value="Submit" class="submit-btn">
+                        <p style="color: red;">{{ error }}</p>
+                        <!-- <p class="login-link">Login as <a href="/">Admin</a></p> -->
+                    </form>
+                    
+                </center>
+            </div>
+            <div class="col-md-3 mt-5"></div>
+
+        </div>
+    </div>
+    
+<!-- Main Content End -->
+
+<!-- Footer Start -->
+<div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%;  ">
+    <div class="row p-3">
+        <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+            © 2025. Powered by
+            <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                style="height: 20px; vertical-align: middle;">
+            <a href="http://www.chronoanalytics.in/"
+                style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                Solution</a>
+            All Rights Reserved.
+        </p>
+      </div>
+        <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+            © 2025. Marketed by
+            <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+            <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+            All Rights Reserved.
+        </p></div>
+    </div>
+</div>
+<!-- Footer End -->
+
+
+
+</body>
+</html>

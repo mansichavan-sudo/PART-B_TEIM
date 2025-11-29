@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #fff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #888888;
+        }
+        .header h1 {
+            font-size: 36px;
+            color: #5e5e5e;
+        }
+        .header p {
+            font-size: 16px;
+            color: #444;
+            margin: 0;
+        }
+
+        .logo {
+            text-align: right;
+            margin-bottom: 10px; /* Reduced bottom margin */
+            padding: 0; /* Remove any padding */
+            display: inline;
+        }
+
+        .logo img {
+            max-width: 20%; /* Ensure the logo size is consistent */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Center the logo horizontally */
+        }
+        .details-section {
+            margin-bottom: 30px;
+        }
+        .company-info, .customer-info, .customer-account-details, .date {
+            font-size: 12px;
+            color: #000000;
+            padding: 5px;
+        }
+        .company-info p, .customer-info p, .customer-account-details p, .date p {
+            margin: 5px 0;
+        }
+
+        .details-section p {
+            margin: 0px;
+            line-height: 1;
+            padding: 5px;
+        }
+
+        .info-table {
+            border: 1px solid rgb(80, 80, 80);
+            font-size: 14px;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+        }
+        .invoice-table th {
+            background-color: #4b4b4b;
+            color: white;
+        }
+        .total-section {
+            text-align: right;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        .total-section p {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- <div class="header">
+            
+            <h1>
+                <div class="logo">
+                <img src="{{ logo_path }}" alt="Logo">
+                </div>Invoice
+            </h1>
+            <p>Company Name: {{invoice.company_name}}</p>
+        </div> -->
+
+        <div class="header">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+
+                    <td style="width: 70%; text-align:left; vertical-align: middle;">
+                        <div style="padding: 0; margin: 0;">
+                            <!-- Reduced margin and line height for Invoice heading -->
+                            <h1 style="margin: 0 0 10px 0; padding: 0; font-size: 50px; color: #000000; line-height: 1;">Invoice</h1>
+                            <!-- Reduced margin for Company name -->
+                            <p style="margin: 0; padding: 0; font-size: 25px;font-weight: bold; color: #1f1f1f; line-height: 1;">{{ invoice.company_name }}</p>
+                        </div>
+                    </td>
+                    <!-- Logo Section -->
+                    <td style="width: 30%; text-align: right; vertical-align: middle;margin-top: 0;">
+                        <img src="{{ logo_path }}" alt="Logo" style="max-width: 70px; height: auto;">
+                    </td>
+                    
+                    <!-- Title Section -->
+                    
+                </tr>
+            </table>
+        </div>
+
+        <div class="details-section">
+
+            <table class="info-table">
+                <tr>
+                    <td>
+                        <p style="margin: 0; padding: 0; font-size: 14px;color: #1f1f1f;"><strong>
+                        Seva Corporation<br>SILVER GARDENIA, S NO.90/5 AND91/1, NIVRUTTI<br>LAWN, AUNDH B R T ROAD, RAVET KIWALE,<br>HAVELI, PUNE, 412101<br>PAN No.EYYPR2462H<br></strong>
+                        </p>
+                    </td>
+                    <td>
+                        <p><strong>Invoice Number:</strong> {{ invoice.invoice_no }}</p>
+                        <p><strong>Invoice Date:</strong> {{ invoice.date }}</p>
+                        <p><strong>Delivery Date:</strong> {{ invoice.delivery_date }}</p>
+                <p><strong>Dispatch Date:</strong> {{ invoice.dispatched_date }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><p><strong>Company:</strong> {{ invoice.company_name }}</p>
+                        <p><strong>Email:</strong> {{ invoice.company_email }}</p>
+                        <p><strong>Contact No:</strong> {{ invoice.company_contact_no }}</p>
+                        <p><strong>Customer Name:</strong> {{ invoice.customer.firstname }} {{invoice.customer.lastname}}</p>
+                        <p><strong>Customer Email:</strong> {{ invoice.customer.primaryemail }}</p>
+                        <p><strong>Designation:</strong> {{ invoice.designation }}</p>
+                    </td>
+                    <td>
+                        <p><strong>HSN/SAC Code:</strong> {{ invoice.hsn_sac_code }}</p>
+                        <p><strong>Pan Card No.:</strong> {{ invoice.pan_card_no }}</p>
+                        <p><strong>Account Number:</strong> {{ invoice.account_no }}</p>
+                        <p><strong>Bank Branch:</strong> {{ invoice.branch }}</p>
+                        <p><strong>IFSC Code:</strong> {{ invoice.ifsc_code }}</p>
+                    </td>
+                </tr>
+            </table>
+
+
+
+            <!-- <div class="company-info">
+                <p><strong>Company:</strong> {{ invoice.company_name }}</p>
+                <p><strong>Email:</strong> {{ invoice.company_email }}</p>
+                <p><strong>Contact No:</strong> {{ invoice.company_contact_no }}</p>
+                <p><strong>Invoice Number:</strong> {{ invoice.invoice_no }}</p>
+                <p><strong>Invoice Date:</strong> {{ invoice.date }}</p>
+            </div>
+            <div class="customer-info">
+                <p><strong>Customer Name:</strong> {{ invoice.customer.firstname }} {{invoice.customer.lastname}}</p>
+                <p><strong>Customer Email:</strong> {{ invoice.customer.primaryemail }}</p>
+                <p><strong>Designation:</strong> {{ invoice.designation }}</p>
+            </div> -->
+        </div>
+
+        <!-- <div class="details-section">
+            <div class="customer-account-details">
+                <p><strong>HSN/SAC Code:</strong> {{ invoice.hsn_sac_code }}</p>
+                <p><strong>Pan Card No.:</strong> {{ invoice.pan_card_no }}</p>
+                <p><strong>Account Number:</strong> {{ invoice.account_no }}</p>
+                <p><strong>Bank Branch:</strong> {{ invoice.branch }}</p>
+                <p><strong>IFSC Code:</strong> {{ invoice.ifsc_code }}</p>
+            </div>
+            <div class="date">
+                <p><strong>Delivery Date:</strong> {{ invoice.delivery_date }}</p>
+                <p><strong>Dispatch Date:</strong> {{ invoice.dispatched_date }}</p>
+            </div>
+        </div> -->
+
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Description of Goods</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ invoice.description_of_goods }}</td>
+                    <td>{{ invoice.quantity }}</td>
+                    <td>Rs. {{ invoice.price }}</td>
+                    <td>Rs. {{ invoice.total_amount }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <p><strong>Subtotal (Before Discount):</strong> Rs. {{ invoice.total_amount }}</p>
+            <p><strong>Discount:</strong> {{ invoice.discount }}%</p>
+            <p><strong>Total (With GST):</strong> Rs. {{ invoice.total_amount_with_gst }}</p>
+        </div>
+
+        <div>
+            <p style="font-size: 12px;"><strong>Declaration:</strong> We declare that this invoice shows the actual price of the goods described and that all particulars are true.</p>
+        </div>
+
+        <div>
+            <table style="border-collapse: collapse;border: 1px solid black;margin-top: 0;">
+                <tr>
+                    <td style="padding-top: 4px;"><p><strong>Customer Seal and Signature: </strong></p></td>
+                    <td style="padding-top: 4px;"><p><strong>For Seva Corporation</strong>  (Authorized Signature)</p></td>
+                </tr>
+
+            </table>
+        </div>
+
+
+
+        <div class="footer">
+            <p>Thank you for doing business with us! Please visit again!</p>
+        </div>
+    </div>
+
+</body>
+</html>

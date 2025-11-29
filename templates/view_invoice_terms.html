@@ -1,0 +1,221 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms & Conditions</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    .sales-table th, .sales-table td {
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .sales-table tbody tr:hover {
+      background-color: #f8f9fa;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-btn {
+      float: right;
+    }
+
+    @media (max-width: 768px) {
+      .table-responsive {
+        font-size: 14px;
+      }
+      .applywidth {
+        min-width: 170px !important;
+      }
+      .title {
+        font-size: 15px !important;
+      }
+    }
+
+    .terms-container {
+      min-height: 40vh !important;
+    }
+
+    .word-wrap {
+      white-space: normal !important;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  {% include 'sidebar.html' %}
+
+  <div class="main">
+    <div class="container terms-container bg-white p-4 rounded" style="margin-top: 100px;">
+      <!-- Header and Add Button -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="text-primary text-center title">
+          📝 Terms & Conditions
+        </h3>
+        <a href="{% url 'add_invoice_term' %}" class="btn btn-success add-btn">
+          <i class="bi bi-plus-lg"></i> Add
+        </a>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped sales-table">
+          <thead class="table-dark">
+            <tr>
+              <th style="width: 5% !important;">No</th>
+              <th style="width: 75% !important;">Description</th>
+              <th style="width: 20% !important;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for term in terms %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td class="text-start word-wrap applywidth">{{ term.description }}</td>
+              <td class="applywidth">
+                <a href="{% url 'edit_invoice_term' term.id %}" class="btn btn-sm btn-warning me-1">
+                  <i class="bi bi-pencil-square"></i>&nbsp;Edit
+                </a>
+                <button onclick="showConfirmModal({{ term.id }})" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i>&nbsp;Delete
+                </button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" class="text-center text-muted">No terms added yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% include 'buttons.html' %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="container-fluid footer" style="background-color: #f7f7f7; width:100%;">
+    <div class="row p-3">
+      <div class="col-md-12 text-center">
+        <p style="margin: 0; font-weight: 600; color:#000000">
+          © 2025. Powered by
+          <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://www.chronoanalytics.in/" style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics Solution</a>
+          All Rights Reserved.
+        </p>
+      </div>
+      <div class="col-md-12 text-center">
+        <p style="font-weight: 600; color:#000000">
+          Marketed by
+          <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://teim.in/" style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title text-info" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-dark">
+          Are you sure you want to delete this term?
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Yes, Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function showConfirmModal(id) {
+      const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+      document.getElementById('confirmDeleteBtn').href = "{% url 'delete_invoice_term' 0 %}".replace('0', id);
+      modal.show();
+    }
+  </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+      menuItems.forEach(item => {
+        item.addEventListener('click', function () {
+          const submenu = this.querySelector('.submenu');
+          const arrow = this.querySelector('.arrow-down');
+
+          // Hide all other submenus
+          menuItems.forEach(otherItem => {
+            if (otherItem !== this) {
+              const otherSubmenu = otherItem.querySelector('.submenu');
+              const otherArrow = otherItem.querySelector('.arrow-down');
+              if (otherSubmenu) {
+                otherSubmenu.style.display = 'none';
+                if (otherArrow.classList.contains('arrow-up')) {
+                  otherArrow.classList.remove('arrow-up');
+                }
+              }
+            }
+          });
+
+          // Toggle current submenu
+          if (submenu) {
+            submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+            arrow.classList.toggle('arrow-up');
+          }
+        });
+      });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      const deleteLinks = document.querySelectorAll('.delete-link');
+      const confirmationModal = document.getElementById('confirmationModal');
+      const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+      const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+      const deleteForm = document.getElementById('deleteForm');
+      let deleteUrl = '';
+
+      deleteLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+          event.preventDefault();
+          deleteUrl = this.getAttribute('href');
+          deleteForm.setAttribute('action', deleteUrl);
+          confirmationModal.style.display = 'block';
+        });
+      });
+
+      cancelDeleteButton.addEventListener('click', function () {
+        confirmationModal.style.display = 'none';
+      });
+    });
+
+    function openModal(lead_id) {
+      fetch(`/get_lead_details/${lead_id}/`)
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('modal-content').innerHTML = html;
+          document.getElementById('modal').classList.add('active');
+        });
+
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+  </script>
+</body>
+</html>

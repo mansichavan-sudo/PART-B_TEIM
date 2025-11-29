@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h3 id="formTitle">Create AI Call Campaign</h3>
+
+  <form id="campaignForm" method="post">
+    {% csrf_token %}
+    <input type="hidden" id="campaignId" name="id" value="">
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Campaign Name</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="lead_type" class="form-label">Lead Type</label>
+        <select id="lead_type" name="lead_type" class="form-select" required>
+          <option value="hot">Hot</option>
+          <option value="warm">Warm</option>
+          <option value="cold">Cold</option>
+          <option value="close_win">Close Win</option>
+          <option value="close_loss">Close Loss</option>
+          <option value="not_interested">Not Interested</option>
+        </select>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="service_type" class="form-label">Service Type</label>
+        <select id="service_type" name="service_type" class="form-select" required>
+          <option value="service">Pest Control Service</option>
+          <option value="product">Pest Control Product</option>
+        </select>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="language" class="form-label">Language</label>
+        <select id="language" name="language" class="form-select">
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="mr">Marathi</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row align-items-end">
+      <div class="col-md-4 mb-3">
+        <label for="caller_id" class="form-label">Caller ID (Number)</label>
+        <input type="text" id="caller_id" name="caller_id" class="form-control" placeholder="+911234567890">
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="template" class="form-label">Voice Template</label>
+        <div class="input-group">
+          <select id="template" name="template" class="form-select">
+            <option value="">-- Select template --</option>
+            <!-- populated by JS -->
+          </select>
+          <a href="{% url 'ai_calling:template_create' %}" class="btn btn-outline-secondary">Edit/Add</a>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label for="retry_attempts" class="form-label">Retry Attempts</label>
+        <input type="number" id="retry_attempts" name="retry_attempts" class="form-control" value="2" min="0">
+      </div>
+    </div>
+
+    <hr>
+
+    <h5>Schedule</h5>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="schedule_type" class="form-label">Schedule Type</label>
+        <select id="schedule_type" name="schedule_type" class="form-select">
+          <option value="immediate">Immediate</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="recurring">Recurring</option>
+        </select>
+      </div>
+
+      <div class="col-md-4 mb-3 schedule-fields d-none">
+        <label for="schedule_date" class="form-label">Date</label>
+        <input type="date" id="schedule_date" name="schedule_date" class="form-control">
+      </div>
+
+      <div class="col-md-4 mb-3 schedule-fields d-none">
+        <label for="schedule_time" class="form-label">Time</label>
+        <input type="time" id="schedule_time" name="schedule_time" class="form-control">
+      </div>
+    </div>
+
+    <hr>
+    <h5>Recommendations & Fallbacks</h5>
+
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" id="recommendation_enabled" name="recommendation_enabled">
+      <label class="form-check-label" for="recommendation_enabled">Enable upsell / cross-sell recommendations</label>
+    </div>
+
+    <div id="recommendationBlock" class="mb-3 d-none">
+      <label for="upsell_text" class="form-label">Upsell Suggestions (comma separated)</label>
+      <input type="text" id="upsell_text" name="upsell_text" class="form-control" placeholder="Premium Plan, Subscription">
+
+      <label for="crosssell_text" class="form-label mt-2">Cross-sell Suggestions (comma separated)</label>
+      <input type="text" id="crosssell_text" name="crosssell_text" class="form-control" placeholder="Traps, Repellent">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Fallbacks</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="fallback_whatsapp" name="fallback_whatsapp">
+        <label class="form-check-label" for="fallback_whatsapp">Send WhatsApp if call fails</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="fallback_email" name="fallback_email">
+        <label class="form-check-label" for="fallback_email">Send Email if call fails</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="fallback_voicemail" name="fallback_voicemail">
+        <label class="form-check-label" for="fallback_voicemail">Leave Voicemail</label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="test_number" class="form-label">Test Number</label>
+      <div class="input-group">
+        <input type="text" id="test_number" class="form-control" placeholder="+911234567890">
+        <button id="testCallBtn" type="button" class="btn btn-outline-secondary">Place Test Call</button>
+      </div>
+      <small class="text-muted">Use this to verify voice template & TTS voice.</small>
+    </div>
+
+    <div class="mt-4">
+      <button id="saveCampaign" class="btn btn-success">Save Campaign</button>
+      <a href="{% url 'ai_calling:campaign_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+
+  <div id="formMessage" class="mt-3"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'ai_calling/js/campaign.js' %}"></script>
+{% endblock %}

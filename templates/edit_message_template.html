@@ -1,0 +1,440 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Message Templates</title>
+  <style>
+    :root {
+      --bg: #f6fbff;
+      --card: #fff;
+      --accent: #0b74de;
+      --muted: #6b7280;
+    }
+
+    body {
+      font-family: Inter, Roboto, system-ui, -apple-system, 'Segoe UI', Arial;
+      background: var(--bg);
+      margin: 0;
+      color: #111
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06)
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px
+    }
+
+    .btn {
+      background: #fff;
+      border: 1px solid #e6eef8;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 38px;
+      text-align: center
+    }
+
+    .btn:hover {
+      box-shadow: 0 2px 6px rgba(11, 116, 222, 0.08)
+    }
+
+    .editor {
+      min-height: 260px;
+      border: 1px solid #e6eef8;
+      border-radius: 8px;
+      padding: 14px;
+      outline: none;
+      background: #fff;
+      overflow: auto
+    }
+
+    .placeholder {
+      background: none;
+      color: inherit;
+      font-weight: normal;
+      user-select: none;
+      /* can't select */
+      pointer-events: none;
+      /* can't click */
+    }
+  </style>
+</head>
+
+<body>
+
+  {% include 'sidebar.html' %}
+
+  <div class="main">
+    <div class="container">
+      <div class="row" style="margin-top: 100px;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 bg-light rounded">
+          <div class="bt">
+            <span onclick="window.location.href='/index'"
+              style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4 mt-2"><i
+                class="fas fa-house-chimney"></i></span>
+            <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;"
+              class="mb-4 mt-2">X</span>
+          </div>
+
+          <form method="post" class="p-4" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h3 style="text-align: center;">Edit Message Templates</h3>
+            
+            
+            {% if templates.message_type == "email" %}
+              <!-- Subject -->
+              <div class="card mt-3">
+                <label for="subjectEditor"><b>Subject</b></label>
+                <div id="subjectEditor" class="editor" contenteditable="true"></div>
+                <textarea name="subject" id="hiddenSubject" hidden></textarea>
+              </div>
+            {% endif %}
+          
+            <!-- Body -->
+            <div class="card mt-3">
+              <label for="bodyEditor"><b>Body</b></label>
+              <div class="toolbar" role="toolbar" aria-label="Formatting toolbar">
+                <button class="btn" data-cmd="bold" type="button"><b>B</b></button>
+                <button class="btn" data-cmd="italic" type="button"><i>I</i></button>
+                <button class="btn" data-cmd="underline" type="button"><u>U</u></button>
+                <button class="btn" data-cmd="insertUnorderedList" type="button">• List</button>
+                <button class="btn" data-cmd="insertOrderedList" type="button">1. List</button>
+                <button class="btn" data-cmd="createLink" type="button">🔗</button>
+                <button class="btn" id="insertPlaceholderBtn" type="button">{...}</button>
+              </div>
+              <div id="editor" class="editor" contenteditable="true"></div>
+              <textarea name="body" id="hiddenBody" hidden></textarea>
+            </div>
+            <div class="card mt-3" id="attachmentCard" style="display:none;">
+              <label for="attachment"><b>Attachment</b></label>
+              <input type="file" name="attachment" id="attachment" class="form-control"
+                     accept="image/*,.pdf,.doc,.docx">
+            </div>
+
+            <div class="row mt-3 mb-3 justify-content-center">
+              <div class="col-md-3">
+                <button class="btn btn-success w-100" type="submit">Submit</button>
+              </div>
+            </div>
+          </form>
+          
+        </div>
+        <div class="col-md-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer" style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+    <div class="row p-3">
+      <div class="col-md-12 text-center">
+        <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">© 2025. Powered by <img
+            src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+            style="height: 20px; vertical-align: middle;"> <a href="http://www.chronoanalytics.in/"
+            style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+            Solution</a> All Rights Reserved.</p>
+      </div>
+      <div class="col-md-12 text-center">
+        <p style="font-weight: 600; word-wrap: break-word;color:#000000">© 2025. Marketed by <img
+            src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;"> <a
+            href="http://teim.in/"
+            style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+          All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+
+ <!-- <script>
+  const PLACEHOLDER_RE = /\{[^}]+\}/g;
+
+// Editors
+const bodyEditor = document.getElementById('editor');
+const subjectEditor = document.getElementById('subjectEditor');
+
+// Hidden fields
+const hiddenBody = document.getElementById('hiddenBody');
+const hiddenSubject = document.getElementById('hiddenSubject');
+
+// Escape HTML
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Render placeholders inside editor
+function renderTemplate(editor, raw) {
+  const parts = raw.split(/(\{[^}]+\})/g);
+  const frag = parts.map(p => {
+    if (p.match(PLACEHOLDER_RE)) {
+      return `<span contenteditable="false" class="placeholder-1" data-value="${esc(p)}">${esc(p)}</span>`;
+    } else {
+      return esc(p).replace(/\r?\n/g, '<br>');
+    }
+  }).join('');
+  editor.innerHTML = frag;
+}
+
+// Serialize editor to text
+function serializeEditor(editor) {
+  const clone = editor.cloneNode(true);
+  const placeholders = clone.querySelectorAll('.placeholder-1');
+  placeholders.forEach(span => {
+    const textNode = document.createTextNode(span.getAttribute('data-value'));
+    span.parentNode.replaceChild(textNode, span);
+  });
+
+  function getTextWithNewlines(node) {
+    let text = '';
+    node.childNodes.forEach(n => {
+      if (n.nodeType === Node.TEXT_NODE) text += n.nodeValue;
+      else if (n.nodeType === Node.ELEMENT_NODE) {
+        if (n.tagName === 'BR') text += '\n';
+        else text += getTextWithNewlines(n) + '\n';
+      }
+    });
+    return text;
+  }
+
+  return getTextWithNewlines(clone).replace(/\n{2,}/g, '\n\n');
+}
+
+// Prevent deletion of placeholders
+[bodyEditor, subjectEditor].forEach(editor => {
+  editor.addEventListener("keydown", (e) => {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    let node = range.startContainer;
+    if (node.nodeType === 3) node = node.parentNode;
+
+    if (e.key === "Backspace") {
+      if (range.startOffset === 0 && node.previousSibling?.classList?.contains("placeholder-1")) {
+        e.preventDefault();
+      }
+    }
+    if (e.key === "Delete") {
+      if (range.startOffset === node.length && node.nextSibling?.classList?.contains("placeholder-1")) {
+        e.preventDefault();
+      }
+    }
+  });
+});
+
+// Toolbar formatting for both editors
+document.querySelectorAll('.toolbar .btn[data-cmd]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    let cmd = btn.getAttribute('data-cmd');
+    if (cmd === 'createLink') {
+      let url = prompt("Enter the link URL:", "https://");
+      if (url) document.execCommand(cmd, false, url);
+    } else document.execCommand(cmd, false, null);
+  });
+});
+
+// Load DB values
+const dbBody = `{{ templates.body|escapejs }}`;
+const dbSubject = `{{ templates.subject|escapejs }}`;
+renderTemplate(bodyEditor, dbBody);
+renderTemplate(subjectEditor, dbSubject);
+
+// Submit handler
+document.querySelector('form').addEventListener('submit', () => {
+  hiddenBody.value = serializeEditor(bodyEditor);
+  hiddenSubject.value = serializeEditor(subjectEditor);
+});
+
+ </script>  -->
+ 
+ <script>
+  const PLACEHOLDER_RE = /\{[^}]+\}/g;
+
+  // Editors
+  const bodyEditor = document.getElementById('editor');
+  const subjectEditor = document.getElementById('subjectEditor');
+
+  // Hidden fields
+  const hiddenBody = document.getElementById('hiddenBody');
+  const hiddenSubject = document.getElementById('hiddenSubject');
+
+  // Subject + attachment cards
+  const subjectCard = document.querySelector('[for="subjectEditor"]')?.closest('.card');
+  const attachmentCard = document.getElementById('attachmentCard');
+
+  // Message type (from DB)
+  const messageType = `{{ templates.message_type|escapejs }}`.toLowerCase();
+
+  // Show/hide fields based on message type
+  function toggleFields() {
+    if (messageType === 'email') {
+      if (subjectCard) subjectCard.style.display = 'block';
+      if (attachmentCard) attachmentCard.style.display = 'block';
+    } else if (messageType === 'whatsapp') {
+      if (subjectCard) subjectCard.style.display = 'none';
+      if (attachmentCard) attachmentCard.style.display = 'block';
+    } else {
+      if (subjectCard) subjectCard.style.display = 'none';
+      if (attachmentCard) attachmentCard.style.display = 'none';
+    }
+  }
+
+  toggleFields(); // run immediately on load
+
+  // ------------------ existing code -------------------
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function renderTemplate(editor, raw) {
+    const parts = raw.split(/(\{[^}]+\})/g);
+    const frag = parts.map(p => {
+      if (p.match(PLACEHOLDER_RE)) {
+        return `<span contenteditable="false" class="placeholder-1" data-value="${esc(p)}">${esc(p)}</span>`;
+      } else {
+        return esc(p).replace(/\r?\n/g, '<br>');
+      }
+    }).join('');
+    editor.innerHTML = frag;
+  }
+
+  function serializeEditor(editor) {
+    const clone = editor.cloneNode(true);
+    const placeholders = clone.querySelectorAll('.placeholder-1');
+    placeholders.forEach(span => {
+      const textNode = document.createTextNode(span.getAttribute('data-value'));
+      span.parentNode.replaceChild(textNode, span);
+    });
+
+    function getTextWithNewlines(node) {
+      let text = '';
+      node.childNodes.forEach(n => {
+        if (n.nodeType === Node.TEXT_NODE) text += n.nodeValue;
+        else if (n.nodeType === Node.ELEMENT_NODE) {
+          if (n.tagName === 'BR') text += '\n';
+          else text += getTextWithNewlines(n) + '\n';
+        }
+      });
+      return text;
+    }
+
+    return getTextWithNewlines(clone).replace(/\n{2,}/g, '\n\n');
+  }
+
+  [bodyEditor, subjectEditor].forEach(editor => {
+    editor?.addEventListener("keydown", (e) => {
+      const sel = window.getSelection();
+      if (!sel.rangeCount) return;
+      const range = sel.getRangeAt(0);
+      let node = range.startContainer;
+      if (node.nodeType === 3) node = node.parentNode;
+
+      if (e.key === "Backspace") {
+        if (range.startOffset === 0 && node.previousSibling?.classList?.contains("placeholder-1")) {
+          e.preventDefault();
+        }
+      }
+      if (e.key === "Delete") {
+        if (range.startOffset === node.length && node.nextSibling?.classList?.contains("placeholder-1")) {
+          e.preventDefault();
+        }
+      }
+    });
+  });
+
+  document.querySelectorAll('.toolbar .btn[data-cmd]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      let cmd = btn.getAttribute('data-cmd');
+      if (cmd === 'createLink') {
+        let url = prompt("Enter the link URL:", "https://");
+        if (url) document.execCommand(cmd, false, url);
+      } else document.execCommand(cmd, false, null);
+    });
+  });
+
+  const dbBody = `{{ templates.body|escapejs }}`;
+  const dbSubject = `{{ templates.subject|escapejs }}`;
+  renderTemplate(bodyEditor, dbBody);
+  // renderTemplate(subjectEditor, dbSubject);
+  if (subjectEditor) {
+    renderTemplate(subjectEditor, dbSubject);
+  }
+
+  document.querySelector('form').addEventListener('submit', () => {
+    hiddenBody.value = serializeEditor(bodyEditor);
+    if (messageType === 'email' && subjectEditor) {
+      hiddenSubject.value = serializeEditor(subjectEditor);
+    }
+  });
+</script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+      menuItems.forEach(item => {
+        item.addEventListener('click', function () {
+          const submenu = this.querySelector('.submenu');
+          const arrow = this.querySelector('.arrow-down');
+          menuItems.forEach(otherItem => {
+            if (otherItem !== this) {
+              const otherSubmenu = otherItem.querySelector('.submenu');
+              const otherArrow = otherItem.querySelector('.arrow-down');
+              if (otherSubmenu) {
+                otherSubmenu.style.display = 'none';
+                if (otherArrow.classList.contains('arrow-up')) {
+                  otherArrow.classList.remove('arrow-up');
+                }
+              }
+            }
+          });
+          if (submenu) {
+            submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+            arrow.classList.toggle('arrow-up');
+          }
+        });
+      });
+    });
+  </script>
+
+<div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+  <div class="row p-3">
+      <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+          © 2025. Powered by
+          <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+              style="height: 20px; vertical-align: middle;">
+          <a href="http://www.chronoanalytics.in/"
+              style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+              Solution</a>
+          All Rights Reserved.
+      </p>
+    </div>
+      <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+          © 2025. Marketed by
+          <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+          All Rights Reserved.
+      </p></div>
+  </div>
+</div>
+</body>
+
+</html>
+
+
+
+

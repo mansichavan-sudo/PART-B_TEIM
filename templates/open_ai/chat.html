@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Integration</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Chat with ChatGPT</h1>
+    <div id="chatbox">
+        <div id="messages"></div>
+    </div>
+
+    <form id="chat-form" method="POST">
+        {% csrf_token %}
+        <input type="text" id="message" name="message" placeholder="Type your message here..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        $('#chat-form').on('submit', function(event) {
+            event.preventDefault();
+            var message = $('#message').val();
+
+            // Add user message to chatbox
+            $('#messages').append('<p><strong>You:</strong> ' + message + '</p>');
+
+            $.ajax({
+                url: "{% url 'chat_view' %}",
+                type: "POST",
+                data: {
+                    'message': message,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    $('#messages').append('<p><strong>ChatGPT:</strong> ' + response.response + '</p>');
+                    $('#message').val('');  // Clear input field
+                },
+                error: function(xhr) {
+                    alert("An error occurred: " + xhr.responseText);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'images/crono.png' %}" type="image/png">
+  <title>TEIM CRM</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&display=swap"
+    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap"
+    rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* General Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+
+
+      height: 100vh;
+      margin: 0;
+    }
+
+    .row {
+
+
+      border-radius: 10px;
+    }
+
+    .container-fluid {
+
+      margin-top: 120px;
+
+    }
+
+    h2 {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+      /* Gradient definition */
+      -webkit-background-clip: text;
+      /* Clip the gradient to the text boundaries */
+      -webkit-text-fill-color: transparent;
+      border-bottom: 3px solid rgb(80, 16, 177);
+    }
+
+
+
+    /* Styling the file input */
+    input[type="file"] {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fafafa;
+      font-size: 15px;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    input[type="file"]:hover {
+      background-color: #f0f0f0;
+      border-color: #ccc;
+    }
+
+    /* Styling the submit button */
+
+
+
+
+    /* Supported formats */
+    .supported-formats {
+      font-size: 13px;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 500px) {}
+
+    .mainnn {
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: inset 0px 0px 5px blue !important;
+      box-shadow: 0px 0px 5px rgb(255, 255, 255) !important;
+
+    }
+
+    h2 {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+      /* Gradient definition */
+      -webkit-background-clip: text;
+      /* Clip the gradient to the text boundaries */
+      -webkit-text-fill-color: transparent;
+      border-bottom: 1px solid rgb(80, 16, 177);
+      /*Script MT */
+      font-weight: 400;
+    }
+
+    .btn-info {
+      background-color: #03AED2;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-info:hover {
+      background-color: #027994;
+      box-shadow: 0 4px 15px rgba(3, 174, 210, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+
+  {% include 'sidebar.html' %}
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-1 col-sm-2"></div>
+      <div class="col-md-6 col-10 col-sm-8 bg-light mainnn p-5">
+        <span onclick="window.location.href='/index'"
+          style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i
+            class="fas fa-house-chimney"></i></span>
+        <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;"
+          class="mb-4">X</span>
+
+        <h2 class="text-center mt-3 mb-3">Import Customer</h2>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        {% if messages %}
+        <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+      </div>
+      <div class="col-md-3 col-1 col-sm-2"></div>
+    </div>
+  </div>
+
+  <div class="container-fluid footer  p-4"
+    style="background-color: #f7f7f7; width:100%; margin-top:400px; bottom: 0px;">
+    <div class="row ">
+      <div class="col-md-12 text-center">
+        <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+          © 2025. Powered by
+          <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+            style="height: 20px; vertical-align: middle;">
+          <a href="http://www.chronoanalytics.in/"
+            style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+            Solution</a>
+          All Rights Reserved.
+        </p>
+      </div>
+      <div class="col-md-12 text-center">
+        <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+          © 2025. Marketed by
+          <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+          All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+      menuItems.forEach(item => {
+        item.addEventListener('click', function () {
+          const submenu = this.querySelector('.submenu');
+          const arrow = this.querySelector('.arrow-down');
+
+          // Hide all other submenus
+          menuItems.forEach(otherItem => {
+            if (otherItem !== this) {
+              const otherSubmenu = otherItem.querySelector('.submenu');
+              const otherArrow = otherItem.querySelector('.arrow-down');
+              if (otherSubmenu) {
+                otherSubmenu.style.display = 'none';
+                if (otherArrow.classList.contains('arrow-up')) {
+                  otherArrow.classList.remove('arrow-up');
+                }
+              }
+            }
+          });
+
+          // Toggle current submenu
+          if (submenu) {
+            submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+            arrow.classList.toggle('arrow-up');
+          }
+        });
+      });
+    });
+    const deleteLinks = document.querySelectorAll('.delete-link');
+    const confirmationModal = document.getElementById('confirmationModal');
+    const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+    const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+    let deleteUrl = '';
+
+    deleteLinks.forEach(link => {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        deleteUrl = this.getAttribute('href');
+        confirmationModal.style.display = 'block';
+      });
+    });
+
+    confirmDeleteButton.addEventListener('click', function () {
+      if (deleteUrl) {
+        window.location.href = deleteUrl;
+      }
+    });
+
+    cancelDeleteButton.addEventListener('click', function () {
+      confirmationModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+      if (event.target == confirmationModal) {
+        confirmationModal.style.display = 'none';
+      }
+    });
+
+    function openModal(service_id) {
+      fetch(`/get_service_details/${service_id}/`)
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('modal-content').innerHTML = html;
+          document.getElementById('modal').classList.add('active');
+        });
+
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+  </script>
+</body>
+
+</html>

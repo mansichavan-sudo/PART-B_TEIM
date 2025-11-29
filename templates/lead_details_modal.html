@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details Modal</title>
+    <style>
+        .detail-container{
+            padding: 10px;
+            margin-top: 5px;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        .detail-item strong {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .detail-box {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <div class="detail-item">
+            <strong>Branch:</strong>
+            <div class="detail-box">{{lead.branch}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Source of Lead:</strong>
+            <div class="detail-box">{{lead.sourceoflead}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sales Person:</strong>
+            <div class="detail-box">{{lead.salesperson}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Customer Name:</strong>
+            <div class="detail-box">{{lead.customername}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Customer Segment:</strong>
+            <div class="detail-box">{{lead.customersegment}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Type of Lead:</strong>
+            <div class="detail-box">{{lead.typeoflead}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Enquiry Date:</strong>
+            <div class="detail-box">{{lead.enquirydate}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Contacted By:</strong>
+            <div class="detail-box">{{lead.contactedby}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Main Category:</strong>
+            <div class="detail-box">{{lead.maincategory}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sub Category:</strong>
+            <div class="detail-box">{{lead.subcategory}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Primary Contact No.:</strong>
+            <div class="detail-box">{{lead.primarycontact}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Secondary Contact No.:</strong>
+            <div class="detail-box">{{lead.secondarycontact}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Customer Email:</strong>
+            <div class="detail-box">{{lead.customeremail}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>First Follow up Date</strong>
+            <div class="detail-box">{{lead.firstfollowupdate}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Customer Address:</strong>
+            <div class="detail-box">{{lead.customeraddress}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Location</strong>
+            <div class="detail-box">{{lead.location}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>State</strong>
+            <div class="detail-box">{{lead.state}}</div>
+        </div>
+        <div class="detail-item">
+            <strong>City</strong>
+            <div class="detail-box">{{lead.city}}</div>
+        </div>
+        <!-- {% if lead.typeoflead == 'Hot' %}
+        <div class="detail-item">
+            <strong>Future Followup:</strong>
+            <div class="detail-box"><a href="/quotation_create" class="btn btn-primary" role="button">Generate Quotation</a></div>
+        </div>
+        {% else %}
+        <div class="detail-item">
+            <div class="detail-box"></div>
+        </div>
+        {% endif %}
+        </div> -->
+        
+    </div>
+</body>
+</html>
+ 
+
+                    

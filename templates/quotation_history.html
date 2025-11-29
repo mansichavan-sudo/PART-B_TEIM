@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <title>Quotation History for {{ quotations.first.company_name }}</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <style>
+        .content-wrapper {
+
+            margin-top: 100px;
+
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .table {
+            margin-top: 20px;
+
+        }
+
+        .gg {
+            min-height: 100vh;
+        }
+
+        h1 {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid rgb(80, 16, 177);
+            /*Script MT */
+        }
+
+        .container {
+            position: relative;
+            padding: 30px;
+            border-radius: 5px !important;
+            box-shadow: 0px 0px 5px rgb(255, 255, 255);
+            min-height: 300px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            white-space: nowrap;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'sidebar.html' %}
+    <div class="gg">
+        <div class="content-wrapper ">
+            <div class="container bg-light">
+                <h1 class="text-center my-4">Quotation History for {{ quotations.first.company_name }}</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped p-3">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Quotation No</th>
+                                <th>Total Amount with GST</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quotation in quotations %}
+                            <tr>
+                                <td>{{ quotation.quotation_no }}</td>
+                                <td>{{ quotation.total_price_with_gst }}</td>
+                                <td>{{ quotation.quotation_date }}</td>
+                                <td><a href="{% url 'view_quotation_pdf' quotation.id %}" title="View PDF">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'view_quotation_pdf' quotation.id %}" target="_blank"
+                                        title="Download PDF">
+                                        <i class="fa-solid fa-file-arrow-down"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center">No quotations found for this customer.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:300px;">
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

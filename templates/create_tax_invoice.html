@@ -1,0 +1,1594 @@
+
+{%load static%}<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SFS - Tax Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+   /* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    cursor: pointer;
+}
+
+.toggle-switch input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-switch-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height:100%;
+    background-color: #ddd;
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 2px #ccc;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.toggle-switch-handle {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-switch-background {
+    background-color: #05c46b;
+    box-shadow: inset 0 0 0 2px #04b360;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-switch-background .toggle-switch-handle {
+    transform: translateX(24px);
+}
+
+.custom-btn {
+    display: inline-block;
+    background-color: #0d6efd;   /* Bootstrap primary blue */
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.custom-btn i {
+    margin-left: 6px; /* space before icon */
+}
+
+.custom-btn:hover {
+    background-color: #0b5ed7; /* darker blue on hover */
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+#products-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* space between rows */
+}
+.product-item {
+    background: #f9f9f9;   /* light background */
+}
+
+
+@media (max-width: 575.98px) {
+     .text-invoice {
+        padding-bottom: 20px;
+    }
+}
+
+    </style>
+
+    <!-- Bootstrap 5 JS (needed for modals to work) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+    
+    {% if use_quotation  %}    
+    <!-- With quotation number -->
+        <div class="container " style="margin-top: 100px;">
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Quotation No -->
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8 bg-light p-4 mb-5 rounded shadow">
+        
+                <div class="mb-3">
+                                        <div class="bt">
+                    <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4 mt-2"><i class="fas fa-house-chimney"></i></span>
+                    <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4 mt-2">X</span>
+                </div>
+                <div class="button text-end me-5">
+                    <a href="/tax-invoice/create" class="custom-btn">
+                        New <i class="fa-solid fa-file-lines"></i>
+                    </a>
+                </div>
+
+                    <h3 class="text-center">Tax Invoice </h3>
+                </div>
+
+                <!-- Branch Info (Read-only) -->
+               <div class="step" id="step-1">
+                    <h5 class=" text-center text-body-secondary">Branch Details</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                                            <label for="quotationNo" class="form-label">Quotation No <span class="star">*</span></label>
+                    <input type="text" id="quotationNo" name="quotation_no" class="form-control" name="quotation_no"
+                        onblur="fetchQuotationDetails()" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Name  <span class="star">*</span></label>
+                            <input type="text" id="branch_name" name="branch_name" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Contact  <span class="star">*</span></label>
+                            <input type="text" id="branch_contact_1" name="branch_contact_1" class="form-control" readonly>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Email <span class="star">*</span></label>
+                            <input type="email" id="branch_email_1" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>GST Number <span class="star">*</span></label>
+                            <input type="text" id="branch_gst" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>PAN Number <span class="star">*</span></label>
+                            <input type="text" id="branch_pan" class="form-control" readonly>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label>Full Address <span class="star">*</span></label>
+                            <textarea id="branch_address" class="form-control" rows="2" readonly></textarea>
+                        </div>
+                    </div>
+                     <div class="d-flex justify-content-center gap-3 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">
+                            Next <i class="fa-solid fa-angles-right"></i> 
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Customer Info (Read-only) -->
+                <div class="step" id="step-2">
+                    <h5 class=" text-center text-body-secondary">Customer Details</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label>Customer Name <span class="star">*</span></label>
+                            <input type="text" id="customer_name" name="customer_full_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Contact <span class="star">*</span></label>
+                            <input type="text" id="primary_contact" name="contact_no" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Email <span class="star">*</span></label>
+                            <input type="email" id="primary_email" name="customer_email" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Customer Type</label>
+                            <select class="form-control" name="customer_type" id="view_customer_type" required>
+                                <option value="">Select Customer Type</option>
+                                <option value="Organization" {% if form_data.customer_type == "Organization" %}selected{% endif %}>
+                                    Organization
+                                </option>
+                                <option value="Individual" {% if form_data.customer_type == "Individual" %}selected{% endif %}>
+                                    Individual
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Org-specific fields (hidden by default via JS) -->
+                        <div class="col-md-3 org-fields">
+                            <label>Sub-Name</label>
+                            <input type="text" name="or_name" id="or_name" value="{{ form_data.or_name }}" class="form-control">
+                        </div>
+                        <div class="col-md-3 org-fields">
+                            <label>Sub-Contact No</label>
+                            <input type="text" name="or_contact" id="or_contact" value="{{ form_data.or_contact }}" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Sold To Party -->
+                        <div class="col-md-6 mb-3">
+                        <label for="sold_address">Sold To Party Address <span class="star">*</span></label>
+                        <textarea id="sold_address" class="form-control" rows="2" name="bill_to_address"></textarea>
+
+                        <label>GSTIN/UIN </label>
+                        <input type="text" id="gstin-uin" name='sold_gstin_uin' class="form-control">
+
+                        <label for="sold_pan">PAN Number </label>
+                        <input type="text" id="sold_pan" name='sold_pan' class="form-control">
+
+                        <label for="sold_state_select">Sold To Party State <span class="star">*</span></label>
+                        <select id="sold_state_select" name="soldtopartystate" class="form-control"
+                        onchange="updateStateCode('sold')">
+                        <option value="">Select State</option>
+                    </select>
+                    
+                    <label for="sold_state_code">State Code <span class="star">*</span></label>
+                    <input type="text" id="sold_state_code" name="soldtopartystatecode" class="form-control" readonly>
+                </div>
+                
+                <!-- Shift To Party -->
+                <div class="col-md-6 mb-3">
+                    <label for="ship_address">Ship To Party Address <span class="star">*</span></label>
+                    <textarea id="ship_address" class="form-control" rows="2" name="ship_to_address"></textarea>
+                    
+                    <label>GSTIN/UIN </label>
+                    <input type="text" id="gstin-uin" name='shift_gstin_uin' class="form-control">
+
+                    <label for="shift_pan">PAN Number </label>
+                    <input type="text" id="shift_pan" name='shift_pan' class="form-control">
+
+                    <label for="shift_state_select">Shift To Party State <span class="star">*</span></label>
+                    <select id="shift_state_select" name="shifttopartystate" class="form-control"
+                    onchange="updateStateCode('shift')">
+                    <option value="">Select State</option>
+                </select>
+                
+                <label for="shift_state_code">State Code <span class="star">*</span></label>
+                <input type="text" id="shift_state_code" name="shifttopartystatecode" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center gap-3 mt-3">
+            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                <i class="fa-solid fa-angles-left"></i> Previous
+            </button>
+            <button type="button" class="btn btn-primary" onclick="nextStep()">
+                Next <i class="fa-solid fa-angles-right"></i> 
+            </button>
+        </div>
+    </div>
+                <div class="step" id="step-3">
+
+                    <!-- Product Info (Read-only) -->
+                    <h5 class=" text-center mt-3 text-body-secondary">Product Details</h5>
+                    <label for="Service-titel">Service Titel <span class="star">*</span></label>
+                    <input type="text" id="service_titel" name="service_titel" class="form-control mb-2" placeholder="Enter Service Titel ">
+                    <div class="t" style="overflow: auto;">
+                        <table class="table table-bordered">
+                            
+                            <thead id="product-table-head"></thead>
+                            
+                            <tbody id="product-table-body">
+                                <!-- Products will be populated here by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th id="gstHeader1"></th>
+                                    <th id="gstHeader2"></th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="gstValues1" class="gstValues1"></td>
+                                <td id="gstValues2" class="gsrValues2"></td>
+                                <td id="totalQuantity" class="totalQuantity"></td>
+                                <td id="grand_total" class="grand_total" name="grand_total"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-3">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                        <i class="fa-solid fa-angles-left"></i> Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">
+                        Next <i class="fa-solid fa-angles-right"></i> 
+                    </button>
+                </div>
+            </div>
+                <div class="step" id="step-4">
+
+                    <!-- Delevary Info  -->
+                    <div class="">
+                        <h5 class=" text-center text-body-secondary">Delivery Details</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label> Buyer’s Order No</label>
+                                <input type="text" id="Buyer_order_no" name="buyer_order_no" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Dated <span class="star">*</span></label>
+                                <input type="date" id="dated" name="dated" class="form-control">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Dispatch Doc No </label>
+                                <input type="number" id="Dispatch_doc_no" name="dispatch_doc_no" class="form-control">
+                            </div>
+                        <div class="col-md-4 mb-3">
+                            <label> Referance No & Date </label>
+                            <input type="text" id="referance_no_and_date" name="referance_no_and_date" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label> Dispatched through </label>
+                            <input type="text" id="Dispatched_through" name="dispatched_through" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label> Destination </label>
+                            <input type="text" id="Destination" name="destination" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label> Other References </label>
+                            <input type="text" id="Other_references" name="other_references" class="form-control">
+                        </div>
+                        <div class="col-md-4     mb-3">
+                            <label> Mode/Terms of Payment </label>
+                            <input type="text" id="Mode_Terms_of_Payment" name="mode_terms_of_payment" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label> Delivery Note </label>
+                            <input type="text" id="Delivery_Note" name="delivery_note" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label> Delivery Note Date </label>
+                            <input type="date" id="delivery_note_date" name="delivery_note_date" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label >Remarks</label>
+                            <textarea name="remarks" id="remarks" class="form-control"></textarea>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label >Terms of Delivery</label>
+                            <textarea name="terms_of_delivery" id="terms_of_delivery" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                <!-- Bank Dropdown -->
+                <div class="mb-3">
+                    <h5 class=" text-center text-body-secondary">Bank Details</h5>
+                    <label for="bank_id" class="form-label">Select Bank Account <span class="star">*</span></label>
+                    <select name="bank_id" id="bank_id" class="form-control" required>
+                        <option value="">Select Bank Account</option>
+                    </select>
+                </div>
+                <input type="hidden" id="grand_total" name="grand_total">
+                <input type="hidden" name="product_data" id="product_data">
+                <div class="row mt-4 mb-4">
+                    <div class="col-md-4"></div>
+                    <div class="d-flex justify-content-center gap-3 mt-4 mb-4">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                            <i class="fa-solid fa-angles-left"></i> Previous
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-2"></div>
+            
+        </form>
+        
+    </div>
+    
+</div>
+
+    {% else %}
+        <div class="container " style="margin-top: 100px;">
+            <form method="POST" id="invoiceForm" >
+                {% csrf_token %}
+                <!-- Quotation No -->
+                <div class="row">
+                <div class="col-md-2"></div>
+                 
+                <div class="col-md-8 bg-light p-4 mb-5 rounded shadow">
+                  <div class="button text-end me-1 mb-1 d-block d-sm-none">
+                        <a href="/tax-invoice/create?use_quotation=true" class="custom-btn ">
+                            <i class="fa-solid fa-file-lines"></i>  with Quotation
+                        </a>
+                    </div>
+                    <div class="mb-3">
+                        <div class="bt">
+                        <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4 mt-2"><i class="fas fa-house-chimney"></i></span>
+                        <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4 mt-2">X</span>
+                    </div>
+                    <div class="button text-end me-5 d-none d-md-block">
+                        <a href="/tax-invoice/create?use_quotation=true" class="custom-btn">
+                            <i class="fa-solid fa-file-lines"></i>  with Quotation
+                        </a>
+                    </div>
+
+                    <h3 class="text-center text-invoice">Tax Invoice </h3>
+                </div>
+
+                <!-- Branch Info (Read-only) -->
+                <div class="step" id="step-1">
+                    <h5 class=" text-center text-body-secondary">Branch Details</h5>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label>Select Branch<span class="star">*</span></label>
+                            <select id="branch_select" name="branch_id" class="form-control" required
+                                onchange="fetchBranchDetails(this.value)">
+                                <option value="">Select Branch</option>
+                                {% for branch in branches %}
+                                <option value="{{ branch.id }}">{{ branch.branch_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- These fields will be auto-filled and read-only -->
+                        <div class="col-md-6 mb-3">
+                            <label>Contact </label>
+                            <input type="text" id="branch_contact_1" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Email</label>
+                            <input type="email" id="branch_email_1" class="form-control" readonly>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>GST Number</label>
+                            <input type="text" id="branch_gst" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>PAN Number</label>
+                            <input type="text" id="branch_pan" class="form-control" readonly>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label>Full Address</label>
+                            <textarea id="branch_address" class="form-control" rows="2"
+                                readonly></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">
+                            Next <i class="fa-solid fa-angles-right"></i> 
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="step" id="step-2" style="display:none;">
+                    <div class="row">
+                        <h5 class=" text-center text-body-secondary">Customer Details</h5>
+                        
+                        <!-- Hidden field to store customer ID -->
+                        <input type="hidden" id="customer_id" name="customer_id">
+                        <!-- Add Customer Button (opens modal) -->
+                        <div class="add_customer mb-3 text-end  ">
+                          <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                            <img src="{% static 'images/add-user.png' %}" alt="Add Customer" width="30" height="30">
+                          </button>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Contact <span class="star">*</span></label>
+                            <input type="text" id="primary_contact" name="contact_no" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Customer Name <span class="star">*</span></label>
+                            <input type="text" id="customer_name" name="customer_full_name" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Email <span class="star">*</span></label>
+                            <input type="email" id="primary_email" name="customer_email" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Customer Type</label>
+                            <select class="form-control" name="customer_type" id="view_customer_type" required>
+                                <option value="">Select Customer Type</option>
+                                <option value="Organization" {% if form_data.customer_type == "Organization" %}selected{% endif %}>
+                                    Organization
+                                </option>
+                                <option value="Individual" {% if form_data.customer_type == "Individual" %}selected{% endif %}>
+                                    Individual
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Org-specific fields (hidden by default via JS) -->
+                        <div class="col-md-3 org-fields">
+                            <label>Sub-Name</label>
+                            <input type="text" name="or_name" value="{{ form_data.or_name }}" class="form-control">
+                        </div>
+                        <div class="col-md-3 org-fields">
+                            <label>Sub-Contact No</label>
+                            <input type="text" name="or_contact" value="{{ form_data.or_contact }}" class="form-control">
+                        </div>
+
+
+                    <div class="row">
+                         <!-- Sold To Party -->
+                         <div class="col-md-6">
+                             <h6 class="mb-2 text-body-secondary text-center">Sold To Party ( Bill to )</h6>
+                             <div class="mb-3">
+                                 <label for="sold_address">Address <span class="star">*</span></label>
+                                 <textarea id="sold_address" class="form-control" name="bill_to_address"  rows="2"></textarea>
+                             </div>
+                             <div class="mb-3">
+                                 <label for="sold_gstin">GSTIN/UIN </label>
+                                 <input type="text" id="sold_gstin" name='sold_gstin_uin' class="form-control ">
+                             </div>
+                             <div class="mb-3">
+                                 <label for="sold_pan">PAN Number </label>
+                                 <input type="text" id="sold_pan" name='sold_pan' class="form-control ">
+                             </div>
+                             <div class="mb-3">
+                                 <label for="sold_state_select">State & Code <span class="star">*</span></label>
+                                 <select id="sold_state_select" class="form-control" name="soldtopartystate">
+                                     <option value="">Select State</option>
+                                     {% for state, data in state_map.items %}
+                                         <option value="{{ state }}-{{ data.code }}">{{ state }} - {{ data.code }}</option>
+                                     {% endfor %}
+                                 </select>
+                             </div>
+                         </div>
+                     
+                         <!-- Ship To Party -->
+                        <div class="col-md-6">
+                             <h6 class="mb-2 text-body-secondary text-center">Ship To Party ( Consignee )</h6>
+                             <div class="mb-3">
+                                 <label for="ship_address">Address <span class="star">*</span></label>
+                                 <textarea id="ship_address" class="form-control" rows="2" name="ship_to_address" ></textarea>
+                             </div>
+                             <div class="mb-3">
+                                 <label for="ship_gstin">GSTIN/UIN </label>
+                                 <input type="text" id="ship_gstin" class="form-control"  name='shift_gstin_uin'>
+                             </div>
+                             <div class="mb-3">
+                                 <label for="shift_pan">PAN Number </label>
+                                 <input type="text" id="shift_pan" name='shift_pan' class="form-control ">
+                             </div>
+                             <div class="mb-3">
+                                 <label for="shift_state_select">State & Code <span class="star">*</span></label>
+                                 <select id="shift_state_select" class="form-control" name="shifttopartystate">
+                                     <option value="">Select State</option>
+                                     {% for state, data in state_map.items %}
+                                         <option value="{{ state }}-{{ data.code }}">{{ state }} - {{ data.code }}</option>
+                                     {% endfor %}
+                                 </select>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="d-flex justify-content-center gap-3 mt-3">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                            <i class="fa-solid fa-angles-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">
+                            Next <i class="fa-solid fa-angles-right"></i> 
+                        </button>
+                    </div>
+                </div>
+                </div>
+
+
+                <!-- Product Info (Read-only) -->
+                <div class="product-section step" id="step-3" style="display:none;">
+                    <h5 class=" text-center mt-3 text-body-secondary">Product Details</h5>
+                    
+                    <div class="row align-items-center">
+                        <!-- GST toggle section -->
+                        <div class="col-md-3 gst-field d-flex align-items-center gap-3">
+                            <label class="gst-label mb-0">Enable GST</label> 
+                            <label class="toggle-switch mb-0 ">
+                                <input type="checkbox" id="gstToggle" name="gst_enabled">
+                                <div class="toggle-switch-background">
+                                    <div class="toggle-switch-handle"></div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-6 gst-field d-flex align-items-center" id="gstTypeContainer" style="display:none;">
+                            <label for="gstType" class="select-gst-type mb-0">Select GST Type</label>
+                            <select id="gstType" class="form-select w-100" name="gst_type">
+                                <option value="CGST + SGST">CGST + SGST</option>
+                                <option value="IGST">IGST</option>
+                            </select>
+                        </div>
+                        <!-- Button -->
+                        <div class="col-md-3 text-end">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal" onclick="loadAddProductForm()">
+                                + New Product
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="service-title">
+                        <label for="Service-titel">Service Titel <span class="star">*</span></label>
+                        <input type="text" id="service_titel" name="service_titel" class="form-control mb-2" placeholder="Enter Service Titel ">
+                    </div>
+                    <!-- Service Type & Product List -->
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="font-weight-medium">Service Type</label>
+                            <select name="service_type" id="service_type" class="form-control" onchange="fetchProducts(this)">
+                                <option value="">Select Service Type</option>
+                                {% for value, label in category_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="font-weight-medium">Available Products</label>
+                            <input type="search" name="product_search" id="product_search" class="form-control" placeholder="Search Products">
+                            <!-- Scrollable container -->
+                            <div id="products-container" 
+                                 class="mt-2 border rounded p-2" 
+                                 style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                            <!-- <div id="products-container" class="mt-2"></div> -->
+                        </div>
+                    </div>
+
+                    <!-- Selected Products -->
+                    <label class="mt-4 ">Selected Products</label>
+                    <ul id="selected_services" class="list-group mb-3"></ul>
+
+                    <!-- Totals -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label>Total Price</label>
+                            <input type="text" id="total_price" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label>GST Amount</label>
+                            <input type="text" id="gst_price" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Total with GST</label>
+                            <input type="text" id="total_with_gst" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Input -->
+                    <input type="hidden" name="selected_products_json" id="selected_products_json">
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                            <i class="fa-solid fa-angles-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">
+                            Next <i class="fa-solid fa-angles-right"></i> 
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <!-- Delevary Info  -->
+                <div class="step" id="step-4" style="display:none;">
+                    <h5 class=" text-center text-body-secondary">Delivery Details</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-1">
+                            <label> Buyer’s Order No </label>
+                            <input type="text" id="Buyer_order_no" name="buyer_order_no" class="form-control">
+                        </div>
+                        
+                        <div class="col-md-4 mb-1">
+                            <label>Dispatch Doc No </label>
+                            <input type="number" id="Dispatch_doc_no" name="dispatch_doc_no" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label>Dated <span class="star">*</span></label>
+                            <input type="date" id="dated" name="dated" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label> Referance No & Date </label>
+                            <input type="text" id="referance_no_and_date" name="referance_no_and_date" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label> Dispatched through </label>
+                            <input type="text" id="Dispatched_through" name="dispatched_through" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label> Destination </label>
+                            <input type="text" id="Destination" name="destination" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label> Other References </label>
+                            <input type="text" id="Other_references" name="other_references" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label> Mode/Terms of Payment </label>
+                            <input type="text" id="Mode_Terms_of_Payment" name="mode_terms_of_payment" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label> Delivery Note </label>
+                            <input type="text" id="Delivery_Note" name="delivery_note" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1 ">
+                            <label> Delivery Note Date </label>
+                            <input type="date" id="delivery_note_date" name="delivery_note_date" class="form-control">
+                        </div>
+                        <div class="col-md-4 mb-1">
+                            <label >Remarks</label>
+                            <textarea name="remarks" id="remarks" class="form-control"></textarea>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label >Terms of Delivery</label>
+                            <textarea name="terms_of_delivery" id="terms_of_delivery" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    
+                    <!-- Bank Dropdown -->
+                    <div class="mb-0">
+                        <h5 class=" text-center text-body-secondary">Bank Details</h5>
+                        <label for="bank_id" class="form-label mt-0 mb-0">Select Bank Account <span class="star">*</span></label>
+                        <select name="bank_id" id="bank_id" class="form-control mt-0" required>
+                            <option value="">Select Bank Account</option>
+                            
+                            {% for bank in banks  %}
+                            <option value="{{ bank.id }}">{{ bank.bank_name }} - {{ bank.account_number }}</option>
+                            {% endfor %}
+                            
+                    </select>
+                    
+                    
+                    <input type="hidden" id="grand_total" name="grand_total">
+                    <input type="hidden" name="product_data" id="product_data">
+                    <div class="d-flex justify-content-center gap-3 mt-4 mb-4">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                            <i class="fa-solid fa-angles-left"></i> Previous
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
+                    </div>
+
+                </div>  
+
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+
+            </form> 
+            
+            <!-- Modal -->
+            <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-body-secondary">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body" id="addProductFormContainer">
+                    <!-- Form will be loaded here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+                <!-- BEGIN: Add Customer Modal -->
+                        <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h5 class="modal-title text-body-secondary">Add New Customer</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                              <div class="modal-body">
+                                <form method="POST" action="{% url 'customer_details_create' %}?next={% url 'create_tax_invoice' %}">
+                                  {% csrf_token %}
+                                
+                                  <!-- First Row: Basic Customer Details -->
+                                  <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                      <label>Primary Contact No <span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control" name="primarycontact" placeholder="Primary Contact No" pattern="\d{10}" required>
+                                    </div>
+                                
+                                    <div class="col-md-6 mb-3">
+                                      <label>Customer ID <span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control" name="customerid" value="{{ customerid }}" readonly required>
+                                    </div>
+                                
+                                    <div class="col-md-6 mb-3">
+                                      <label>Full Name <span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control" name="fullname" placeholder="Full Name" required>
+                                    </div>
+                                
+                                    <div class="col-md-6 mb-3">
+                                      <label>Primary Email <span class="text-danger">*</span></label>
+                                      <input type="email" class="form-control" name="primaryemail" placeholder="Primary Email" required>
+                                    </div>
+                                
+                                    <div class="col-md-6 mb-3">
+                                      <label>Secondary Email</label>
+                                      <input type="email" class="form-control" name="secondaryemail" placeholder="Secondary Email">
+                                    </div>
+                                
+                                    <div class="col-md-6 mb-3">
+                                      <label>Secondary Contact No</label>
+                                      <input type="text" class="form-control" name="secondarycontact" placeholder="Secondary Contact No" pattern="\d{10}">
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+                                        <label>Customer Type<span class="star">*</span></label>
+                                        <select name="customer_type" class="form-control" id="customer_type" onchange="toggleOrganizationFields()">
+                                          <option value="Individual" {% if customer_type == 'Individual' %}selected{% endif %}>Individual</option>
+                                          <option value="Organization" {% if customer_type == 'Organization' %}selected{% endif %}>Organization</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="or_name col-md-4 mb-4" style="display: none;">
+                                      <label>Name <span class="star">*</span></label>
+                                      <input type="text" name="or_name"  class="form-control">
+                                    </div>
+                                    <div class="or_contact col-md-4 mb-4" style="display: none;">
+                                      <label>Contact <span class="star">*</span></label>
+                                      <input type="number" name="or_contact" class="form-control">
+                                    </div>
+                            
+                                
+                                    <div class="col-md-4 mb-3">
+                                      <label>Contact Person Name <span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control" name="contactperson" placeholder="Contact person name" required>
+                                    </div>
+                                
+                                    <div class="col-md-4 mb-3">
+                                      <label>Designation <span class="text-danger">*</span></label>
+                                      <input type="text" class="form-control" name="designstion" placeholder="Designation" required>
+                                    </div>
+                                  </div>
+                              
+                                  <hr>
+                              
+                                  <!-- Second Row: Two-Column Split -->
+                                  <div class="row">
+                                    <!-- Shift To Party -->
+                                    <div class="col-md-6">
+                                      <h6 class="mb-3 text-success">Shift To Party</h6>
+                                      <div class="mb-3">
+                                        <label>Address <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="shifttopartyaddress" placeholder="Shift To Party Address" required>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label>City <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="shifttopartycity" placeholder="City" required>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label>State / Province <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="shifttopartystate" placeholder="State / Province" required>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label>Postal / Zip Code <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="shifttopartypostal" placeholder="Zip Code" required>
+                                      </div>
+                                    </div>
+                                
+                                    <!-- Sold To Party -->
+                                    <div class="col-md-6">
+                                      <h6 class="mb-3 text-warning">Sold To Party</h6>
+                                      <div class="mb-3">
+                                        <label>Address <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="soldtopartyaddress" placeholder="Sold To Party Address" required>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label>City <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="soldtopartycity" placeholder="City" required>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label>State / Province <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="soldtopartystate" placeholder="State / Province" required>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label>Postal / Zip Code <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="soldtopartypostal" placeholder="Zip Code" required>
+                                      </div>
+                                    </div>
+                                  </div>
+                              
+                                  <!-- Submit & Footer -->
+                                  <div class="modal-footer  justify-content-center">
+                                    <input type="submit" class="btn btn-success" value="Submit">
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- END: Add Customer Modal -->
+
+                    <!-- customer type -->
+                     <script>
+                        function toggleOrganizationFields() {
+                      const selectValue = document.getElementById('customer_type_select').value;
+                      const orgFields = document.querySelectorAll('.or_name, .or_contact'); // multiple classes
+                        
+                      orgFields.forEach(field => {
+                        field.style.display = (selectValue === 'Organization') ? 'block' : 'none';
+                      });
+                    }
+
+                    // Run on page load
+                    window.onload = function () {
+                      toggleOrganizationFields();
+                    }
+
+                    </script>
+
+            
+            <script>
+            function loadAddProductForm() {
+                fetch("{% url 'add_product' %}")
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("addProductFormContainer").innerHTML = html;
+                });
+            }
+            </script>
+            
+        </div>
+
+<!-- Add new product form modal -->
+<script>
+function loadAddProductForm() {
+    fetch("{% url 'add_product' %}", {
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById("addProductFormContainer").innerHTML = html;
+
+        // Attach form submit handler
+        const form = document.getElementById("addProductForm");
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            fetch("{% url 'add_product' %}?from_quotation=true", {
+                method: "POST",
+                body: new FormData(form),
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById("addProductModal"));
+                    modal.hide();
+
+                    // Optionally refresh product list
+                    location.reload();
+                }
+            });
+        });
+    });
+}
+</script>
+    {% endif %}
+    
+
+<!-- form steps -->
+<script>
+    let currentStep = 0;
+const steps = document.querySelectorAll(".step");
+
+function showStep(index) {
+    steps.forEach((step, i) => {
+        step.style.display = i === index ? "block" : "none";
+    });
+}
+
+function nextStep() {
+    if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+    }
+}
+
+function prevStep() {
+    if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+    }
+}
+
+// Initialize
+showStep(currentStep);
+
+</script>
+
+
+
+    <!-- Product section -->
+<script>
+    let gstEnabled = false; // initially off
+
+    document.getElementById('gstToggle').addEventListener('change', function () {
+        gstEnabled = this.checked;
+        console.log(gstEnabled ? "GST Enabled" : "GST Disabled");
+        
+
+        // Show/hide GST input fields
+        document.querySelectorAll('.product-gst-group').forEach(el => {
+            el.style.display = gstEnabled ? 'block' : 'none';
+        });
+
+        updateSelectedServicesList();
+        updateTotalPrice();
+    });
+
+
+    let selectedProducts = [];
+    let counter = 1;
+
+    function fetchProducts(selectElement) {
+        document.getElementById('products-container').innerHTML = '';
+        const category = selectElement.value;
+
+        if (!category) return;
+
+        fetch(`/get_products?categories=${category}`)
+            .then(res => res.json())
+            .then(data => {
+                data.products.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'product-item mb-3 p-2 border rounded';
+                    productDiv.setAttribute('data-product-id', product.product_id);
+
+                    productDiv.innerHTML = `
+                        <div class="mb-1 text-dark"><strong>${product.product_name}</strong></div>
+                        <div class="row g-2 mb-0">
+                            <div class="col-md-2">
+                                <label class="mt-1">Price</label>
+                                <input type="number" class="form-control product-price" value="0" step="0.01">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="mt-1">Quantity</label>
+                                <input type="number" class="form-control product-quantity" value="1" step="0.01" min="0.01">
+                            </div>
+                            <div class="col-md-5">
+                                <label class="mt-1">HSN / SAC </label>
+                                <input type="text" class="form-control product-hsn-sac" placeholder="HSN / SAC">
+                            </div>
+                           
+                            <div class="col-md-2 product-gst-group" style="display:${gstEnabled ? 'block' : 'none'}">
+                                <label class="mt-1">GST %</label>
+                                <input type="number" class="form-control product-gst" value="18" step="0.01">
+                            </div>
+                            <div class="col-md-2 ">
+                                <label class="mt-1">Unit</label>
+                                <input type="text" class="form-control product-unit" placeholder="Unit">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="mt-1">Description</label>
+                                <textarea class="form-control product-description" rows="1"></textarea>
+                            </div>
+                            <div class="col-md-2 align-self-center">
+                                <button type="button" class="btn btn-sm btn-primary mt-4" onclick='addProductManually(${JSON.stringify(product)})'>
+                                    + Add
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('products-container').appendChild(productDiv);
+                });
+            });
+    }
+
+    // Attach search functionality
+    document.getElementById("product_search").addEventListener("keyup", function () {
+        let query = this.value.toLowerCase();
+        let products = document.querySelectorAll("#products-container .product-item");
+    
+        products.forEach(product => {
+            let productName = product.querySelector("strong").textContent.toLowerCase();
+            product.style.display = productName.includes(query) ? "block" : "none";
+        });
+    });
+
+
+    function addProductManually(product) {
+        const container = document.querySelector(`div.product-item[data-product-id="${product.product_id}"]`);
+        if (!container) return;
+
+        const price = parseFloat(container.querySelector('input.product-price').value) || 0;
+        const quantity = parseFloat(container.querySelector('input.product-quantity').value) || 0;
+        const unit = container.querySelector('input.product-unit').value || '';
+        const gst = parseFloat(container.querySelector('input.product-gst')?.value) || 0;
+        const description = container.querySelector('textarea.product-description').value || '';
+        const hsn = container.querySelector('input.product-hsn-sac').value || '';
+
+        if (quantity <= 0) {
+            alert('Quantity must be greater than zero.');
+            return;
+        }
+
+        selectedProducts.push({
+            id: counter++,
+            p_id: product.product_id,
+            name: product.product_name,
+            price,
+            quantity,
+            unit,
+            gst,
+            description,
+            hsn,
+        });
+
+        updateSelectedServicesList();
+        updateTotalPrice();
+        updateHiddenInput();
+    }
+
+    function updateSelectedServicesList() {
+        const list = document.getElementById('selected_services');
+        list.innerHTML = '';
+
+        if (selectedProducts.length === 0) {
+            list.innerHTML = '<li class="list-group-item">No products selected</li>';
+            return;
+        }
+
+        selectedProducts.forEach((p, index) => {
+            const gstText = gstEnabled ? ` + GST(${p.gst}%)` : '';
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.innerHTML = `
+                <span>${p.name} : ₹${p.price.toFixed(2)} x ${p.quantity}${gstText}</span>
+                <span>
+                    ₹${(p.price * p.quantity).toFixed(2)}
+                    <button type="button" class="btn btn-sm btn-danger ms-2" onclick="removeSelectedProduct(${index})">×</button>
+                </span>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    function removeSelectedProduct(index) {
+        selectedProducts.splice(index, 1);
+        updateSelectedServicesList();
+        updateTotalPrice();
+        updateHiddenInput();
+    }
+
+   function updateTotalPrice() {
+        let total = 0, gstTotal = 0;
+        selectedProducts.forEach(p => {
+            total += p.price * p.quantity;
+            if (gstEnabled) {
+                gstTotal += p.price * p.quantity * (p.gst / 100);
+            }
+        });
+
+        document.getElementById('total_price').value = total.toFixed(2);
+        document.getElementById('gst_price').value = gstEnabled ? gstTotal.toFixed(2) : '0.00';
+        document.getElementById('total_with_gst').value = (total + (gstEnabled ? gstTotal : 0)).toFixed(2);
+    }
+
+
+    function updateHiddenInput() {
+        document.getElementById('selected_products_json').value = JSON.stringify(selectedProducts);
+    }
+    // function updateHiddenInput() {
+    //     const hiddenInput = document.getElementById('selected_products_json');
+    //     hiddenInput.value = JSON.stringify(selectedProducts);
+
+    //     // Debug log
+    //     console.log("selected_products_json:", hiddenInput.value);
+    // }
+
+</script>
+
+<!-- Customer type but in quotation form -->
+<script>
+function toggleOrgFieldsByCustomerType() {
+    const customerTypeInput = document.getElementById("view_customer_type");
+    if (!customerTypeInput) return;
+
+    const customerType = customerTypeInput.value.trim();
+    const orgFields = document.querySelectorAll(".org-fields");
+
+    const show = (customerType === "Organization");
+    orgFields.forEach(el => {
+        el.style.display = show ? "block" : "none";
+    });
+}
+
+// Run on page load + when dropdown changes
+document.addEventListener("DOMContentLoaded", function () {
+    toggleOrgFieldsByCustomerType();
+
+    const customerTypeInput = document.getElementById("view_customer_type");
+    if (customerTypeInput) {
+        customerTypeInput.addEventListener("change", toggleOrgFieldsByCustomerType);
+    }
+});
+</script>
+<!-- Customer details -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const customerIdField = document.getElementById("customer_id");
+            const contactInput = document.getElementById("primary_contact");
+            const emailField = document.getElementById("primary_email");
+            const nameField = document.getElementById("customer_name");
+            const soldAddressField = document.getElementById("sold_address");
+            const soldStateSelect = document.getElementById("sold_state_select");
+            
+
+            const shipAddressField = document.getElementById("ship_address");
+            const shiftStateSelect = document.getElementById("shift_state_select");
+            const customerTypeField = document.querySelector('select[name="customer_type"]');
+            const or_nameField = document.querySelector('input[name="or_name"]');
+            const or_contactField = document.querySelector('input[name="or_contact"]');
+
+            contactInput.addEventListener('blur', function () {
+                const contactNo = this.value.trim();
+                if (!contactNo) return;
+
+                fetch(`/get_customer_details/?contact_no=${encodeURIComponent(contactNo)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Customer not found');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+
+                        customerIdField.value = data.customer_id || '';
+
+                        if (!emailField.value && data.customer_email) {
+                            emailField.value = data.customer_email;
+                        }
+
+                        if (!nameField.value && data.customer_full_name) {
+                            nameField.value = data.customer_full_name;
+                        }
+
+                        if (!soldAddressField.value && data.soldtopartyaddress) {
+                            soldAddressField.value = `${data.soldtopartyaddress}, ${data.sold_city} - ${data.sold_pincode}`;
+                            soldAddressField.style.borderLeft = "4px solid #03AED2";
+                            soldAddressField.title = "Auto-filled from customer records";
+                            setTimeout(() => {
+                                soldAddressField.style.borderLeft = "";
+                                soldAddressField.title = "";
+                            }, 4000);
+                        }
+
+                        if (data.sold_state) {
+                            soldStateSelect.value = data.sold_state;
+                        }
+
+                        if (!shipAddressField.value && data.shifttopartyaddress) {
+                            shipAddressField.value = `${data.shifttopartyaddress}, ${data.city} - ${data.pincode}`;
+                        }
+
+                        if (data.state) {
+                            shiftStateSelect.value = data.state;
+                        }
+                        if (!customerTypeField.value && data.customer_type) {
+                            customerTypeField.value = data.customer_type;
+                            toggleOrgFieldsByCustomerType(); 
+                        }
+
+                        if (!or_nameField.value && data.or_name) {
+                            or_nameField.value = data.or_name;
+                        }
+
+                        if (!or_contactField.value && data.or_contact) {
+                            or_contactField.value = data.or_contact;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>  
+
+<!-- Branch details -->
+    <script>
+        function fetchBranchDetails(branchId) {
+            if (!branchId) {
+                // Clear all fields if no branch is selected
+                document.getElementById('branch_contact_1').value = '';
+                document.getElementById('branch_email_1').value = '';
+                document.getElementById('branch_gst').value = '';
+                document.getElementById('branch_pan').value = '';
+                document.getElementById('branch_address').value = '';
+                return;
+            }
+
+            fetch(`/get_branch_details/${branchId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Fill in the branch details
+                    document.getElementById('branch_contact_1').value = data.contact_1 || '';
+                    document.getElementById('branch_email_1').value = data.email_1 || '';
+                    document.getElementById('branch_gst').value = data.gst_number || '';
+                    document.getElementById('branch_pan').value = data.pan_number || '';
+                    document.getElementById('branch_address').value = data.full_address || '';
+                })
+                .catch(error => {
+                    console.error('Error fetching branch details:', error);
+                    alert('Error fetching branch details');
+                });
+        }
+    </script>
+
+    <!-- ✅ Do NOT remove this sidebar toggle logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow && otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    if (submenu) {
+                        submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+                        if (arrow) arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+        let globalStateMap = {}; // Global state map
+        function fetchQuotationDetails() {
+            const quotationNo = document.getElementById('quotationNo').value;
+            if (!quotationNo) return;
+
+            fetch(`/get_quotation_details_by_no/?quotation_no=${encodeURIComponent(quotationNo)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Branch Info
+                    document.getElementById('branch_name').value = data.branch_name || '';
+                    document.getElementById('branch_contact_1').value = data.branch_contact_1 || '';
+                    document.getElementById('branch_email_1').value = data.branch_email_1 || '';
+                    document.getElementById('branch_gst').value = data.branch_gst || '';
+                    document.getElementById('branch_pan').value = data.branch_pan || '';
+                    document.getElementById('branch_address').value = `${data.branch_address},${data.state},${data.code}`;
+
+                    // Customer Info
+                    document.getElementById('customer_name').value = data.fullname || '';
+                    document.getElementById('primary_contact').value = data.primarycontact || '';
+                    document.getElementById('primary_email').value = data.primaryemail || '';
+                    document.getElementById('view_customer_type').value = data.customer_type || '';
+                    document.getElementById('or_name').value = data.or_name || '';
+                    document.getElementById('or_contact').value = data.or_contact || '';
+                    document.getElementById('sold_address').value =
+                        `${data.soldtopartyaddress}, ${data.soldtopartycity}, ${data.soldtopartystate}, ${data.soldtopartypostal} `;
+                    document.getElementById('ship_address').value =
+                        `${data.shifttopartyaddress}, ${data.shifttopartycity}, ${data.shifttopartystate}, ${data.shifttopartypostal} `;
+                    toggleOrgFieldsByCustomerType();
+                    // ✅ Bank Account (populate dynamically)
+                    const bankDropdown = document.getElementById('bank_id');
+                    bankDropdown.innerHTML = '<option value="">Select Bank Account</option>';
+                    if (data.bank && Array.isArray(data.bank)) {
+                        data.bank.forEach(bank => {
+                            const option = document.createElement('option');
+                            option.value = bank.id;
+                            option.text = `${bank.bank_name} - ${bank.account_number}`;
+                            bankDropdown.appendChild(option);
+                        });
+                    }
+
+                    // Populate State Dropdowns
+                    populateStateDropdowns(data.state_map, data.soldtopartystate, data.shifttopartystate);
+
+                    // Product Table Rendering
+                    const productHead = document.querySelector('#product-table-head');
+                    const productBody = document.querySelector('#product-table-body');
+
+                    function renderTableHeader(showGST) {
+                        let headerHTML = `
+                            <tr>
+                                <th>Product Name</th>
+                                <th>HSN/SAC</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Description</th>
+                        `;
+                            
+                        if (showGST) {
+                            headerHTML += `<th>GST (%)</th>`;
+                        }
+
+                        headerHTML += `</tr>`;
+                        productHead.innerHTML = headerHTML;
+                    }
+
+                    function renderProductRows(products, showGST) {
+                        productBody.innerHTML = ''; // Clear old rows
+                    
+                        products.forEach(prod => {
+                            const gstColumn = showGST
+                                ? `<td><input type="number" class="form-control gst" value="${prod.gst}" readonly></td>`
+                                : '';
+                        
+                            const row = `
+                                <tr>
+                                    <td><input type="text" class="form-control product-name" value="${prod.name}" readonly></td>
+                                    <td><input type="text" class="form-control hsn" placeholder="Enter HSN/SAC number"></td>
+                                    <td><input type="number" class="form-control price" value="${parseFloat(prod.price).toFixed(2)}" readonly></td>
+                                    <td><input type="number" class="form-control quantity" value="${parseFloat(prod.quantity).toFixed(2)}" readonly></td>
+                                    <td><input type="text" class="form-control unit" value="${prod.unit}" readonly></td>
+                                    <td><input type="text" class="form-control description" value="${prod.description}" readonly></td>
+                                    ${gstColumn}
+                                </tr>
+                            `;
+                            productBody.insertAdjacentHTML('beforeend', row);
+                        });
+                    }
+
+                    // Example usage after fetching data
+                    renderTableHeader(data.apply_gst == 1);
+                    renderProductRows(data.product, data.apply_gst == 1);
+
+                    // Calculate total quantity
+                    const totalQuantity = data.product.reduce((sum, item) => {
+                        return sum + (parseFloat(item.quantity) || 0);
+                    }, 0);
+
+                    // GST & Totals display logic
+                    if (data.apply_gst == 1) {
+                        // GST is applied
+                        if (data.igst > 0) {
+                            // IGST case
+                            document.getElementById('gstHeader1').innerHTML = 'IGST';
+                            document.getElementById('gstValues1').innerText = data.igst || 0;
+                            document.getElementById('gstHeader2').innerHTML = '';
+                            document.getElementById('gstValues2').innerText = '';
+                        } else {
+                            // CGST + SGST case
+                            document.getElementById('gstHeader1').innerHTML = 'CGST';
+                            document.getElementById('gstValues1').innerText = data.cgst || 0;
+                            document.getElementById('gstHeader2').innerHTML = 'SGST';
+                            document.getElementById('gstValues2').innerText = data.sgst || 0;
+                        }
+                    } else {
+                        // No GST — hide GST headers & values
+                        document.getElementById('gstHeader1').innerHTML = '';
+                        document.getElementById('gstValues1').innerText = '';
+                        document.getElementById('gstHeader2').innerHTML = '';
+                        document.getElementById('gstValues2').innerText = '';
+                    }
+
+                    document.getElementById('grand_total').innerText = data.total || 0;
+                    document.getElementById('grand_total').value = data.total || 0;
+                    document.getElementById('totalQuantity').innerText = totalQuantity || 0;
+                })
+                .catch(err => console.error('Fetch error:', err));
+        }
+
+
+        function populateStateDropdowns(stateMap, soldState, shiftState) {
+            globalStateMap = stateMap;
+
+            const soldSelect = document.getElementById('sold_state_select');
+            const shiftSelect = document.getElementById('shift_state_select');
+
+            soldSelect.innerHTML = '<option value="">Select State</option>';
+            shiftSelect.innerHTML = '<option value="">Select State</option>';
+
+            Object.keys(stateMap).forEach(stateName => {
+                const soldOption = new Option(stateName, stateName);
+                const shiftOption = new Option(stateName, stateName);
+
+                if (stateName === soldState) soldOption.selected = true;
+                if (stateName === shiftState) shiftOption.selected = true;
+
+                soldSelect.appendChild(soldOption);
+                shiftSelect.appendChild(shiftOption);
+            });
+
+            updateStateCode('sold');
+            updateStateCode('shift');
+        }
+
+        function updateStateCode(type) {
+            const select = document.getElementById(`${type}_state_select`);
+            const codeInput = document.getElementById(`${type}_state_code`);
+            const selected = select.value;
+
+            if (selected && globalStateMap[selected]) {
+                codeInput.value = globalStateMap[selected].code;
+            } else {
+                codeInput.value = '';
+            }
+        }
+
+    </script>
+
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const products = [];
+            document.querySelectorAll("#product-table-body tr").forEach(row => {
+                products.push({
+                    name: row.querySelector(".product-name")?.value || "",
+                    hsn: row.querySelector(".hsn")?.value || "",
+                    price: parseFloat(row.querySelector(".price")?.value || 0),
+                    quantity: parseFloat(row.querySelector(".quantity")?.value || 0),
+                    unit: row.querySelector(".unit")?.value || "",
+                    gst: parseFloat(row.querySelector(".gst")?.value || 0),
+                    description: row.querySelector(".description")?.value || ""
+                });
+            });
+
+            document.getElementById("product_data").value = JSON.stringify(products);
+        });
+    </script>
+    </div>
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top: 150px;" >
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

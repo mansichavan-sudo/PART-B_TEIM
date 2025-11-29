@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Confirm Delete - {{ person.full_name }}</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    body {
+       min-height: 100vh !important;
+      font-family: 'Segoe UI', sans-serif !important;
+    }
+
+    .delete-card {
+      background-color: white !important;
+      border-radius: 20px !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+      padding: 40px !important;
+      width: 100% !important;
+      text-align: center !important;
+      animation: fadeIn 1s ease !important;
+    }
+
+    .delete-icon {
+      font-size: 3rem !important;
+      color: #dc3545 !important;
+      margin-bottom: 20px !important;
+    }
+
+    .btn-delete {
+      background-color: #dc3545 !important;
+      border: none !important;
+    }
+
+    .btn-delete:hover {
+      background-color: #c82333 !important;
+    }
+
+    .btn-cancel {
+      background-color: #006b1c !important;
+      color: white !important;
+    }
+
+    .btn-cancel:hover {
+      background-color: #068a2e !important;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'sidebar.html' %}
+
+<div class="main" style="min-height: 100vh;">
+    <div class="container   mb-5" style="margin-top: 100px !important;">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6" data-aos="zoom-in">
+        <span onclick="window.location.href='/index'"
+                    style="float: right; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i
+                        class="fas fa-house-chimney ml-5 mt-3"></i></span>
+        <div class="delete-card">
+          
+              
+          <div class="delete-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <h3 class="text-danger mb-3">Are you sure?</h3>
+          <p class="mb-4 text-dark">You are about to delete <strong>{{ person.full_name }}</strong>. This action cannot be undone.</p>
+
+          <form method="post">
+            {% csrf_token %}
+            <div class="row mb-2">
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-delete btn-lg w-100 mt-2">
+                  <i class="bi bi-trash"></i> Yes, Delete
+                </button>
+              </div>
+                            <div class="col-md-6">
+                <a href="{% url 'sales_person_list' %}" class="btn btn-cancel btn-lg w-100 mt-2">
+                  <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+              </div>
+            </div>
+        
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Footer -->
+  <div class="container-fluid footer" style="background-color: #f7f7f7 !important; width:100% !important; margin-top:200px !important;">
+    <div class="row p-3">
+      <div class="col-md-12 text-center">
+        <p style="margin: 0; font-weight: 600; color:#000000 !important;">
+          © 2025. Powered by
+          <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://www.chronoanalytics.in/" style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics Solution</a>
+          All Rights Reserved.
+        </p>
+      </div>
+      <div class="col-md-12 text-center">
+        <p style="font-weight: 600; color:#000000 !important;">
+          © 2025. Marketed by
+          <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://teim.in/" style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+          All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AOS Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+        const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+        let deleteUrl = '';
+
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                deleteUrl = this.getAttribute('href');
+                confirmationModal.style.display = 'block';
+            });
+        });
+
+        confirmDeleteButton.addEventListener('click', function () {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
+            }
+        });
+
+        cancelDeleteButton.addEventListener('click', function () {
+            confirmationModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target == confirmationModal) {
+                confirmationModal.style.display = 'none';
+            }
+        });
+
+        function openModal(service_id) {
+            fetch(`/get_service_details/${service_id}/`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('modal-content').innerHTML = html;
+                    document.getElementById('modal').classList.add('active');
+                });
+
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>

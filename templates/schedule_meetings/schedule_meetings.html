@@ -1,0 +1,180 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule a Meeting</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 100px auto;
+            background-color: #ffffff;
+            padding: 50px 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        h2 {
+            font-size: 30px;
+            font-weight: 600;
+            color: #444 !important;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            box-shadow: 0 6px 16px rgba(0, 86, 179, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            font-weight: 500;
+            display: none; /* Hidden by default */
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+
+<div class="container">
+    <h2>Schedule a Meeting</h2>
+
+    <!-- Calendly inline widget -->
+    <div class="calendly-inline-widget" data-url="https://calendly.com/connectteim" style="min-width:320px;height:700px;"></div>
+    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+    <div style="text-align: center; margin-top: 40px;">
+        <button class="btn btn-primary" onclick="scheduleMeeting()">Return to Dashboard</button>
+    </div>
+</div>
+
+<!-- Notification message -->
+<div class="notification" id="notification">
+    Meeting successfully scheduled!
+</div>
+
+<script>
+    // Redirects to the index page and passes a flag to show notification
+    function scheduleMeeting() {
+        window.location.href = '/index?schedule_success=1';
+    }
+</script>
+<div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%;  ">
+    <div class="row p-3">
+        <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+            © 2025. Powered by
+            <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                style="height: 20px; vertical-align: middle;">
+            <a href="http://www.chronoanalytics.in/"
+                style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                Solution</a>
+            All Rights Reserved.
+        </p>
+      </div>
+        <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+            © 2025. Marketed by
+            <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+            <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+            All Rights Reserved.
+        </p></div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+
+    $(document).ready(function() {
+        function calculateTotalAmount() {
+            var quantity = parseFloat($("#uquantity").val()) || 0;
+            var price = parseFloat($("#uprice").val()) || 0;
+            var discount = parseFloat($("#discount").val()) || 0;
+            var total_amount = quantity * price;
+            $("#utotal_amount").val(total_amount.toFixed(2));
+            $("#hidden_total_amount").val(total_amount.toFixed(2)); // Update hidden input
+            
+            if ($("#gst").is(":checked")) {
+                var gst = total_amount * 0.18;
+                var total_amount_with_gst = total_amount + gst - discount;
+                $("#utotal_amount_with_gst").val(total_amount_with_gst.toFixed(2));
+                $("#hidden_total_amount_with_gst").val(total_amount_with_gst.toFixed(2)); // Update hidden input
+            } else {
+                var total_amount_with_gst = total_amount - discount;
+                $("#utotal_amount_with_gst").val(total_amount_with_gst.toFixed(2));
+                $("#hidden_total_amount_with_gst").val(total_amount_with_gst.toFixed(2)); // Update hidden input
+            }
+        }
+
+        $("#uquantity, #uprice, #discount, #gst").on("input change", calculateTotalAmount);
+        calculateTotalAmount();
+    });
+
+
+</script>
+</body>
+</html>

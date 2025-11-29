@@ -1,0 +1,1335 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static '\images' %}">
+  <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+  <script src="{% static 'js/script.js' %}"></script>
+
+
+  <title>Lead Management</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f0fbff;
+      color: #333;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+
+    }
+
+    .card:hover {
+      box-shadow: 0px 0px 10px rgb(255, 255, 255);
+    }
+
+    .card-registration {
+      border-radius: 15px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 20px rgba(3, 174, 210, 0.2);
+      width: 100%;
+      max-width: 900px;
+
+      margin-top: 80px;
+    }
+
+    label{
+      margin-top: 0px !important;
+      
+    }
+
+    h3 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      color: #03AED2;
+      margin-bottom: 30px;
+    }
+
+    h6 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 20px;
+      color: #007a99;
+      text-align: center;
+    }
+
+    .form-outline input,
+    .form-outline textarea,
+    .form-outline select {
+      border-radius: 10px;
+      border: 1px solid #b2e4ef;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 12px;
+    }
+
+    .form-outline input:focus,
+    .form-outline textarea:focus,
+    .form-outline select:focus {
+      border-color: #03AED2;
+      outline: none;
+      box-shadow: 0 0 8px rgba(3, 174, 210, 0.2);
+    }
+
+    .btn-info {
+      background-color: #03AED2;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-info:hover {
+      background-color: #027994;
+      box-shadow: 0 4px 15px rgba(3, 174, 210, 0.4);
+    }
+
+    .container {
+      margin-top: 30px;
+    }
+
+    .card-body {
+      padding: 40px;
+      min-height: 510px;
+    }
+
+    @media (max-width: 768px) {
+
+      .card {
+        margin-left: 0;
+
+        max-width: 100%;
+        padding: 20px;
+        /* Add some padding for better appearance */
+      }
+
+      .open-sidebar .card {
+        margin-left: 300px;
+        /* Adjust content when sidebar is open */
+      }
+
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+
+  {% include 'sidebar.html' %}
+
+  <div class="main-container">
+    <div class="card    card-registration ">
+      <div class="card-body">
+        <span onclick="window.location.href='/index'"
+          style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i
+            class="fas fa-house-chimney"></i></span>
+        <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;"
+          class="mb-4">X</span>
+
+        <h3 class="mt-4 mb-3" style=" margin-top: 5px;font-weight: 600;">Lead Management</h3>
+        <form method="POST" id="leadForm">
+          {% csrf_token %}
+
+
+          <!-- Step 1: Lead Source Info -->
+          <div class="form-step active">
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <label>Phone Number <span class="star">*</span></label>
+                <input type="text" name="primarycontact" class="form-control" pattern="\d{10}" required />
+              </div>
+              <div class="col-md-6 mb-4">
+
+                <label>Customer Name<span class="star">*</span></label>
+                <input type="text" name="customername" class="form-control" required />
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <label>Secondary Phone Number</label>
+                <input type="text" name="secondarycontact" class="form-control" pattern="\d{10}" />
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Customer Email</label>
+                <input type="email" name="customeremail" class="form-control"  />
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Customer Type<span class="star">*</span></label>
+                <select name="customer_type" class="form-control" id="customer_type_select" onchange="toggleOrganizationFields()">
+                  <option value="Individual" selected>Individual</option>
+                  <option value="Organization">Organization</option>
+                </select>
+              </div>
+
+              <div class="or_name col-md-6 mb-4" style="display: none;">
+                <label>Name <span class="star">*</span></label>
+                <input type="text" name="or_name"  class="form-control">
+              
+                <label>Contact <span class="star">*</span></label>
+                <input type="number" name="or_contact" class="form-control">
+              </div>
+
+
+
+              <div class="col-md-6 mb-4">
+                <label>Select State <span class="star">*</span></label>
+                <select id="state" name="state" class="form-control" required>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Assam">Assam</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Chhattisgarh">Chhattisgarh</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Himachal Pradesh">Himachal Pradesh</option>
+                  <option value="Jharkhand">Jharkhand</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Manipur">Manipur</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Sikkim">Sikkim</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Tripura">Tripura</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
+                  <option value="West Bengal">West Bengal</option>
+
+                  <!-- Add all Indian states here -->
+                </select>
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>City <span class="star">*</span></label>
+                <select id="city" name="city" class="form-control" required>
+                  <option value="">Please select a state first</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Address<span class="star">*</span></label>
+                <textarea name="customeraddress" class="form-control" rows="1" required></textarea>
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Location (Google Maps Link)</label>
+                <input type="url" name="location" class="form-control" />
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <label>Enquiry Date<span class="star">*</span></label>
+                <input type="date" name="enquirydate" id="enquirydate" class="form-control" required />
+              </div>
+
+
+            </div>
+          </div>
+
+          <!-- Step 2:  -->
+          <div class="form-step">
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <label for="branch">Select Branch<span class="star">*</span></label>
+                <select class="form-control" name="branch" required>
+                  <option value="">Select Branch</option>
+                  <option value="Bhiwandi">Bhiwandi</option>
+                  <option value="Indore">Indore</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Nagpur">Nagpur</option>
+                  <option value="Amravti">Amravti</option>
+                  <option value="Aurangabad">Aurangabad</option>
+                  <option value="Baramati">Baramati</option>
+                  <option value="Pune">Pune</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Source of Lead<span class="star">*</span></label>
+                <select name="sourceoflead" class="form-control" required>
+                  <option value="">Source of Lead</option>
+                  <option value="Google">Google</option>
+                  <option value="Justdial">Justdial</option>
+                  <option value="Indianmart">Indianmart</option>
+                  <option value="Customer Reference">Customer Reference</option>
+                  <option value="BNI">BNI</option>
+                  <option value="Lineclub">Lionclub</option>
+                  <option value="Employee Reference">Employee Reference</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+
+              <div class="col-md-6 mb-4">
+                <label>Type of Lead<span class="star">*</span></label>
+                <select name="typeoflead" class="form-control" required>
+                  <option value="">Type of Lead</option>
+                  <option value="Hot">Hot</option>
+                  <option value="Warm">Warm</option>
+                  <option value="Cold">Cold</option>
+                  <option value="NotInterested">Not Interested</option>
+                  <option value="LossOfOrder">Loss Of Order</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Customer Segment<span class="star">*</span></label>
+                <select name="customersegment" class="form-control" required>
+                  <option value="">Customer Segment</option>
+                  <option value="Residential">Residential</option>
+                  <option value="Industrial / Commercial">Industrial / Commercial</option>
+                  <!-- <option value="Commercial">Commercial</option> -->
+                  <option value="Institutional">Institutional</option>
+                  <option value="Irrelevant Lead">Irrelevant Lead</option>
+                </select>
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <label>Salesperson<span class="star">*</span></label>
+                <select name="salesperson" class="form-control" >
+                  <option value="">-- Select Sales Person --</option>
+                  {% for person in salespersons %}
+                  <option value="{{ person.id }}">{{ person.full_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <label>Contacted By<span class="star">*</span></label>
+                <input type="text" name="contactedby" class="form-control" required />
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Main Category<span class="star">*</span></label>
+                <input type="text" name="maincategory" class="form-control" required />
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>Sub Category<span class="star">*</span></label>
+                <input type="text" name="subcategory" class="form-control" required />
+              </div>
+              <div class="col-md-6 mb-4">
+                <label>First Follow-up Taken<span class="star">*</span></label>
+                <input type="date" name="firstfollowupdate" class="form-control" required />
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+          <!-- Navigation Buttons -->
+          <div class="text-center mt-4 mb-3">
+            <a href="/display_lead_management" class="btn btn-info mt-2 vwb" style="width: 150px;">View
+              Records</a>
+            <button type="button" class="btn btn-secondary mt-2" id="prevBtn" style="width: 150px;">Previous</button>
+            <button type="button" class="btn btn-primary ml-2 mt-2" id="nextBtn" style="width: 150px;">Next</button>
+            <input type="submit" class="btn btn-success ml-2 mt-2" id="submitBtn" style="width: 150px;"
+              value="Submit" />
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- organiization dropdown -->
+<script>
+    function toggleOrganizationFields() {
+      const selectValue = document.getElementById('customer_type_select').value;
+      const orgFields = document.querySelector('.or_name');
+      if (selectValue === 'Organization') {
+        orgFields.style.display = 'block';
+      } else {
+        orgFields.style.display = 'none';
+      }
+    }
+
+    // Optional: Run on page load if editing form
+    window.onload = function () {
+      toggleOrganizationFields();
+    }
+</script>
+  <script>
+    const stateCityMap = {
+      "Andhra Pradesh": [
+        "Alluri Sitharama Raju",
+        "Anakapalli",
+        "Anantapuramu",
+        "Annamayya",
+        "Bapatla",
+        "Chittoor",
+        "Dr. B.R. Ambedkar Konaseema",
+        "East Godavari",
+        "Eluru",
+        "Guntur",
+        "Kakinada",
+        "Krishna",
+        "Kurnool",
+        "Nandyal",
+        "NTR",
+        "Palnadu",
+        "Parvathipuram Manyam",
+        "Prakasam",
+        "Sri Potti Sriramulu Nellore",
+        "Sri Sathya Sai",
+        "Srikakulam",
+        "Tirupati",
+        "Visakhapatnam",
+        "Vizianagaram",
+        "West Godavari",
+        "YSR Kadapa"
+      ],
+      "Arunachal Pradesh": [
+        "Anjaw",
+        "Bichom",
+        "Changlang",
+        "Dibang Valley",
+        "East Kameng",
+        "East Siang",
+        "Kamle",
+        "Kra Daadi",
+        "Kurung Kumey",
+        "Lepa-Rada",
+        "Lohit",
+        "Longding",
+        "Lower Dibang Valley",
+        "Lower Siang",
+        "Lower Subansiri",
+        "Namsai",
+        "Pakke-Kessang",
+        "Papum Pare",
+        "Shi Yomi",
+        "Siang",
+        "Tawang",
+        "Tirap",
+        "Upper Siang",
+        "Upper Subansiri",
+        "West Kameng",
+        "West Siang",
+        "Keyi Panyor",
+        "Itanagar Capital Complex"
+      ],
+      "Assam": [
+        "Baksa",
+        "Barpeta",
+        "Biswanath",
+        "Bongaigaon",
+        "Cachar",
+        "Charaideo",
+        "Chirang",
+        "Darrang",
+        "Dhemaji",
+        "Dhubri",
+        "Dibrugarh",
+        "Dima Hasao",
+        "Goalpara",
+        "Golaghat",
+        "Hailakandi",
+        "Hojai",
+        "Jorhat",
+        "Kamrup Metropolitan",
+        "Kamrup Rural",
+        "Karbi Anglong",
+        "Karimganj",
+        "Kokrajhar",
+        "Lakhimpur",
+        "Majuli",
+        "Morigaon",
+        "Nagaon",
+        "Nalbari",
+        "Sivasagar",
+        "Sonitpur",
+        "South Salmara-Mankachar",
+        "Tinsukia",
+        "Udalguri",
+        "West Karbi Anglong",
+        "Tamulpur",
+        "Bajali"
+      ],
+      "Bihar": [
+        "Araria",
+        "Arwal",
+        "Aurangabad",
+        "Banka",
+        "Begusarai",
+        "Bhagalpur",
+        "Bhojpur",
+        "Buxar",
+        "Darbhanga",
+        "East Champaran",
+        "Gaya",
+        "Gopalganj",
+        "Jamui",
+        "Jehanabad",
+        "Kaimur",
+        "Katihar",
+        "Khagaria",
+        "Kishanganj",
+        "Lakhisarai",
+        "Madhepura",
+        "Madhubani",
+        "Munger",
+        "Muzaffarpur",
+        "Nalanda",
+        "Nawada",
+        "Patna",
+        "Purnia",
+        "Rohtas",
+        "Saharsa",
+        "Samastipur",
+        "Saran",
+        "Sheikhpura",
+        "Sheohar",
+        "Sitamarhi",
+        "Siwan",
+        "Supaul",
+        "Vaishali",
+        "West Champaran"
+      ],
+      "Chhattisgarh": [
+        "Balod",
+        "Baloda Bazar",
+        "Balrampur",
+        "Bastar",
+        "Bemetara",
+        "Bijapur",
+        "Bilaspur",
+        "Dantewada",
+        "Dhamtari",
+        "Durg",
+        "Gariaband",
+        "Gaurela-Pendra-Marwahi",
+        "Janjgir-Champa",
+        "Jashpur",
+        "Kabirdham",
+        "Kanker",
+        "Kondagaon",
+        "Korba",
+        "Koriya",
+        "Mahasamund",
+        "Mungeli",
+        "Narayanpur",
+        "Raigarh",
+        "Raipur",
+        "Rajnandgaon",
+        "Sukma",
+        "Surajpur",
+        "Surguja",
+        "Khairagarh-Chhuikhadan-Gandai",
+        "Mohla-Manpur-Ambagarh Chowki",
+        "Sarangarh-Bilaigarh",
+        "Manendragarh-Chirmiri-Bharatpur"
+      ],
+      "Goa": [
+        "North Goa",
+        "South Goa"
+      ],
+      "Gujarat": [
+        "Ahmedabad",
+        "Amreli",
+        "Anand",
+        "Aravalli",
+        "Banaskantha",
+        "Bharuch",
+        "Bhavnagar",
+        "Botad",
+        "Chhota Udaipur",
+        "Dahod",
+        "Dang",
+        "Devbhoomi Dwarka",
+        "Gandhinagar",
+        "Gir Somnath",
+        "Jamnagar",
+        "Junagadh",
+        "Kheda",
+        "Kutch",
+        "Mahisagar",
+        "Mehsana",
+        "Morbi",
+        "Narmada",
+        "Navsari",
+        "Panchmahal",
+        "Patan",
+        "Porbandar",
+        "Rajkot",
+        "Sabarkantha",
+        "Surat",
+        "Surendranagar",
+        "Tapi",
+        "Vadodara",
+        "Valsad"
+      ],
+      "Haryana": [
+        "Ambala",
+        "Bhiwani",
+        "Charkhi Dadri",
+        "Faridabad",
+        "Fatehabad",
+        "Gurugram",
+        "Hisar",
+        "Jhajjar",
+        "Jind",
+        "Kaithal",
+        "Karnal",
+        "Kurukshetra",
+        "Mahendragarh",
+        "Nuh",
+        "Palwal",
+        "Panchkula",
+        "Panipat",
+        "Rewari",
+        "Rohtak",
+        "Sirsa",
+        "Sonipat",
+        "Yamunanagar"
+      ],
+      "Himachal Pradesh": [
+        "Bilaspur",
+        "Chamba",
+        "Hamirpur",
+        "Kangra",
+        "Kinnaur",
+        "Kullu",
+        "Lahaul and Spiti",
+        "Mandi",
+        "Shimla",
+        "Sirmaur",
+        "Solan",
+        "Una"
+      ],
+      "Jharkhand": [
+        "Bokaro",
+        "Chatra",
+        "Deoghar",
+        "Dhanbad",
+        "Dumka",
+        "East Singhbhum",
+        "Garhwa",
+        "Giridih",
+        "Godda",
+        "Gumla",
+        "Hazaribagh",
+        "Jamtara",
+        "Khunti",
+        "Koderma",
+        "Latehar",
+        "Lohardaga",
+        "Pakur",
+        "Palamu",
+        "Ramgarh",
+        "Ranchi",
+        "Sahebganj",
+        "Seraikela Kharsawan",
+        "Simdega",
+        "West Singhbhum"
+      ],
+      "Karnataka": [
+        "Bagalkot",
+        "Ballari",
+        "Belagavi",
+        "Bengaluru Rural",
+        "Bengaluru Urban",
+        "Bidar",
+        "Chamarajanagar",
+        "Chikkaballapur",
+        "Chikkamagaluru",
+        "Chitradurga",
+        "Dakshina Kannada",
+        "Davanagere",
+        "Dharwad",
+        "Gadag",
+        "Hassan",
+        "Haveri",
+        "Kalaburagi",
+        "Kodagu",
+        "Kolar",
+        "Koppal",
+        "Mandya",
+        "Mysuru",
+        "Raichur",
+        "Ramanagara",
+        "Shivamogga",
+        "Tumakuru",
+        "Udupi",
+        "Uttara Kannada",
+        "Vijayapura",
+        "Yadgir"
+      ],
+      "Kerala": [
+        "Alappuzha",
+        "Ernakulam",
+        "Idukki",
+        "Kannur",
+        "Kasaragod",
+        "Kollam",
+        "Kottayam",
+        "Kozhikode",
+        "Malappuram",
+        "Palakkad",
+        "Pathanamthitta",
+        "Thiruvananthapuram",
+        "Thrissur",
+        "Wayanad"
+      ],
+      "Maharashtra": [
+        "Ahmednagar",
+        "Akola",
+        "Amravati",
+        "Aurangabad",
+        "Beed",
+        "Bhandara",
+        "Buldhana",
+        "Chandrapur",
+        "Dhule",
+        "Gadchiroli",
+        "Gondia",
+        "Hingoli",
+        "Jalgaon",
+        "Jalna",
+        "Kolhapur",
+        "Latur",
+        "Mumbai City",
+        "Mumbai Suburban",
+        "Nagpur",
+        "Nanded",
+        "Nandurbar",
+        "Nashik",
+        "Osmanabad",
+        "Palghar",
+        "Parbhani",
+        "Pune",
+        "Raigad",
+        "Ratnagiri",
+        "Sangli",
+        "Satara",
+        "Sindhudurg",
+        "Solapur",
+        "Thane",
+        "Wardha",
+        "Washim",
+        "Yavatmal"
+      ],
+
+      "Madhya Pradesh": [
+        "Agar Malwa",
+        "Alirajpur",
+        "Anuppur",
+        "Ashoknagar",
+        "Balaghat",
+        "Barwani",
+        "Betul",
+        "Bhind",
+        "Bhopal",
+        "Burhanpur",
+        "Chhatarpur",
+        "Chhindwara",
+        "Damoh",
+        "Datia",
+        "Dewas",
+        "Dhar",
+        "Dindori",
+        "Guna",
+        "Gwalior",
+        "Harda",
+        "Hoshangabad",
+        "Indore",
+        "Jabalpur",
+        "Jhabua",
+        "Katni",
+        "Khandwa",
+        "Khargone",
+        "Mandla",
+        "Mandsaur",
+        "Morena",
+        "Narsinghpur",
+        "Neemuch",
+        "Niwari",
+        "Panna",
+        "Raisen",
+        "Rajgarh",
+        "Ratlam",
+        "Rewa",
+        "Sagar",
+        "Satna",
+        "Sehore",
+        "Seoni",
+        "Shahdol",
+        "Shajapur",
+        "Sheopur",
+        "Shivpuri",
+        "Sidhi",
+        "Singrauli",
+        "Tikamgarh",
+        "Ujjain",
+        "Umaria",
+        "Vidisha"
+      ],
+      "Manipur": [
+        "Bishnupur",
+        "Chandel",
+        "Churachandpur",
+        "Imphal East",
+        "Imphal West",
+        "Jiribam",
+        "Kakching",
+        "Kamjong",
+        "Kangpokpi",
+        "Noney",
+        "Pherzawl",
+        "Senapati",
+        "Tamenglong",
+        "Tengnoupal",
+        "Thoubal",
+        "Ukhrul"
+      ],
+      "Meghalaya": [
+        "East Garo Hills",
+        "East Jaintia Hills",
+        "East Khasi Hills",
+        "North Garo Hills",
+        "Ri-Bhoi",
+        "South Garo Hills",
+        "South West Garo Hills",
+        "South West Khasi Hills",
+        "West Garo Hills",
+        "West Jaintia Hills",
+        "West Khasi Hills"
+      ],
+      "Mizoram": [
+        "Aizawl",
+        "Champhai",
+        "Hnahthial",
+        "Khawzawl",
+        "Kolasib",
+        "Lawngtlai",
+        "Lunglei",
+        "Mamit",
+        "Saiha",
+        "Saitual",
+        "Serchhip"
+      ],
+      "Nagaland": [
+        "Chümoukedima",
+        "Dimapur",
+        "Kiphire",
+        "Kohima",
+        "Longleng",
+        "Mokokchung",
+        "Mon",
+        "Niuland",
+        "Noklak",
+        "Peren",
+        "Phek",
+        "Shamator",
+        "Tseminyü",
+        "Tuensang",
+        "Wokha",
+        "Zünheboto"
+      ],
+      "Odisha": [
+        "Angul",
+        "Balangir",
+        "Balasore",
+        "Bargarh",
+        "Bhadrak",
+        "Boudh",
+        "Cuttack",
+        "Deogarh",
+        "Dhenkanal",
+        "Gajapati",
+        "Ganjam",
+        "Jagatsinghpur",
+        "Jajpur",
+        "Jharsuguda",
+        "Kalahandi",
+        "Kandhamal",
+        "Kendrapara",
+        "Kendujhar",
+        "Khordha",
+        "Koraput",
+        "Malkangiri",
+        "Mayurbhanj",
+        "Nabarangpur",
+        "Nayagarh",
+        "Nuapada",
+        "Puri",
+        "Rayagada",
+        "Sambalpur",
+        "Subarnapur",
+        "Sundargarh"
+      ],
+      "Punjab": [
+        "Amritsar",
+        "Barnala",
+        "Bathinda",
+        "Faridkot",
+        "Fatehgarh Sahib",
+        "Fazilka",
+        "Ferozepur",
+        "Gurdaspur",
+        "Hoshiarpur",
+        "Jalandhar",
+        "Kapurthala",
+        "Ludhiana",
+        "Malerkotla",
+        "Mansa",
+        "Moga",
+        "Muktsar",
+        "Nawanshahr",
+        "Pathankot",
+        "Patiala",
+        "Rupnagar",
+        "Sangrur",
+        "SAS Nagar",
+        "Tarn Taran"
+      ],
+      "Rajasthan": [
+        "Ajmer",
+        "Alwar",
+        "Banswara",
+        "Baran",
+        "Barmer",
+        "Bharatpur",
+        "Bhilwara",
+        "Bikaner",
+        "Bundi",
+        "Chittorgarh",
+        "Churu",
+        "Dausa",
+        "Dholpur",
+        "Dungarpur",
+        "Hanumangarh",
+        "Jaipur",
+        "Jaisalmer",
+        "Jalore",
+        "Jhalawar",
+        "Jhunjhunu",
+        "Jodhpur",
+        "Karauli",
+        "Kota",
+        "Nagaur",
+        "Pali",
+        "Pratapgarh",
+        "Rajsamand",
+        "Sawai Madhopur",
+        "Sikar",
+        "Sirohi",
+        "Sri Ganganagar",
+        "Tonk",
+        "Udaipur"
+      ],
+      "Sikkim": [
+        "Gangtok",
+        "Gyalshing",
+        "Mangan",
+        "Namchi",
+        "Pakyong",
+        "Soreng"
+      ],
+      "Tamil Nadu": [
+        "Ariyalur",
+        "Chengalpattu",
+        "Chennai",
+        "Coimbatore",
+        "Cuddalore",
+        "Dharmapuri",
+        "Dindigul",
+        "Erode",
+        "Kallakurichi",
+        "Kancheepuram",
+        "Kanniyakumari",
+        "Karur",
+        "Krishnagiri",
+        "Madurai",
+        "Mayiladuthurai",
+        "Nagapattinam",
+        "Namakkal",
+        "Nilgiris",
+        "Perambalur",
+        "Pudukkottai",
+        "Ramanathapuram",
+        "Ranipet",
+        "Salem",
+        "Sivaganga",
+        "Tenkasi",
+        "Thanjavur",
+        "Theni",
+        "Thoothukudi",
+        "Tiruchirappalli",
+        "Tirunelveli",
+        "Tirupathur",
+        "Tiruppur",
+        "Tiruvallur",
+        "Tiruvannamalai",
+        "Tiruvarur",
+        "Vellore",
+        "Viluppuram",
+        "Virudhunagar"
+      ],
+      "Telangana": [
+        "Adilabad",
+        "Bhadradri Kothagudem",
+        "Hanumakonda",
+        "Hyderabad",
+        "Jagtial",
+        "Jangaon",
+        "Jayashankar Bhupalapally",
+        "Jogulamba Gadwal",
+        "Kamareddy",
+        "Karimnagar",
+        "Khammam",
+        "Komaram Bheem Asifabad",
+        "Mahabubabad",
+        "Mahabubnagar",
+        "Mancherial",
+        "Medak",
+        "Medchal–Malkajgiri",
+        "Mulugu",
+        "Nagarkurnool",
+        "Nalgonda",
+        "Narayanpet",
+        "Nirmal",
+        "Nizamabad",
+        "Peddapalli",
+        "Rajanna Sircilla",
+        "Ranga Reddy",
+        "Sangareddy",
+        "Siddipet",
+        "Suryapet",
+        "Vikarabad",
+        "Wanaparthy",
+        "Warangal",
+        "Yadadri Bhuvanagiri"
+      ],
+      "Tripura": [
+        "Dhalai",
+        "Gomati",
+        "Khowai",
+        "North Tripura",
+        "Sepahijala",
+        "South Tripura",
+        "Unakoti",
+        "West Tripura"
+      ],
+      "Uttar Pradesh": [
+        "Agra",
+        "Aligarh",
+        "Ambedkar Nagar",
+        "Amethi",
+        "Amroha",
+        "Auraiya",
+        "Ayodhya",
+        "Azamgarh",
+        "Baghpat",
+        "Bahraich",
+        "Ballia",
+        "Balrampur",
+        "Banda",
+        "Barabanki",
+        "Bareilly",
+        "Basti",
+        "Bhadohi",
+        "Bijnor",
+        "Budaun",
+        "Bulandshahr",
+        "Chandauli",
+        "Chitrakoot",
+        "Deoria",
+        "Etah",
+        "Etawah",
+        "Farrukhabad",
+        "Fatehpur",
+        "Firozabad",
+        "Gautam Buddha Nagar",
+        "Ghaziabad",
+        "Ghazipur",
+        "Gonda",
+        "Gorakhpur",
+        "Hamirpur",
+        "Hapur",
+        "Hardoi",
+        "Hathras",
+        "Jalaun",
+        "Jaunpur",
+        "Jhansi",
+        "Kannauj",
+        "Kanpur Dehat",
+        "Kanpur Nagar",
+        "Kasganj",
+        "Kaushambi",
+        "Kheri",
+        "Kushinagar",
+        "Lalitpur",
+        "Lucknow",
+        "Maharajganj",
+        "Mahoba",
+        "Mainpuri",
+        "Mathura",
+        "Mau",
+        "Meerut",
+        "Mirzapur",
+        "Moradabad",
+        "Muzaffarnagar",
+        "Pilibhit",
+        "Pratapgarh",
+        "Prayagraj",
+        "Raebareli",
+        "Rampur",
+        "Saharanpur",
+        "Sambhal",
+        "Sant Kabir Nagar",
+        "Shahjahanpur",
+        "Shamli",
+        "Shrawasti",
+        "Siddharthnagar",
+        "Sitapur",
+        "Sonbhadra",
+        "Sultanpur",
+        "Unnao",
+        "Varanasi"
+      ],
+      "Uttarakhand": [
+        "Almora",
+        "Bageshwar",
+        "Chamoli",
+        "Champawat",
+        "Dehradun",
+        "Haridwar",
+        "Nainital",
+        "Pauri Garhwal",
+        "Pithoragarh",
+        "Rudraprayag",
+        "Tehri Garhwal",
+        "Udham Singh Nagar",
+        "Uttarkashi"
+      ],
+      "West Bengal": [
+        "Alipurduar",
+        "Bankura",
+        "Birbhum",
+        "Cooch Behar",
+        "Dakshin Dinajpur",
+        "Darjeeling",
+        "Hooghly",
+        "Howrah",
+        "Jalpaiguri",
+        "Jhargram",
+        "Kalimpong",
+        "Kolkata",
+        "Malda",
+        "Murshidabad",
+        "Nadia",
+        "North 24 Parganas",
+        "Paschim Bardhaman",
+        "Paschim Medinipur",
+        "Purba Bardhaman",
+        "Purba Medinipur",
+        "Purulia",
+        "South 24 Parganas",
+        "Uttar Dinajpur"
+      ],
+    };
+
+    document.getElementById('state').addEventListener('change', function () {
+      const selectedState = this.value;
+      const citySelect = document.getElementById('city');
+
+      citySelect.innerHTML = ""; // Clear old options
+
+      if (selectedState && stateCityMap[selectedState]) {
+        const cities = stateCityMap[selectedState];
+        cities.forEach(city => {
+          const option = document.createElement("option");
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      } else {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "Please select a state first";
+        citySelect.appendChild(option);
+      }
+    });
+  </script>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("input[name='primarycontact']").on("blur", function () {
+        var primarycontact = $(this).val();
+        if (primarycontact.length === 10) {
+          $.ajax({
+            url: "",  // same URL, so keep it blank
+            data: {
+              'primarycontact': primarycontact
+            },
+            dataType: 'json',
+            success: function (response) {
+              if (response.status === 'exists') {
+                console.log(response.data);
+                const data = response.data;
+                $("select[name='sourceoflead']").val(data.sourceoflead);
+                $("input[name='salesperson']").val(data.salesperson);
+                $("input[name='customername']").val(data.customername);
+                $("select[name='customersegment']").val(data.customersegment);
+                $("input[name='enquirydate']").val(data.enquirydate);
+                $("input[name='contactedby']").val(data.contactedby);
+                $("input[name='maincategory']").val(data.maincategory);
+                $("input[name='subcategory']").val(data.subcategory);
+                $("input[name='secondarycontact']").val(data.secondarycontact);
+                $("input[name='customeremail']").val(data.customeremail);
+                $("input[name='customeraddress']").val(data.customeraddress);
+                $("input[name='location']").val(data.location);
+                $("input[name='city']").val(data.city);
+                $("select[name='typeoflead']").val(data.typeoflead);
+                $("input[name='firstfollowupdate']").val(data.firstfollowupdate);
+                $("select[name='branch']").val(data.branch);
+              }
+            }
+          });
+        }
+      });
+    });
+  </script>
+
+
+  <script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll(".form-step");
+    const nextBtn = document.getElementById("nextBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function showStep(index) {
+      steps.forEach((step, i) => {
+        step.classList.remove("active");
+        if (i === index) step.classList.add("active");
+      });
+
+      // Update button visibility
+      prevBtn.style.display = index === 0 ? "none" : "inline-block";
+      nextBtn.style.display = index === steps.length - 1 ? "none" : "inline-block";
+      submitBtn.classList.toggle("d-none", index !== steps.length - 1);
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+
+    // Show first step
+    document.addEventListener("DOMContentLoaded", () => {
+      showStep(currentStep);
+    });
+  </script>
+
+
+  <!-- /123 -->
+
+  <script>// Restrict Enquiry Date to yesterday, today & future dates
+    document.addEventListener("DOMContentLoaded", function () {
+      const enquirydateInput = document.getElementById('enquirydate');
+
+      if (enquirydateInput) {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1); // Get yesterday
+
+        // Format to YYYY-MM-DD
+        const minDate = yesterday.toISOString().split('T')[0];
+
+        enquirydateInput.setAttribute('min', minDate); // Set minimum date
+        enquirydateInput.value = today.toISOString().split('T')[0]; // Default to today
+      }
+    });</script>
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+      menuItems.forEach(item => {
+        item.addEventListener('click', function () {
+          const submenu = this.querySelector('.submenu');
+          const arrow = this.querySelector('.arrow-down');
+
+          // Hide all other submenus
+          menuItems.forEach(otherItem => {
+            if (otherItem !== this) {
+              const otherSubmenu = otherItem.querySelector('.submenu');
+              const otherArrow = otherItem.querySelector('.arrow-down');
+              if (otherSubmenu) {
+                otherSubmenu.style.display = 'none';
+                if (otherArrow.classList.contains('arrow-up')) {
+                  otherArrow.classList.remove('arrow-up');
+                }
+              }
+            }
+          });
+
+          // Toggle current submenu
+          if (submenu) {
+            submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+            arrow.classList.toggle('arrow-up');
+          }
+        });
+      });
+    });
+  </script>
+
+  <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:100px;">
+    <div class="row p-3">
+      <div class="col-md-12 text-center">
+        <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+          © 2025. Powered by
+          <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+            style="height: 20px; vertical-align: middle;">
+          <a href="http://www.chronoanalytics.in/"
+            style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+            Solution</a>
+          All Rights Reserved.
+        </p>
+      </div>
+      <div class="col-md-12 text-center">
+        <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+          © 2025. Marketed by
+          <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+          All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

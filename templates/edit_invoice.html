@@ -1,0 +1,384 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+   
+    <title>Customer Details</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0fbff;
+            color: #333;
+        }
+        .main-container {
+            display: flex;
+            justify-content: center;
+            
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+
+        }
+        .card-registration {
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(3, 174, 210, 0.2);
+            width: 100%;
+            max-width: 800px;
+             margin-top: 90px;
+        }
+        h3 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: #03AED2;
+            margin-bottom: 30px;
+        }
+        h6 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            color: #007a99;
+            text-align: center;
+        }
+        .form-outline input {
+            border-radius: 10px;
+            border: 1px solid #b2e4ef;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+        }
+        .form-outline input:focus {
+            border-color: #03AED2;
+            outline: none;
+            box-shadow: 0 0 8px rgba(3, 174, 210, 0.2);
+        }
+        .btn-info {
+            background-color: #03AED2;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .btn-info:hover {
+            background-color: #027994;
+            box-shadow: 0 4px 15px rgba(3, 174, 210, 0.4);
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .card-body {
+            padding: 40px;
+        }
+     
+
+
+        
+        @media (max-width: 768px) {
+            .main-container{
+                margin-top: 30px;
+            }
+            .card {
+                margin-left: 0;
+
+                max-width: 100%;
+                padding: 20px; /* Add some padding for better appearance */
+            }
+
+            .open-sidebar .card {
+                margin-left: 300px; /* Adjust content when sidebar is open */
+            }
+
+        }
+    </style>
+    
+</head>
+<body>
+    {% include 'sidebar.html' %}
+
+    <div class="main-container " style="min-height: 100vh !important;">
+        <div class="card shadow-2-strong card-registration">
+            <div class="card-body">
+                <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i class="fas fa-house-chimney"></i></span>
+                <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4">X</span>
+              
+                <h3 style="  margin-top: 20px;" class="mb-4">Invoice</h3>
+                {% for x in data %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Mode Of Payment</label>
+                                        <input type="text" id="umodeofpayment" class="form-control form-control-lg" placeholder="Mode Of Payment" name="umodeofpayment" value="{{ x.modeofpayment }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Dispatched Through</label>
+                                        <input type="text" id="udispatchedthrough" class="form-control form-control-lg" placeholder="Dispatched Through" name="udispatchedthrough" value="{{ x.dispatchedthrough }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Terms of Delivery</label>
+                                        <input type="text" id="utermofdelivery" class="form-control form-control-lg" placeholder="Terms of Delivery" name="utermofdelivery" value="{{ x.termofdelivery }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Terms and Conditions</label>
+                                        <input type="text" id="utermsandcondition" class="form-control form-control-lg" placeholder="Terms and Conditions" name="utermsandcondition" value="{{ x.termsandcondition }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Company Name</label>
+
+                                        <input type="text" id="ucompany_name" class="form-control form-control-lg" placeholder="Company Name" name="ucompany_name" value="{{ x.company_name }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Company Email</label>
+                                        <input type="email" id="ucompany_email" class="form-control form-control-lg" placeholder="Company Email" name="ucompany_email" value="{{ x.company_email }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Company Contact No</label>
+                                        <input type="text" id="ucompany_contact_no" class="form-control form-control-lg" placeholder="Company Contact No." name="ucompany_contact_no" value="{{ x.company_contact_no }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Invoice No</label>
+                                        <input type="text" id="uinvoice_no" class="form-control form-control-lg" placeholder="Invoice No." name="uinvoice_no" value="{{ x.invoice_no }}" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Dispatched Date</label>
+                                        <input type="date" id="udispatched_date" class="form-control form-control-lg" placeholder="Date" name="udispatched_date" value="{{ x.dispatched_date }}" />
+                                     </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                <label>Description Of Goods</label>
+
+                                        <textarea id="udescription_of_goods" class="form-control form-control-lg" placeholder="Description Of Goods" name="udescription_of_goods">{{ x.description_of_goods }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">      
+                                    <label for="delivery_date"  >Delivery Date</label>
+
+                                        <input type="date" id="udelivery_date" class="form-control form-control-lg" placeholder="Delivery Date" name="udelivery_date" value="{{ x.delivery_date }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                    <label for="delivery_date"  >HSN/SAC Code</label>
+                                        <input type="text" id="uhsn_sac_code" class="form-control form-control-lg" placeholder="HSN/SAC Code" name="uhsn_sac_code" value="{{ x.hsn_sac_code }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                    <label for="delivery_date"  >Uquantity</label>
+                                        <input type="number" id="uquantity" class="form-control form-control-lg" placeholder="Quantity" name="uquantity" value="{{ x.quantity }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                    <label >Price</label>
+                                        <input type="text" id="uprice" class="form-control form-control-lg" placeholder="Price" name="uprice" value="{{ x.price }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                    <label for="delivery_date"  >Uquantity</label>
+                                        <input type="text" id="udiscount" class="form-control form-control-lg" placeholder="Discount" name="udiscount" value="{{ x.discount }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="ugst_checkbox">GST Checkbox</label>
+
+                                        <input type="checkbox" id="ugst_checkbox" class="form-check-input" name="ugst_checkbox" {% if x.gst_checkbox %}checked{% endif %} />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+
+                                        <label >Total Amount</label>
+                                        <input type="text" id="utotal_amount" class="form-control form-control-lg" placeholder="Total Amount" name="utotal_amount" value="{{ x.total_amount }}" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label >Total Amount with GST</label>
+                                        <input type="text" id="utotal_amount_with_gst" class="form-control form-control-lg" placeholder="Total Amount with GST" name="utotal_amount_with_gst" value="{{ x.total_amount_with_gst }}" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label >Total Amount in Words</label>
+                                        <input type="text" id="utotal_amount_in_words" class="form-control form-control-lg" placeholder="Total Amount in Words" name="utotal_amount_in_words" value="{{ x.total_amount_in_words }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label >PAN Card No</label>
+                                        <input type="text" id="upan_card_no" class="form-control form-control-lg" placeholder="PAN Card No." name="upan_card_no" value="{{ x.pan_card_no }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label >PAN Card No</label>
+                                        <input type="text" id="uaccount_no" class="form-control form-control-lg" placeholder="Account No." name="uaccount_no" value="{{ x.account_no }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label >Branch</label>
+                                        <input type="text" id="ubranch" class="form-control form-control-lg" placeholder="Branch" name="ubranch" value="{{ x.branch }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label >IFSC</label>
+                                        <input type="text" id="uifsc" class="form-control form-control-lg" placeholder="IFSC" name="uifsc_code" value="{{ x.ifsc_code }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <label >Company Address</label>
+                                        <input type="text" id="ucompanyaddress" class="form-control form-control-lg" placeholder="Company Address" name="ucompanyaddress" value="{{ x.companyaddress }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-2 text-center" style="font-family: 'Playfair Display', serif;color:antiquewhite;">
+                                <input class="btn btn-info btn-lg" type="submit" name="submit" value="Submit" />
+                            </div>
+                        </form>
+                        {% endfor %}
+                        
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid footer  p-4" style="background-color: #f7f7f7; width:100%; margin-top:400px; bottom: 0px;">
+        <div class="row ">
+            <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                © 2025. Powered by
+                <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                    style="height: 20px; vertical-align: middle;">
+                <a href="http://www.chronoanalytics.in/"
+                    style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                    Solution</a>
+                All Rights Reserved.
+            </p>
+          </div>
+            <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                © 2025. Marketed by
+                <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+                <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                All Rights Reserved.
+            </p></div>
+        </div>
+    </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to calculate and update total amount and related fields
+        function calculateTotals() {
+            let quantity = parseFloat(document.getElementById('uquantity').value) || 0;
+            let price = parseFloat(document.getElementById('uprice').value) || 0;
+            let discount = parseFloat(document.getElementById('udiscount').value) || 0;
+            let gstCheckbox = document.getElementById('ugst_checkbox').checked;
+
+            let totalAmount = quantity * price;
+            let discountedAmount = totalAmount - (totalAmount * (discount / 100));
+            let totalAmountWithGst = gstCheckbox ? (discountedAmount * 1.18).toFixed(2) : discountedAmount.toFixed(2);
+            
+            // Update the DOM elements with calculated values
+            document.getElementById('utotal_amount').value = totalAmount.toFixed(2);
+            document.getElementById('utotal_amount_with_gst').value = totalAmountWithGst;
+        }
+
+        // Event listeners for input fields to trigger calculation on input change
+        document.getElementById('uquantity').addEventListener('input', calculateTotals);
+        document.getElementById('uprice').addEventListener('input', calculateTotals);
+        document.getElementById('udiscount').addEventListener('input', calculateTotals);
+        document.getElementById('ugst_checkbox').addEventListener('change', calculateTotals);
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+id,user_id,item_id,event_type,rating,ts,source
+1,1,1,purchase,5,2025-09-01 00:00:00,taxinvoiceitem
+2,1,7,purchase,5,2025-09-01 00:00:00,taxinvoiceitem
+16,1,4,recommended,5,2025-11-05 18:37:18,pest_recommendations
+26,1,3,recommended,5,2025-11-07 18:39:56,pest_recommendations
+3,2,3,purchase,5,2025-09-10 00:00:00,taxinvoiceitem
+17,2,5,recommended,4,2025-11-05 18:37:18,pest_recommendations
+27,2,4,recommended,4,2025-11-07 18:39:56,pest_recommendations
+4,3,2,purchase,5,2025-09-15 00:00:00,taxinvoiceitem
+18,3,1,recommended,4,2025-11-05 18:37:18,pest_recommendations
+5,4,1,purchase,5,2025-09-20 00:00:00,taxinvoiceitem
+6,4,4,purchase,5,2025-09-20 00:00:00,taxinvoiceitem
+19,4,3,recommended,4,2025-11-05 18:37:18,pest_recommendations
+7,5,10,purchase,5,2025-09-22 00:00:00,taxinvoiceitem
+20,5,2,recommended,4,2025-11-05 18:37:18,pest_recommendations
+8,6,1,purchase,5,2025-09-25 00:00:00,taxinvoiceitem
+9,6,6,purchase,5,2025-09-25 00:00:00,taxinvoiceitem
+21,6,10,recommended,4,2025-11-05 18:37:18,pest_recommendations
+10,7,5,purchase,5,2025-09-27 00:00:00,taxinvoiceitem
+22,7,9,recommended,4,2025-11-05 18:37:18,pest_recommendations
+11,8,9,purchase,5,2025-09-29 00:00:00,taxinvoiceitem
+12,8,8,purchase,5,2025-09-29 00:00:00,taxinvoiceitem
+23,8,1,recommended,4,2025-11-05 18:37:18,pest_recommendations
+13,9,4,purchase,5,2025-10-02 00:00:00,taxinvoiceitem
+24,9,7,recommended,4,2025-11-05 18:37:18,pest_recommendations
+14,10,2,purchase,5,2025-10-05 00:00:00,taxinvoiceitem
+15,10,5,purchase,5,2025-10-05 00:00:00,taxinvoiceitem

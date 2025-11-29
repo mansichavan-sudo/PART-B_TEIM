@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details Modal</title>
+    <style>
+        .detail-container {
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        .detail-item strong {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .detail-box {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .boxcontaner::after {
+            background-color: darkcyan;
+            background-size: contain;
+            font-waight: bold;
+            color: darkred;
+            min-height: 500px;
+            min-width: fit-content;
+            display: contents;
+            direction: calc(9);
+            font-size: large;
+            inline-size: none;
+            justify-self: start;
+            gap: 10px;
+            display: block;
+            grid-template-columns: minmax(9mm);
+            flex-direction: row;
+
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+
+
+
+<!-- 
+ <div class="detail-container">
+        <div class="detail-item">
+            <strong>Customer ID:</strong>
+            <div class="detail-box">{{ invoice_var.customer }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Mode of Payment:</strong>
+            <div class="detail-box">{{ invoice_var.modeofpayment }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Dispatched through:</strong>
+            <div class="detail-box">{{ invoice_var.dispatchedthrough }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Term of Delivery:</strong>
+            <div class="detail-box">{{ invoice_var.termofdelivery }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Terms and Conditions:</strong>
+            <div class="detail-box">{{ invoice_var.termsandcondition }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Company Name:</strong>
+            <div class="detail-box">{{ invoice_var.company_name }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Company Email:</strong>
+            <div class="detail-box">{{ invoice_var.company_email }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Company Contact:</strong>
+            <div class="detail-box">{{ invoice_var.company_contact_no }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Invoice No.:</strong>
+            <div class="detail-box">{{ invoice_var.invoice_no }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Invoice date:</strong>
+            <div class="detail-box">{{ invoice_var.date }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Description of Goods:</strong>
+            <div class="detail-box">{{ invoice_var.description_of_goods }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>HSN SAC Code:</strong>
+            <div class="detail-box">{{ invoice_var.hsn_sac_code }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Quantity:</strong>
+            <div class="detail-box">{{ invoice_var.quantity }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Price:</strong>
+            <div class="detail-box">{{ invoice_var.price }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Discount:</strong>
+            <div class="detail-box">{{ invoice_var.discount }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>GST checkbox:</strong>
+            <div class="detail-box">{{ invoice_var.gst_checkbox }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Total Amount:</strong>
+            <div class="detail-box">{{ invoice_var.total_amount }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Total Amount With GST:</strong>
+            <div class="detail-box">{{ invoice_var.total_amount_with_gst }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Pan Card NO.:</strong>
+            <div class="detail-box">{{ invoice_var.pan_card_no }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Account no.:</strong>
+            <div class="detail-box">{{ invoice_var.account_no }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Branch:</strong>
+            <div class="detail-box">{{ invoice_var.branch }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>IFSC Code:</strong>
+            <div class="detail-box">{{ invoice_var.ifsc_code }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Delivery Date:</strong>
+            <div class="detail-box">{{ invoice_var.delivery_date }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Dispatched Date:</strong>
+            <div class="detail-box">{{ invoice_var.dispatched_date }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Designation:</strong>
+            <div class="detail-box">{{ invoice_var.designation }}</div>
+        </div>
+        <div class="detail-item">
+            <!-- <form action="{% url 'create_paypal_payment' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Pay with PayPal</button>
+            </form> -->
+<form method="POST" action="{% url 'create_paypal_payment' %}">
+    {% csrf_token %}
+    <input type="hidden" name="customer_id" value="{{ invoice_var.customer }}">
+    <input type="hidden" name="total_amount_with_gst" value="{{ invoice_var.total_amount_with_gst }}">
+    <input type="hidden" name="company_name" value="{{ invoice_var.company_name }}">
+
+    <!-- Additional invoice details can go here -->
+
+    <button type="submit" class="btn btn-primary">Pay Now</button>
+</form>
+</div>
+
+</div> -->

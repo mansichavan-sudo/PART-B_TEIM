@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Edit Template: {{ template.template_name }}</h3>
+
+  <form id="templateEditForm" method="post">
+    {% csrf_token %}
+    <input type="hidden" id="templateId" name="id" value="{{ template.id }}">
+
+    <div class="mb-3">
+      <label for="template_name" class="form-label">Template Name</label>
+      <input type="text" id="template_name" name="template_name" class="form-control" value="{{ template.template_name }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="language" class="form-label">Language</label>
+      <select id="template_language" name="language" class="form-select">
+        <option value="en" {% if template.language == 'en' %}selected{% endif %}>English</option>
+        <option value="hi" {% if template.language == 'hi' %}selected{% endif %}>Hindi</option>
+        <option value="mr" {% if template.language == 'mr' %}selected{% endif %}>Marathi</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="tts_voice" class="form-label">TTS Voice / Engine</label>
+      <input type="text" id="tts_voice" name="tts_voice" class="form-control" value="{{ template.tts_voice }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="voice_script" class="form-label">Voice Script</label>
+      <textarea id="voice_script" name="voice_script" class="form-control" rows="6">{{ template.voice_script }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <button type="submit" class="btn btn-success">Update Template</button>
+      <a href="{% url 'ai_calling:template_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'ai_calling/js/template.js' %}"></script>
+{% endblock %}

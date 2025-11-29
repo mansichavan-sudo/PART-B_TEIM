@@ -1,0 +1,553 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <title>Complete Work</title>
+  <style>
+    .hidden-input {
+      display: none !important;
+    }
+
+    .new-container {
+      max-width: 700px;
+      margin-top: 100px !important;
+      border-radius: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-control {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .img-fluid {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+
+    .preview-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .preview-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      margin-right: 10px;
+      border-radius: 6px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 200px;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+
+    .section-box {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .section-box p {
+      margin: 6px 0;
+      font-size: 15px;
+    }
+
+    .section-box span b {
+      color: #444;
+    }
+
+    @media (max-width: 768px) {
+      .new-container {
+        margin-top: 30px;
+        max-width: 100%;
+      }
+
+      .add-file-btn {
+        width: 100% !important;
+        margin-left: 0% !important;
+      }
+    }
+
+    h3 {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      border-bottom: 1px solid rgb(80, 16, 177);
+      font-weight: 400;
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'techsidebar.html' %}
+
+  <div class="new-container container">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8 bg-light mb-5" style="border-radius: 20px;">
+        <span onclick="window.location.href='/index'"
+          style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4 mt-2"><i
+            class="fas fa-house-chimney"></i></span>
+        <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;"
+          class="mb-4 mt-2">X</span>
+          <!-- Language Switch -->
+          <div class="text-center mb-3">
+            <select id="languageSwitcher" class="form-select form-select-sm w-auto mx-auto">
+              <option value="en">En</option>
+              <option value="mr">म</option>
+              <option value="hi">हिं</option>
+            </select>
+          </div>
+
+
+        <!-- Customer Info -->
+        <div class="section-box customer-section">
+          <p><b data-translate="cust_name">Customer Name:</b> {{ tech_work.service.customer.fullname }}</p>
+          <p><b data-translate="phone">Phone No:</b> {{ tech_work.service.customer.primarycontact }}</p>
+          <p><b data-translate="poc">POC:</b> {{ tech_work.service.customer.or_name }}</p>
+          <p><b data-translate="poc_no">POC No:</b> {{ tech_work.service.customer.or_contact }}</p>
+        </div>
+
+        <!-- <h3 class="my-4 text-center" data-translate="title">Complete Work for {{ tech_work.work.customer_fname }}
+          {{ tech_work.work.customer_lname }}</h3> -->
+
+        <center>
+          <form method="post" enctype="multipart/form-data"
+            style="width: 100%; margin-bottom: 40px !important; color:black !important">
+            {% csrf_token %}
+
+            <!-- Before Service Photos -->
+            <div class="form-group">
+              <label for="photos_before_service" data-translate="before">Photo Before Service:</label>
+              <input type="file" name="photos_before_service" id="photos_before_service"
+                class="form-control hidden-input" multiple>
+              <button type="button" class="btn btn-primary add-file-btn" id="add-photo-before"
+                style="width: 30%; margin-top: 10px;margin-left: 100px;">
+                <i class="fa fa-plus"></i> <span data-translate="add_files">Add Files</span>
+              </button>
+              <div class="file-list" id="file-list-before"></div>
+            </div>
+
+            <!-- After Service Photos -->
+            <div class="form-group">
+              <label for="photos_after_service" data-translate="after">Photo After Service:</label>
+              <input type="file" name="photos_after_service" id="photos_after_service"
+                class="form-control hidden-input" multiple>
+              <button type="button" class="btn btn-primary add-file-btn" id="add-photo-after"
+                style="width: 30%; margin-top: 10px;margin-left: 100px;">
+                <i class="fa fa-plus"></i> <span data-translate="add_files">Add Files</span>
+              </button>
+              <div class="file-list" id="file-list-after"></div>
+            </div>
+
+           
+
+            <div class="section-box  text-start">
+              <h4 data-translate="payment_info" >Payment Information</h4>
+              {% for w in tech_work.work.all %}
+                <p><b data-translate="payment_status">Payment Status :</b> {{ w.customer_payment_status }}</p>
+                <p id="total-amount"><b data-translate="total_amount">Total Amount :</b> {{ w.payment_amount }}</p>
+              </div>
+              
+              <div class="row">
+                
+                {% if w.customer_payment_status != "Completed" %}
+              
+                
+                <!-- Payment Mode + Type -->
+                <div class="payment-mode col-6">
+                  <label for="customer_payment_status" data-translate="payment_mode">Payment Mode:</label>
+                  <select name="customer_payment_status" id="customer_payment_status" class="form-control">
+                    <option value="" data-translate="select">-- Select --</option>
+                    <option value="UPI" data-translate="upi">UPI</option>
+                    <option value="Cash" data-translate="cash">Cash</option>
+                    <option value="UPI+Cash" data-translate="upi_cash">UPI + Cash</option>
+                  </select>
+                </div>
+                
+                <div class="payment-type col-6">
+                  <label for="payment_type" data-translate="payment_type">Payment Type:</label>
+                  <select name="payment_type" id="payment_type" class="form-control">
+                    <option value="" data-translate="select">-- Select --</option>
+                    <option value="Full Payment" data-translate="full_payment">Full Payment</option>
+                    <option value="Half Payment" data-translate="half_payment">Half Payment</option>
+                  </select>
+                </div>
+                
+                {% endif %}
+                {% endfor %}
+                
+              <!-- Dynamic Fields -->
+              <div id="payment-details" class="mt-3" style="display:none;">
+                <div id="upi-section" style="display:none;" class="mb-2">
+                  <label data-translate="upi_scan"><b>Scan & Pay via UPI:</b></label><br>
+                  <img src="{% static 'images/payment_scanner.jpg' %}" alt="UPI QR" class="img-fluid" style="max-width:200px;">
+                  
+                  <!-- Upload Payment Proof -->
+                  <div class="form-group">
+                    <label for="payment_photos" data-translate="payment_proof">Upload Payment Proof:</label>
+                  
+                    <!-- Hidden File Input -->
+                    <input type="file" 
+                           name="payment_photos" 
+                           id='payment_photos'
+                           class="form-control hidden-input" 
+                           accept="image/*" 
+                           multiple>
+                  
+                    <!-- Custom Button -->
+                    <button type="button" 
+                            class="btn btn-primary add-file-btn" 
+                            id='add-photo-payment'
+                            style="width: 30%; margin-top: 10px; margin-left: 100px;">
+                      <i class="fa fa-plus"></i> 
+                      <span data-translate="add_files">Add Files</span>
+                    </button>
+                  
+                    <!-- File Preview -->
+                    <div class="file-list mt-2" id="file-list-payment"></div>
+                  </div>
+
+
+                  <div id="upi-amount-wrapper" style="display:none;" class="mt-2">
+                  <label for="upi_amount" data-translate="upi_amount"><b>Enter UPI Amount Paid Now:</b></label>
+                  <input type="number" name="upi_amount" id="upi_amount" class="form-control" placeholder="Enter UPI amount" data-placeholder="upi_amount_ph">
+                </div>
+              </div>
+          
+              <div id="cash-section" style="display:none;" class="mb-2">
+                <label for="cash_amount" data-translate="cash_amount"><b>Enter Cash Amount Paid Now:</b></label>
+                <input type="number" name="cash_amount" id="cash_amount" class="form-control" placeholder="Enter cash amount" data-placeholder="cash_amount_ph">
+              </div>
+          
+              <!-- Remaining Balance (for half payment) -->
+              <div id="balance-section" style="display:none;" class="mt-2">
+                <label data-translate="remaining_balance"><b>Remaining Balance (to be paid later):</b></label>
+                <input type="text" id="remaining_balance" name="remaining_balance" class="form-control" readonly>
+
+                 <!-- Next Due Date -->
+                <label data-translate="next_due"><b>Next Due Date:</b></label>
+                <input type="date" id="next_due_date" name="next_due_date" class="form-control" >
+              </div>
+            </div>
+          </div>
+              <!-- Signature -->
+            <div class="form-group">
+              <label for="signature-pad" data-translate="signature">Customer Signature:</label>
+              <canvas id="signature-pad" width="600" height="300"
+                style="border: 2px solid #ddd; background-color: #f8f9fa;"></canvas>
+              <button type="button" class="btn btn-outline-danger mt-2" id="clear-signature"
+                data-translate="clear_sig">Clear Signature</button>
+              <input type="hidden" name="signature_data" id="signature_data">
+            </div>
+
+            <button type="submit" class="btn btn-outline-success" data-translate="submit">Submit Completion</button>
+          </form>
+        </center>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+  <!-- payment section -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const paymentMode = document.getElementById("customer_payment_status");
+        const paymentType = document.getElementById("payment_type");
+        
+        const paymentDetails = document.getElementById("payment-details");
+        const upiSection = document.getElementById("upi-section");
+        const cashSection = document.getElementById("cash-section");
+        const upiAmountWrapper = document.getElementById("upi-amount-wrapper");
+        const balanceSection = document.getElementById("balance-section");
+        const remainingBalance = document.getElementById("remaining_balance");
+        
+        // take total amount from template
+        const totalAmount = parseFloat(document.getElementById("total-amount").innerText.replace(/[^0-9.-]+/g,"")) || 0;
+
+        function updatePaymentFields() {
+    const mode = paymentMode.value;
+    const type = paymentType.value;
+
+    // Reset UI
+    paymentDetails.style.display = "none";
+    upiSection.style.display = "none";
+    cashSection.style.display = "none";
+    upiAmountWrapper.style.display = "none";
+    balanceSection.style.display = "none";
+
+    // 🔹 Clear old values when mode changes
+    document.getElementById("upi_amount").value = "";
+    document.getElementById("cash_amount").value = "";
+    remainingBalance.value = "";
+
+    if (mode) {
+        paymentDetails.style.display = "block";
+
+        if (mode === "UPI") {
+            upiSection.style.display = "block";
+            if (type === "Half Payment") {
+                upiAmountWrapper.style.display = "block";
+                balanceSection.style.display = "block";
+            }
+        } 
+        else if (mode === "Cash") {
+            cashSection.style.display = "block";
+            if (type === "Half Payment") {
+                balanceSection.style.display = "block";
+            }
+        } 
+        else if (mode === "UPI+Cash") {
+            upiSection.style.display = "block";
+            cashSection.style.display = "block";
+            if (type === "Half Payment") {
+                upiAmountWrapper.style.display = "block";
+                balanceSection.style.display = "block";
+            }
+        }
+    }
+}
+
+        // Calculate remaining balance
+        function calculateBalance() {
+            let paid = 0;
+            const upiVal = parseFloat(document.getElementById("upi_amount")?.value || 0);
+            const cashVal = parseFloat(document.getElementById("cash_amount")?.value || 0);
+            paid = upiVal + cashVal;
+            const balance = totalAmount - paid;
+            remainingBalance.value = balance >= 0 ? balance : 0;
+        }
+        
+        if (paymentMode) {
+            paymentMode.addEventListener("change", updatePaymentFields);
+        }
+        if (paymentType) {
+            paymentType.addEventListener("change", updatePaymentFields);
+        }
+        
+        // Update balance dynamically
+        document.getElementById("upi_amount")?.addEventListener("input", calculateBalance);
+        document.getElementById("cash_amount")?.addEventListener("input", calculateBalance);
+    });
+    
+</script>
+  <script>
+    // SignaturePad init
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+
+    document.getElementById('clear-signature').addEventListener('click', function () {
+      signaturePad.clear();
+    });
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+      if (!signaturePad.isEmpty()) {
+        document.getElementById('signature_data').value = signaturePad.toDataURL();
+      } else {
+        e.preventDefault();
+        alert("Please provide a signature.");
+      }
+    });
+
+    // File handling with preview + remove
+  function handleFileAddition(inputId, listId) {
+  const inputElement = document.getElementById(inputId);
+  const fileListElement = document.getElementById(listId);
+  const dt = new DataTransfer();
+
+  Array.from(inputElement.files).forEach(file => dt.items.add(file));
+  inputElement.click();
+
+  inputElement.addEventListener("change", function () {
+    Array.from(this.files).forEach(file => dt.items.add(file));
+    inputElement.files = dt.files;
+    renderFileList();
+  }, { once: true });
+
+  function renderFileList() {
+    fileListElement.innerHTML = "";
+
+    Array.from(inputElement.files).forEach((file, index) => {
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("preview-item");
+
+      if (file.type.startsWith("image/")) {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.style.width = "80px";
+        img.style.height = "80px";
+        img.style.objectFit = "cover";
+        wrapper.appendChild(img);
+      }
+
+      const fileName = document.createElement("span");
+      fileName.textContent = file.name;
+      fileName.style.flexGrow = "1";
+      wrapper.appendChild(fileName);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "❌";
+      removeBtn.style.border = "none";
+      removeBtn.style.background = "transparent";
+      removeBtn.style.cursor = "pointer";
+      removeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        dt.items.remove(index);
+        inputElement.files = dt.files;
+        renderFileList(); // just refresh UI
+      });
+      wrapper.appendChild(removeBtn);
+
+      fileListElement.appendChild(wrapper);
+    });
+  }
+}
+
+    document.getElementById('add-photo-before').addEventListener('click', () => {
+      handleFileAddition('photos_before_service', 'file-list-before');
+    });
+    document.getElementById('add-photo-after').addEventListener('click', () => {
+      handleFileAddition('photos_after_service', 'file-list-after');
+    });
+    document.getElementById('add-photo-payment').addEventListener('click', () => {
+      handleFileAddition('payment_photos', 'file-list-payment');
+    });
+
+  </script>
+
+<script>
+const translations = {
+  en: {
+    cust_name: "Customer Name",
+    phone: "Phone No",
+    poc: "POC",
+    poc_no: "POC No",
+    title: "Complete Work for",
+    before: "Photo Before Service",
+    after: "Photo After Service",
+    payment_photo: "Payment Photo",
+    add_files: "Add Files",
+    signature: "Customer Signature",
+    clear_sig: "Clear Signature",
+    payment_info: "Payment Information",
+    payment_mode: "Payment Mode",
+    payment_type: "Payment Type",
+    submit: "Submit",
+    upi: "UPI",
+    cash: "Cash",
+    upi_cash: "UPI + Cash",
+    full_payment: "Full Payment",
+    half_payment: "Half Payment",
+    upi_scan: "Scan & Pay via UPI",
+    upi_amount: "Enter UPI Amount Paid Now",
+    cash_amount: "Enter Cash Amount Paid Now",
+    remaining_balance: "Remaining Balance (to be paid later)"
+  },
+  hi: {
+    cust_name: "ग्राहक का नाम",
+    phone: "फ़ोन नंबर",
+    poc: "संपर्क व्यक्ति",
+    poc_no: "संपर्क नंबर",
+    title: "के लिए कार्य पूरा करें",
+    before: "सेवा से पहले की फोटो",
+    after: "सेवा के बाद की फोटो",
+    payment_photo: "भुगतान की फोटो",
+    add_files: "फ़ाइलें जोड़ें",
+    signature: "ग्राहक हस्ताक्षर",
+    clear_sig: "हस्ताक्षर साफ़ करें",
+    payment_info: "भुगतान जानकारी",
+    payment_status: "भुगतान की स्थिति",
+    total_amount: "कुल राशि",
+    payment_mode: "भुगतान का तरीका",
+    payment_type: "भुगतान का प्रकार",
+    submit: "सबमिट करें",
+    upi: "यूपीआई",
+    cash: "नकद",
+    upi_cash: "यूपीआई + नकद",
+    full_payment: "पूरा भुगतान",
+    half_payment: "आधा भुगतान",
+    upi_scan: "यूपीआई से स्कैन कर भुगतान करें",
+    upi_amount: "अभी किया गया यूपीआई भुगतान दर्ज करें",
+    cash_amount: "अभी किया गया नकद भुगतान दर्ज करें",
+    remaining_balance: "शेष राशि (बाद में दी जाएगी)",
+    next_due: "अगली देय तिथि"
+  },
+  mr: {
+    cust_name: "ग्राहकाचे नाव",
+    phone: "फोन नंबर",
+    poc: "संपर्क व्यक्ती",
+    poc_no: "संपर्क क्रमांक",
+    title: "साठी पूर्ण काम",
+    before: "सेवेपूर्वीचा फोटो",
+    after: "सेवेनंतरचा फोटो",
+    payment_photo: "पेमेंट फोटो",
+    add_files: "फाईल्स जोडा",
+    signature: "ग्राहकाची सही",
+    clear_sig: "सही पुसा",
+    payment_info: "पेमेंट माहिती",
+    payment_status: "पेमेंट स्थिती",
+    total_amount: "एकूण रक्कम",
+    payment_mode: "पेमेंट पद्धत",
+    payment_type: "पेमेंट प्रकार",
+    submit: "सबमिट करा",
+    upi: "यूपीआय",
+    cash: "रोख",
+    upi_cash: "यूपीआय + रोख",
+    full_payment: "पूर्ण पेमेंट",
+    half_payment: "अर्धे पेमेंट",
+    upi_scan: "यूपीआयने स्कॅन करून भरा",
+    upi_amount: "आता केलेली यूपीआय रक्कम भरा",
+    cash_amount: "आता केलेली रोख रक्कम भरा",
+    remaining_balance: "शिल्लक रक्कम (नंतर दिली जाईल)",
+    next_due: "पुढील देय तारीख"
+
+  }
+};
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const languageSwitcher = document.getElementById("languageSwitcher");
+
+  // Attach listener safely
+  languageSwitcher.addEventListener("change", function () {
+    applyTranslations(this.value);
+    
+  });
+
+  // Apply translations on page load
+  applyTranslations(languageSwitcher.value);
+});
+
+function applyTranslations(lang) {
+  document.querySelectorAll("[data-translate]").forEach(el => {
+    const key = el.getAttribute("data-translate");
+    el.textContent = translations[lang][key] || el.textContent;
+  });
+}
+</script>
+
+</body>
+
+</html>

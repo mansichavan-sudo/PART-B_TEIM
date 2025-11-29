@@ -1,0 +1,1302 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
+    <title>CRM</title>
+    <style>
+         body {
+            overflow-x: hidden;
+            background-color: #f5fffa  !important;
+            /* dark for contrast */
+            color: #F4F4F5 !important;
+
+        }
+
+.addnewshadow{
+      box-shadow: 0px 0px 10px rgb(125, 93, 93);
+            background-color: rgba(255, 255, 255, 0.945);
+
+}
+
+.formshdow{
+     background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(3, 174, 210, 0.2);
+}
+        /* Scrollbar */
+        body::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: #6a6a6a;
+            border-radius: 4px;
+        }
+
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            color: rgb(0, 0, 0);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            position: fixed;
+            top: 0%;
+            box-shadow: 0px 5px 10px rgb(77, 77, 77);
+            padding: 8px;
+        }
+
+        .header .hamburger {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 290px;
+            position: fixed;
+            top: 0;
+            left: -300px;
+            /* Hidden by default */
+            background-color: #F4F4F5;
+            padding: 20px 0 0 0;
+            /* Only padding on the top for space */
+            overflow-y: auto;
+            color: black !important;
+            z-index: 2000;
+            /* Ensure sidebar is above overlay */
+
+            /* Curved bottom-right corner */
+            box-shadow: 2px 0px 10px rgba(101, 117, 255, 0.984);
+            border-radius: 1px !important;
+            /* Optional for better aesthetics */
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+                         background: linear-gradient(to right, #2575fc, #6a11cb,0.5);
+
+            /* Adjust opacity */
+            backdrop-filter: blur(5px);
+            /* Blurred effect for overlay */
+            z-index: 1500;
+            /* Should cover page content but not sidebar */
+        }
+
+        .open-sidebar .sidebar {
+            left: 0;
+            /* Slide sidebar into view */
+        }
+
+        .open-sidebar .overlay {
+            display: block;
+            /* Show the overlay */
+        }
+
+        .sidebar .logo img {
+            width: 80%;
+            margin-bottom: -40px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            color: #000000;
+            /* Light shade for better contrast */
+            font-family: "Cardo", serif;
+            font-weight: 400;
+            font-size: 18px;
+            padding: 6.5px;
+            margin: 10px 0;
+            cursor: pointer;
+            position: relative;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+            .sidebar ul li:hover {
+            background-color: #007DBE;
+            /* Slightly lighter shade for hover */
+            color: white;
+        }
+
+        .sidebar ul li a {
+            color: inherit;
+            font-size: 25px;
+            text-decoration: none;
+            display: block;
+            padding: 2px;
+        }
+
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+
+        .sidebar ul .has-submenu {
+            position: relative;
+        }
+
+        .submenu {
+            display: none;
+            background-color: #ffffff;
+            /* Submenu background adjusted */
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+            margin-top: 10px;
+            padding-left: 20px;
+            border-radius: 5px;
+        }
+
+        .submenu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .submenu ul li {
+            font-size: 16px;
+            padding: 2px 0;
+            margin: 7px 0;
+            color: #000000;
+            /* Submenu text updated */
+            cursor: pointer;
+        }
+
+        .submenu ul li:hover {
+            background-color: #fdfdfd;
+            color: black;
+            box-shadow: 0px 0px 1px rgb(57, 54, 54);
+            padding: 5px;
+            /* Slightly darker shade for hover */
+        }
+
+        .arrow-down {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid #acabab;
+            /* Adjusted arrow color */
+        }
+
+        .arrow-down:hover {
+            color: rgb(255, 255, 255);
+        }
+
+        .arrow-up:hover {
+            color: rgb(255, 255, 255);
+        }
+
+        .arrow-up {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid#acabab;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+            /* Reduced bottom margin */
+            padding: 0;
+            /* Remove any padding */
+        }
+
+        .logo img {
+            max-width: 70%;
+            /* Ensure the logo size is consistent */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            /* Center the logo horizontally */
+        }
+
+
+
+
+
+        .open-sidebar .sidebar {
+            left: 0;
+            /* Slide sidebar into view */
+        }
+
+        .open-sidebar .overlay {
+            display: block;
+            /* Show the overlay */
+        }
+
+        @media (max-width: 768px) {
+            .teimlms {
+                display: inline-block;
+                position: absolute;
+                left: 44% !important;
+                top: 30px !important;
+                font-weight: bold;
+                font-size: 15px !important;
+
+            }
+
+            .open-sidebar .overlay {
+                display: block;
+                /* Show overlay when sidebar is open */
+            }
+
+            .header {
+                padding: 10px;
+            }
+
+            .navbar-header_logo {
+                height: 80px !important;
+
+
+            }
+
+
+
+
+
+            .sidebar {
+                left: -300px;
+                /* Sidebar hidden by default on smaller screens */
+            }
+
+            .header .hamburger {
+                display: block;
+                /* Show hamburger icon on smaller screens */
+            }
+
+            .open-sidebar .sidebar {
+                left: 0;
+                /* Slide sidebar into view when toggled */
+            }
+
+            .open-sidebar .overlay {
+                display: block;
+                /* Show overlay when sidebar is open */
+            }
+
+            .close-button {
+                display: block;
+                /* Show the button on small screens */
+            }
+        }
+
+        @media (min-width: 769px) {
+            .sidebar {
+                left: -300px;
+                /* Sidebar always visible on larger screens */
+            }
+
+            .overlay {
+                display: none;
+                /* No overlay needed on larger screens */
+            }
+
+            .header .hamburger {
+                display: inline-block;
+                /* Hide hamburger icon on larger screens */
+            }
+
+            .open-sidebar .open-sidebar {
+                display: block;
+                /* No overlay needed on larger screens */
+            }
+
+            .close-button {
+                display: block;
+                /* Show the button on small screens */
+            }
+
+
+        }
+
+        .logout-container {
+            display: flex;
+            flex-direction: column;
+            /* Arrange buttons vertically */
+            align-items: center;
+            /* Center buttons horizontally */
+            gap: 15px;
+            /* Space between buttons */
+            margin-top: auto;
+            /* Push buttons to the bottom */
+        }
+
+        .logout-button {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-left: 0px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            /* Updated to a red shade for logout */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            text-align: left;
+            text-decoration: none;
+        }
+
+
+
+        .logout-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .logout-button:hover i {
+            transform: rotate(360deg);
+        }
+
+        .logout-button:hover {
+            background-color: #a2a2a2;
+            /* Slightly darker shade for hover */
+        }
+
+        .close-button {
+            display: block;
+            /* Hidden by default */
+            font-size: 24px;
+            color: rgb(244, 80, 80);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            z-index: 2100;
+            /* Ensure it's above the sidebar content */
+        }
+
+        .close-button :hover {
+            color: rgb(255, 0, 0);
+            text-shadow: 0px 0px 5px rgb(255, 2, 2);
+            z-index: 1;
+
+        }
+
+        @media (max-width: 768px) {
+            .close-button {
+                display: block;
+                /* Show the button on small screens */
+            }
+        }
+
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .container1 {
+            margin-left: 25px;
+            margin-right: 10px;
+            padding: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            /* Arrange buttons vertically */
+            align-items: center;
+            /* Center buttons horizontally */
+            padding: 5px;
+            gap: 15px;
+            /* Space between buttons */
+            margin-top: auto;
+            /* Push buttons to the bottom */
+        }
+
+        .btn-custom {
+            display: flex;
+            align-items: center;
+            /* Center icon and text vertically */
+            justify-content: center;
+            /* Center content horizontally */
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: "Outfit", sans-serif;
+            background-color: #000000;
+            /* Green color for buttons */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            /* Rounded edges */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+            width: 80%;
+            /* Ensure consistent width for all buttons */
+            max-width: 180px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for depth */
+        }
+
+        .btn-custom:hover {
+            background-color: #1a1a1a;
+            /* Darker green on hover */
+            transform: translateY(-3px);
+            /* Lift effect on hover */
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+            /* Enhanced shadow */
+        }
+
+        .btn-custom i {
+            margin-right: 8px;
+            /* Space between icon and text */
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .btn-custom {
+                width: 90%;
+                /* Adjust width for smaller screens */
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .main {
+            min-height: 100vh;
+        }
+
+        /* Make it responsive for smaller screens */
+        @media (max-width: 768px) {
+
+            .buttonback {
+                width: 100% !important;
+            }
+
+            .leanking-buttons {
+                margin-left: 14px;
+            }
+
+            .leanking-buttons-Quotation {
+                margin-left: 5px;
+            }
+
+
+            .open-sidebar .pie-chart-container {
+                margin-left: 300px;
+                /* Adjust content when sidebar is open */
+            }
+
+            .open-sidebar .bar-chart-container {
+                margin-left: 300px;
+                /* Adjust content when sidebar is open */
+            }
+        }
+
+        #contractTypeChart {
+            max-width: 500px;
+            max-height: 500px;
+            margin: 0 auto;
+            /* Center the chart */
+        }
+
+
+
+        .navbar-header_logo {
+            position: absolute;
+            left: 50px;
+            top: 0px;
+        }
+
+
+
+        .teimlms {
+            display: inline-block;
+            position: absolute;
+            left: 47%;
+            top: 35px;
+            font-weight: bold;
+            font-size: 20px;
+
+        }
+
+        /* Cards Style*/
+
+        .cards {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 5px rgb(107, 108, 108);
+ 
+
+        }
+
+        .cardsmaincontainer {
+            margin-bottom: 200px;
+        }
+
+        h3 {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 1px solid rgb(80, 16, 177);
+            /*Script MT */
+            font-weight: 400;
+        }
+
+        label {
+            margin-top: 20px;
+            color: #3498db;
+
+        }
+
+        /* From Uiverse.<njeljkjehdjjdksjljjdjlslsjsdsio by satyamchaudharydev */
+        /* From Uiverse.io by satyamchaudharydev */
+        .logoutbtn {
+            --primary-color: #b4b4b8;
+            --secondary-color: #fff;
+            --hover-color: #111;
+            --arrow-width: 10px;
+            --arrow-stroke: 2px;
+            box-sizing: border-box;
+            border: 0;
+            border-radius: 20px;
+            color: var(--secondary-color);
+            padding: 0.5em 1.3em;
+            background: var(--primary-color);
+            display: flex;
+            transition: 0.2s background;
+            align-items: center;
+            gap: 0.6em;
+            font-weight: bold;
+            background-color: #ff4646;
+            margin-top: 50px !important;
+        }
+
+        .logoutbtn a {
+            list-style-type: none;
+            text-decoration: none;
+            color: white;
+        }
+
+
+
+
+        .logoutbtn .arrow-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hand span:hover {
+            text-shadow: 0px 0px 10px red;
+
+        }
+
+        .logoutbtn .arrow {
+            margin-top: 1px;
+            width: var(--arrow-width);
+            background: var(--primary-color);
+            height: var(--arrow-stroke);
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .logoutbtn .arrow::before {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            border: solid var(--secondary-color);
+            border-width: 0 var(--arrow-stroke) var(--arrow-stroke) 0;
+            display: inline-block;
+            top: -3px;
+            right: 2px;
+            transition: 0.2s;
+            padding: 3px;
+            transform: rotate(-45deg);
+        }
+
+        .logoutbtn:hover {
+            background-color: red;
+            box-shadow: 0px 10px 10px red;
+        }
+
+        .logoutbtn:hover .arrow {
+            background: var(--secondary-color);
+        }
+
+        .logoutbtn:hover .arrow:before {
+            right: 0;
+        }
+
+        .hamburger:hover {
+
+            color: rgb(109, 22, 202);
+            text-shadow: 0px 0px 5px rgb(0, 0, 27);
+        }
+
+        .scroll-instruction {
+            text-align: right;
+            font-size: 16px;
+            margin: 10px;
+            font-weight: bold;
+            color: #E53935;
+        }
+
+        .star {
+            color: red;
+        }
+
+        .click-burst {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: rgb(4, 128, 193);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: burstAnimation 600ms ease-out forwards;
+        }
+
+        @keyframes burstAnimation {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        #particles-js canvas {
+            position: absolute;
+            display: block;
+        }
+
+        #particles-js {
+            position: fixed;
+            /* Fixes it to the screen */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Ensures the canvas takes the full height of the screen */
+            z-index: -1;
+            color: #00e5ff;
+            /* Keeps it in the background */
+        }
+
+        .sidebar ul li.active {
+            background-color: #007DBE;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .sidebar ul .has-submenu.active a {
+            color: #fff;
+        }
+
+        /* From Uiverse.io by Jedi-hongbin */
+        .buttonback {
+            background: linear-gradient(135deg, #f2f8ff, #d1f8fe);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        }
+
+
+
+
+        .buttonback:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .buttonback {
+            text-decoration: none;
+            color: black;
+        }
+
+        .buttonback:hover {
+            text-decoration: none;
+            color: black;
+        }
+
+
+
+        .buttonback3 {
+            background: rgb(0, 255, 247);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            width: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        }
+
+        .go-back-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #8e2de2, #4a00e0);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+
+            transition: background 0.3s ease,
+                color 0.3s ease,
+                transform 0.2s ease,
+                text-shadow 0.3s ease;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            width: 150px;
+        }
+
+        .go-back-btn i {
+            margin-right: 8px;
+            /* Space between icon and text */
+        }
+
+        .go-back-btn:hover {
+            background: linear-gradient(135deg, #9b40ea, #8655e8);
+            transform: translateY(-2px);
+
+        }
+
+        .go-Home-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            width: 150px;
+
+            transition: background 0.3s ease,
+                color 0.3s ease,
+                transform 0.2s ease,
+                text-shadow 0.3s ease;
+            /* pure white for readability */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .go-Home-btn i {
+            margin-right: 8px;
+            /* Space between icon and text */
+        }
+
+        .go-Home-btn:hover {
+            background: linear-gradient(135deg, #38ef7d, #11998e);
+            /* keep the text bright white */
+            color: #ffffff;
+            /* deepen the shadow under the text for extra pop */
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+            /* subtle “lift” */
+            transform: translateY(-2px);
+
+        }
+
+        /* Make it responsive for smaller screens */
+        @media (max-width: 768px) {
+
+
+
+            .Back_Home_Button_Box {
+                margin-left: 16%;
+                margin-top: 30px;
+            }
+        }
+
+
+
+        .buttonback2:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .buttonback2 {
+            text-decoration: none;
+            color: black;
+        }
+
+        .buttonback2:hover {
+            text-decoration: none;
+            color: black;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+        
+    </style>
+</head>
+
+<body>
+    {% if request.user.is_authenticated %}
+        {% with request.user.userprofile.role as role %}
+            <div class="header">
+
+                <div class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+
+                </div>
+                <div class="navbar-header ">
+                    <a class="navbar-brand " href="https://sevafacility.com/" target="_blank">
+                        <img src="{% static 'images/Logo.webp' %}" alt="Logo" style="height: 90px;   margin-bottom: 5px; "
+                            class="navbar-header_logo">
+                    </a>
+                </div>
+                
+                <div class="navbar-header tem">
+                    <a class="navbar-brand " href="https://chronoanalytics.in/" target="_blank">
+                        <img src="{% static 'images/crono.png' %}" alt="Logo" class="imgg"
+                            style="height: 50px;   margin-bottom: 8px; ">
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="sidebar">
+
+                <div class="close-button" id="closeButton">
+                    <i class="fas fa-times"></i>
+                </div>
+
+                <div class="logo">
+                    <a href="https://sevafacility.com/">
+                        <img src="{% static 'images/Logo.webp' %}" alt="Logo">
+
+                    </a>
+                </div>
+
+                <ul>
+                    <a href="/index" style="text-decoration: none;">
+                        <li data-link="/index"><i class="fas fa-home"></i> Dashboard</li>
+                    </a>
+                    <a href="{% url 'today_work' %}" style="text-decoration: none;">
+                        <li data-link="/today-work"><i class="fas fa-calendar-check"></i> Today Work</li>
+                    </a>
+
+                    <a href="{% url 'pending_followups' %}" style="text-decoration: none;">
+                        <li><i class="fas fa-clock"></i> Pending Follow-ups</li>
+                    </a>
+
+
+                    <li class="has-submenu"><i class="fas fa-info-circle"></i> View Records <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/display_lead_management">
+                                    <li data-link="/display_lead_management">1.Lead Management Records</li>
+                                </a>
+                                <a href="/display_customer">
+                                    <li data-link="/display_customer">2. Customer Details</li>
+                                </a>
+                                <a href="/display_service_management">
+                                    <li data-link="/display_service_management">3. Service Management</li>
+                                </a>
+                                <a href="/display_quotation">
+                                    <li data-link="/display_quotation">4. Quotation</li>
+                                </a>
+                                <a href="/display_tax_invoice">
+                                    <li data-link="/display_tax_invoice">5. Invoice</li>
+                                </a> 
+                                
+                                <a href="/payment-records/list/">
+                                    <li data-link="/payment-record/list/">6. Payment Records</li>
+                                </a>
+                                <a href="/display_reschedule">
+                                    <li data-link="/display_reschedule">7. Reschedule log</li>
+                                </a>
+                                <a href="/schedule_meetings/display_meeting">
+                                    <li data-link="/schedule_meetings/display_meeting">8. Meeting Records Log</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="has-submenu"><i class="fas fa-folder-open"></i> Transaction <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/lead_management_create">
+                                    <li data-link="/lead_management_create">1. Lead Management</li>
+                                </a>
+                                <a href="/customer_details_create">
+                                    <li data-link="/customer_details_create">2. Customer Details</li>
+                                </a>
+                                <a href="/service_management_create">
+                                    <li data-link="/service_management_create">3. Service Management</li>
+                                </a>
+                                <a href="/create_quotation">
+                                    <li data-link="/quotation_create">4. Quotation</li>
+                                </a>
+                                <!-- <li onclick="openInvoicePopup()" style="cursor: pointer;">5. Invoice</li> -->
+                                 <a href="/tax-invoice/create">
+                                    <li data-link="/tax-invoice/create">5. Invoice</li>
+                                </a>
+                                <a href="/payment-records/create">
+                                    <li data-link="/tax-invoice/create">6. Payment Records</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="has-submenu"><i class="fas fa-box"></i> Products <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/add_product">
+                                    <li data-link="/add_product">1. Add Products</li>
+                                </a>
+                                <a href="/products">
+                                    <li data-link="/products">2. All Products</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+
+                    {% if role == 'admin' %}
+                    <li class="has-submenu"><i class="fas fa-user-tie"></i> Sales Person <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/add-sales-person/">
+                                    <li data-link="/add-sales-person/">1. Add Sales Person</li>
+                                </a>
+                                <a href="/sales-persons/">
+                                    <li data-link="/sales-persons/">2. View Sales Persons</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="has-submenu">
+                        <i class="fas fa-file-invoice"></i> Branches <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/branches/create/">
+                                    <li data-link="/add_invoice_term/">
+                                        <i class="fas fa-plus-circle"></i> Create Branch
+                                    </li>
+                                </a>
+
+                                <a href="/branches/">
+                                    <li data-link="/view_invoice_terms/">
+                                        <i class="fas fa-eye"></i> View Branch
+                                    </li>
+                                </a>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="has-submenu"><i class="fa-solid fa-building-columns"></i> Bank Accounts <span
+                            class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/bank/create/">
+                                    <li data-link="bank/create/">1. Create Bank Account</li>
+                                </a>
+                                <a href="/bank/list/">
+                                    <li data-link="/bank/list/">2. Show Bank Accounts </li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+                    {% endif %}
+
+                    <!-- QUOTATION TERMS -->
+                    <li class="has-submenu">
+                        <i class="fas fa-file-alt"></i> Quotation Terms <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/add_quotation_term/">
+                                    <li data-link="/add_quotation_term/">1. Add Quotation Term</li>
+                                </a>
+                                <a href="/view_quotation_terms/">
+                                    <li data-link="/view_quotation_terms/">2. View Quotation Terms</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- INVOICE TERMS -->
+                    <li class="has-submenu">
+                        <i class="fas fa-file-invoice"></i> Invoice Terms <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/add_invoice_term/">
+                                    <li data-link="/add_invoice_term/">1. Add Invoice Term</li>
+                                </a>
+                                <a href="/view_invoice_terms/">
+                                    <li data-link="/view_invoice_terms/">2. View Invoice Terms</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+
+
+
+                    <li class="has-submenu"><i class="fas fa-user-cog"></i> Technicians <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/create">
+                                    <li data-link="/create">1. Create Technician</li>
+                                </a>
+                                <a href="/technicians">
+                                    <li data-link="/technicians">2. Show Technician</li>
+                                </a>
+                                <a href="/technician_work_list">
+                                    <li data-link="/technician_work_list">3. Work History</li>
+                                </a>
+                                <a href="/completed_work">
+                                    <li data-link="/completed_work">4. Completed Work List</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+
+
+                    <a href="/display_allocation" style="text-decoration: none;">
+                        <li class="has-submenu" data-link="/display_allocation"><i class="fas fa-tasks"></i> Allocate Work</li>
+                    </a>
+
+                    <li class="has-submenu"><i class="fa-solid fa-message"></i> Message Templates <span class="arrow-down"></span>
+                        <div class="submenu">
+                            <ul>
+                                <a href="/create_message_template">
+                                    <li data-link="/create_message_template">1. Create Template</li>
+                                </a>
+                                <a href="/message_templates">
+                                    <li data-link="/message_templates">2. Show Template</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <a href="/ocrapp/scan/" style="text-decoration: none;">
+                        <li class="has-submenu" data-link="/ocrapp/scan/"><i class="fas fa-id-card"></i> Scan Card</li>
+                    </a>
+
+                    <a href="/schedule_meetings/schedule/" style="text-decoration: none;">
+                        <li class="has-submenu" data-link="/schedule_meetings/schedule/"><i class="fas fa-calendar-plus"></i>
+                            Schedule Meet</li>
+                    </a>
+
+                    <a href="/schedule_meetings/meeting_list/" style="text-decoration: none;">
+                        <li class="has-submenu" data-link="/schedule_meetings/meeting_list/"><i class="fas fa-book"></i> Meet
+                            Notes</li>
+                    </a>
+
+                    <a href="/open_ai/chatbot/" style="text-decoration: none;">
+                        <li class="has-submenu" data-link="/open_ai/chatbot/"><i class="fa-solid fa-comments"></i> Chat Bot</li>
+                    </a>
+                    
+                <!-- AI Calling -->
+            
+                    <a href="{% url 'ai_calling:campaign_list' %}" style="text-decoration: none;">
+                        <li id="sidebar-ai-calling" data-link="/ai-calling">
+                         <i class="fas fa-robot"></i> AI Calling
+                         </li>
+                    </a> 
+                </ul>
+
+
+
+                <div class="notification" id="notification">
+                    Meeting successfully scheduled!
+                </div>
+
+                <!-- Invoice Popup Modal -->
+                <center>
+                    <div id="invoicePopup" class="modal" style="display: none;">
+                        <div class="modal-content shadow p-4 rounded" style="width: 400px; margin: 10% auto; background: white; border: 1px solid #ccc;">
+                            <span class="close" onclick="closeInvoicePopup()" style="float:right; font-size: 20px; cursor: pointer;">&times;</span>
+                            <h5 class="text-center mb-4">Choose Invoice Type</h5>
+                            <div class="d-grid gap-2">
+                                <button onclick="location.href='/tax-invoice/create?use_quotation=true'" class="btn btn-primary mb-2">Invoice with Quotation</button>
+                                <button onclick="location.href='/tax-invoice/create'" class="btn btn-secondary">New Invoice</button>
+                                </div>
+                            </div>
+                        </div>        
+                </center>
+                <center>
+                    <button class="mb-5 mt-3 logoutbtn">
+                        <a href="/logout">Logout</a>
+                        <div class="arrow-wrapper">
+                            <div class="arrow"></div>
+                        </div>
+                    </button>
+                </center>
+
+                
+
+                <script>
+                    // Highlight current page link
+                    const path = window.location.pathname;
+                    const allLinks = document.querySelectorAll('li[data-link]');
+                    allLinks.forEach(link => {
+                        if (link.getAttribute('data-link') === path) {
+                            link.classList.add('active');
+                        }
+                    });
+
+                    // Show notification if scheduled
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('schedule_success') === '1') {
+                        const notification = document.getElementById('notification');
+                        notification.style.display = 'block';
+                        setTimeout(() => {
+                            notification.style.display = 'none';
+                        }, 3000);
+                    }
+                </script>
+            </div>
+
+        {% endwith %}
+    {% endif %}
+    <div class="overlay" id="overlay"></div>
+    <!-- Particles JS Container -->
+    <div id="particles-js" style="position: fixed; width: 100%; height: 100%; top: 20; left: 0; z-index: -5;"></div>
+
+    <!-- Load the Particles.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+   
+    <!-- Sidebar popup -->
+    <script>
+        function openInvoicePopup() {
+            document.getElementById("invoicePopup").style.display = "block";
+        }
+
+        function closeInvoicePopup() {
+            document.getElementById("invoicePopup").style.display = "none";
+        }
+
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            const modal = document.getElementById("invoicePopup");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', () => {
+            document.body.classList.toggle('open-sidebar');
+        });
+
+        overlay.addEventListener('click', () => {
+            document.body.classList.remove('open-sidebar');
+        });
+
+
+        const closeButton = document.getElementById('closeButton');
+
+        closeButton.addEventListener('click', () => {
+            document.body.classList.remove('open-sidebar');
+        });
+    </script>
+    <script>
+        function goBackAndRefresh() {
+            let count = 0;
+            const maxSteps = 20; // prevent infinite loop
+            const delay = 300;
+
+            const interval = setInterval(() => {
+                // Stop condition
+                if (count >= maxSteps || !document.referrer.includes(location.hostname)) {
+                    clearInterval(interval);
+                    location.reload(); // 🔄 Refresh the final page
+                    return;
+                }
+
+                history.back(); // ⬅️ Go back one page
+                count++;
+            }, delay);
+        }
+    </script>
+
+
+    
+
+</body>
+
+</html>

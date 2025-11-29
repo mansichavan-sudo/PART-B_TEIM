@@ -1,0 +1,431 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <title>Quotation</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0fbff;
+            color: #333;
+        }
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+
+        }
+        .card-registration {
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(3, 174, 210, 0.2);
+            width: 100%;
+            max-width: 800px;
+          
+            margin-top: 70px;
+        }
+        h3 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: #03AED2;
+            margin-bottom: 30px;
+        }
+        h6 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            color: #007a99;
+            text-align: center;
+        }
+        .form-outline input {
+            border-radius: 10px;
+            border: 1px solid #b2e4ef;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+        }
+        .form-outline input:focus {
+            border-color: #03AED2;
+            outline: none;
+            box-shadow: 0 0 8px rgba(3, 174, 210, 0.2);
+        }
+        .btn-info {
+            background-color: #03AED2;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .btn-info:hover {
+            background-color: #027994;
+            box-shadow: 0 4px 15px rgba(3, 174, 210, 0.4);
+        }
+        .container {
+            margin-top: 30px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            margin-top: 10px;
+            width: 55px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4caf50; /* Light green color */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 40px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        .gst-toggle-label {
+            display: inline-block;
+            margin-left: 10px;
+            vertical-align: middle;
+            margin-bottom: 35px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container{
+                margin-top: 30px;
+            }
+            .card {
+                margin-left: 0;
+
+                max-width: 100%;
+                padding: 20px; /* Add some padding for better appearance */
+            }
+            .flaxxxx {
+                display: flex !important;
+           
+                justify-content: space-around !important;
+                align-items: center !important;
+            }
+            .open-sidebar .card {
+                margin-left: 300px; /* Adjust content when sidebar is open */
+            }
+
+        }        
+
+    </style>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+
+    <div class="main-container">
+        <div class="card shadow-2-strong card-registration">
+            <div class="card-body">
+                <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i class="fas fa-house-chimney"></i></span>
+                <span onclick="window.history.back()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4">X</span>
+              
+                <h3 style="  margin-top: 5px;font-weight: 600;" class="mt-5 mb-3"> Quotation</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label>Select Customer<span class="star">*</span></label>
+                                <select id="customer_id" class="form-control form-control-lg" name="customer_id" required>
+                                    <option value="" disabled selected>Select Customer</option>
+                                    {% for customer in customers %}
+                                    <option value="{{ customer.id }}" data-fullname="{{ customer.firstname }} {{ customer.lastname }}">{{ customer.customerid }} - {{ customer.firstname }} {{ customer.lastname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label>Service Type<span class="star">*</span></label>
+                                <textarea id="servicetype_q" class="form-control form-control-lg" placeholder="Service Type" name="servicetype_q" required></textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label> Enter Quantity<span class="star">*</span></label>
+                                <input type="number" id="quantity" class="form-control form-control-lg" placeholder="Quantity" name="quantity" required />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label>Enter Price<span class="star">*</span></label>
+                                <input type="number" step="0.01" id="price" class="form-control form-control-lg" placeholder="Price" name="price" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label>Terms and Condition<span class="star">*</span></label>
+                                <input type="text" id="termsandcondition" class="form-control form-control-lg" placeholder="Terms and Condition" name="termsandcondition" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label>Enter Subject<span class="star">*</span></label>
+                                <input type="text" id="subject" class="form-control form-control-lg" placeholder="Subject" name="subject" required />
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label>Enter Company Name<span class="star">*</span></label>
+                                <input type="text" id="company_name" class="form-control form-control-lg" placeholder="Company Name" name="company_name" required />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label>Enter Company Email<span class="star">*</span></label>
+                                <input type="email" id="company_email" class="form-control form-control-lg" placeholder="Company Email" name="company_email" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                 <label>Company Contact No<span class="star">*</span></label>
+
+                                <input type="text" 
+                                       id="company_contact_no" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="Company Contact No." 
+                                       name="company_contact_no" 
+                                       pattern="\d{10}" 
+                                       title="Please enter a valid 10-digit phone number" 
+                                       required />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                 <label>Select Quotation Date<span class="star">*</span></label>
+                                <input type="date" id="quotation_date" class="form-control form-control-lg" placeholder="Quotation Date" name="quotation_date" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <div data-mdb-input-init class="form-outline mt-3">
+                                <label>Enter Company Address<span class="star">*</span></label>
+                                <input type="text" id="company_address" class="form-control form-control-lg" placeholder="Company Address" name="company_address" required />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6  ">
+                            <div data-mdb-input-init class="form-outline" >
+                                <label>  </label>
+                               
+                               <div class="row mt-4">
+                                <div class="col-md-12  ">
+                                    <label class="switch">
+                                        <input type="checkbox" id="gst_checkbox" class="form-check-input" name="gst_checkbox" />
+                                        <span class="slider round "></span>
+                                    </label>
+                                    <label class="form-check-label gst-toggle-label mb-5" for="gst_checkbox"  >Apply GST</label>
+
+                                   </div> 
+                                 
+                               </div> 
+                              
+                            </div>
+                        </div>
+                    </div> 
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label  style="font-size: 14px;">Discount </label>
+                                <input type="number" step="0.01" id="discount" class="form-control form-control-lg" placeholder="Discount (%)" name="discount" required />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label  style="font-size: 14px;">Total Amount</label>
+                                <input type="text" id="total_amount" class="form-control form-control-lg" placeholder="Total Amount" name="total_amount" readonly />
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label  style="font-size: 14px;">Total Amount with GST and Discount</label>
+                                <input type="text" id="total_amount_with_gst" class="form-control form-control-lg" placeholder="Total Amount with GST" name="total_amount_with_gst" readonly />
+                                
+                            </div>
+                        </div>  
+                        
+                        <div class="col-md-6 mb-4">
+                            <div data-mdb-input-init class="form-outline">
+                                <label style="font-size: 14px;">Quotation Version</label>
+                                <input type="number" id="quotation_version" class="form-control form-control-lg" placeholder="Quotation Version" name="quotation_version" value="{{ quotation.version }}" readonly />
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="mt-4 pt-2 text-center" style="font-family: 'Playfair Display', serif;color:antiquewhite;">
+                        <input class="btn btn-info btn-lg" type="submit" name="submit" value="Submit"  style="width: 200px;" />
+                    </div>
+<div class="b">
+    <a href="/display_quotation" class="btn btn-outline-info   mt-3 leanking-buttons-Quotation  "  >View Quotation Records</a>
+
+</div>                     
+ 
+                </form>
+            </div>
+        </div>
+    </div>            
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+        
+    document.addEventListener('DOMContentLoaded', function() {
+        const quantityInput = document.getElementById('quantity');
+        const priceInput = document.getElementById('price');
+        const discountInput = document.getElementById('discount');
+        const gstCheckbox = document.getElementById('gst_checkbox');
+        const totalAmountInput = document.getElementById('total_amount');
+        const totalAmountWithGstInput = document.getElementById('total_amount_with_gst');
+
+        function calculateAmounts() {
+            const quantity = parseFloat(quantityInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            const discount = parseFloat(discountInput.value) || 0;
+
+            let totalAmount = quantity * price;
+            totalAmountInput.value = totalAmount.toFixed(2);
+
+            let discountedAmount = totalAmount - (totalAmount * (discount / 100));
+            let totalAmountWithGst = gstCheckbox.checked ? discountedAmount * 1.18 : discountedAmount;
+            totalAmountWithGstInput.value = totalAmountWithGst.toFixed(2);
+        }
+
+        quantityInput.addEventListener('input', calculateAmounts);
+        priceInput.addEventListener('input', calculateAmounts);
+        discountInput.addEventListener('input', calculateAmounts);
+        gstCheckbox.addEventListener('change', calculateAmounts);
+
+        calculateAmounts();
+    });
+</script>
+
+<div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+    <div class="row p-3">
+        <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+            © 2025. Powered by
+            <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                style="height: 20px; vertical-align: middle;">
+            <a href="http://www.chronoanalytics.in/"
+                style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                Solution</a>
+            All Rights Reserved.
+        </p>
+      </div>
+        <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+            © 2025. Marketed by
+            <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+            <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+            All Rights Reserved.
+        </p></div>
+    </div>
+</div>
+</body>
+</html>

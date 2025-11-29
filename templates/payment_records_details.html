@@ -1,0 +1,288 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>payment records list</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <style>
+    th a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    th a:hover {
+      text-decoration: underline;
+    }
+</style>
+ <style>
+        #modal {
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            right: -100%;
+            width: 25vw;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 7px rgba(0, 0, 0, 0.2);
+            border-radius: 1px;
+            transition: 0.3s;
+            overflow-y: auto;
+            padding: 20px;
+
+        }
+
+        #modal.active {
+            right: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+        }
+       
+
+    </style>
+
+
+</head>
+<body>
+  {% include 'sidebar.html' %}
+  <div class="main" style="min-height: 100vh;" >
+    <div class="container bg-white" style="margin-top: 100px;">
+      <h4 class="text-primary text-center">Payment Details </h4>
+      <div class="d-flex flex-wrap gap-3 mb-3 justify-content-evenly">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">Customer Details</h5>
+              <p class="card-text"><strong>Name :</strong> {{ main_invoice.customer.fullname }} <br>
+              <strong>Phone :</strong> {{ main_invoice.customer.primarycontact }} <br>
+              <strong>Email :</strong>{{ main_invoice.customer.primaryemail }}  <br>
+            <strong>Address :</strong>{{ main_invoice.customer.soldtopartyaddress }} {{ main_invoice.customer.soldtopartycity }} 
+            {{ main_invoice.customer.soldtopartystate }} {{ main_invoice.customer.soldtopartypostal }} </p>
+            </div>
+          </div>
+
+
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">Bank Details</h5>
+              <p class="card-text"><strong>Name :</strong> {{ main_invoice.bank.bank_name }}-{{ main_invoice.bank.branch }} <br>
+              <strong>Account No :</strong> {{ main_invoice.bank.account_number }} <br>
+            <strong>IFSC :</strong> {{ main_invoice.bank.ifs_code }}</p>
+             
+            </div>
+          </div>
+
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title fw-bold">Branch Details</h5>
+              <p class="card-text"><strong>Name :</strong> {{ main_invoice.quotation.branch.branch_name }}<br>
+              <strong>GST No :</strong> {{ main_invoice.quotation.branch.gst_number }} <br>
+            <strong>Email :</strong> {{ main_invoice.quotation.branch.email_1 }}</p>
+              <button onclick="openModal('{{ main_invoice.id }}')">Invoice Details</button>
+            </div>
+          </div>
+        </div>
+      <div class="filter-form mb-3">
+        <form method="GET" class="d-flex flex-wrap gap-2">
+          <input type="search" name="search" class="form-control w-auto" placeholder="Search by Invoice No ..." value="{{ search_query }}">
+        
+          <select name="ageing" class="form-select w-auto">
+            <option value="">-- Filter by Ageing --</option>
+            <option value="0-7" {% if ageing_selected == '0-7' %}selected{% endif %}>0–7 Days</option>
+            <option value="8-15" {% if ageing_selected == '8-15' %}selected{% endif %}>8–15 Days</option>
+            <option value="16-21" {% if ageing_selected == '16-21' %}selected{% endif %}>16–21 Days</option>
+            <option value="22-30" {% if ageing_selected == '22-30' %}selected{% endif %}>22–30 Days</option>
+            <option value="30+" {% if ageing_selected == '30+' %}selected{% endif %}>30+ Days</option>
+          </select>
+        
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+      </div>
+
+
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Paymnet Invoice No</th>
+                    <th>Payment Date</th>
+                    <th>Total Amount</th>
+                    <th>Paid Amount</th>
+                    <th>Remain Amount</th>
+                    <th>
+                      <a href="?{% if search_query %}search={{ search_query|urlencode }}&{% endif %}{% if ageing_selected %}ageing={{ ageing_selected|urlencode }}&{% endif %}due_order={% if due_order == 'asc' %}desc{% else %}asc{% endif %}">
+                        Next Due Date
+                        {% if due_order == 'asc' %}
+                          ▲
+                        {% elif due_order == 'desc' %}
+                          ▼
+                        {% endif %}
+                      </a>
+                    </th>
+                    <th>Previous <br> Due Date</th>
+                    <th>Payment <br> Mode</th>
+                    <th>Payment <br> Details</th>
+                    <th>Payment <br> Attachment</th>
+                    <th>Payment <br> Ratings</th>
+                    <th>Remark</th>
+                    <th>Ageing</th>
+                    <!-- <th>Status</th> -->
+                </tr>
+            </thead>
+            <tbody>
+              {% for i in payments %}
+              <tr>
+                  <td><a href="#">{{ i.payment_invoice_no }}</a></td>
+                  <td>{{ i.payment_date }}</td>
+                  <td>{{ i.main_invoice.grand_total }}</td>
+                  <td>{{ i.amount_paid }}</td>
+                  <td>{{ i.amount_remaining }}</td>
+                   <td>
+                    {% if i.next_due_date %}
+                    {{ i.next_due_date }}
+                    {% else %}
+                    -
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if i.previous_due_date %}
+                    {{ i.previous_due_date }}
+                    {% else %}
+                    -
+                    {% endif %}
+                  </td>
+                  <td>{{ i.payment_mode }}</td>
+                  <td>
+                    {% if i.payment_details %}
+                    {{ i.payment_details }}
+                    {% else %}
+                    -
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if i.attachment %}
+                      <a href="{{ i.attachment.url }}" target="_blank">View</a>
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td>{{ i.payment_rating }} <i class="fa-solid fa-star" style="color: #FFD43B;"></i></td>
+                   <td>
+                    {% if i.remarks %}
+                    {{ i.remarks }}
+                    {% else %}
+                    -
+                    {% endif %}
+                  </td>
+                  <td>{{ i.ageing }}</td>
+                  <!-- <td>
+                    {% if i.amount_paid %}
+                      <span class="text-success">Completed</span>
+                    {% else %}
+                      <span class="text-warning">Pending</span>
+                    {% endif %}
+                  </td> -->
+              </tr>
+              {% empty %}
+              <tr>
+                  <td colspan="5" class="text-center">No payment records found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+      </div>
+
+
+  </div>
+  <div class="container-fluid footer" style="background-color: #f7f7f7; width:100%;">
+    <div class="row p-3">
+      <div class="col-md-12 text-center">
+        <p style="margin: 0; font-weight: 600; color:#000000">
+          © 2025. Powered by
+          <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+            style="height: 20px; vertical-align: middle;">
+          <a href="http://www.chronoanalytics.in/"
+            style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+            Solution</a>
+          All Rights Reserved.
+        </p>
+      </div>
+      <div class="col-md-12 text-center">
+        <p style="font-weight: 600; color:#000000">
+          © 2025. Marketed by
+          <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+          <a href="http://teim.in/"
+            style="text-decoration: none; background: linear-gradient(to right, #2575fc, #6a11cb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+          All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="modal">
+        <button class="close-btn" onclick="closeModal()">X</button>
+        <h3 style="font-family: 'Playfair Display', serif;font-weight: 900;text-align: center;">Invoice Details</h3>
+        <div id="modal-content"></div>
+    </div>
+
+
+
+<!-- Sidebar section -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+      menuItems.forEach(item => {
+        item.addEventListener('click', function () {
+          const submenu = this.querySelector('.submenu');
+          const arrow = this.querySelector('.arrow-down');
+
+          // Hide all other submenus
+          menuItems.forEach(otherItem => {
+            if (otherItem !== this) {
+              const otherSubmenu = otherItem.querySelector('.submenu');
+              const otherArrow = otherItem.querySelector('.arrow-down');
+              if (otherSubmenu) {
+                otherSubmenu.style.display = 'none';
+                if (otherArrow.classList.contains('arrow-up')) {
+                  otherArrow.classList.remove('arrow-up');
+                }
+              }
+            }
+          });
+
+          // Toggle current submenu
+          if (submenu) {
+            submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+            arrow.classList.toggle('arrow-up');
+          }
+        });
+      });
+    });
+
+
+    function openModal(invoice_id) {
+      fetch(`/fetch_invoice_product_details/${invoice_id}/`)
+          .then(response => response.text())
+          .then(html => {
+              document.getElementById('modal-content').innerHTML = html;
+              document.getElementById('modal').classList.add('active');
+          });
+    }
+    
+    function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+    }
+
+    
+  </script>
+</body>
+</html>

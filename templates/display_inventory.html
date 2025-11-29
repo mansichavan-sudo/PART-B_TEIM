@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <title>Customer Details</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container-table {
+    overflow-x: auto; /* Horizontal scrollbar */
+    width: calc(100% - 250px); /* Adjust width to account for scrollbar */
+    margin: auto;
+    max-width: 100%;
+    padding: 0 20px; /* Add padding for spacing */
+    margin-left: 250px; /* Offset scrollbar by 250px */
+}
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+            white-space: nowrap; /* Prevent wrapping */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            background-color: #ffffff;
+        }
+        .edit-delete-buttons {
+            white-space: nowrap; /* Prevent wrapping for buttons */
+            text-align: center; /* Center align buttons */
+        }
+        .edit-delete-buttons a {
+            display: inline-block; /* Ensure inline block to prevent overflow */
+            width: auto; /* Set width to auto */
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+<h1 style="text-align: center;"> Inventory Information</h1>
+
+<div class="table-wrapper">
+    <div class="container-table">
+      
+      
+        <!-- <nav class="navbar navbar-light bg-light" style="margin-bottom: 20px; width: 100%; padding: 10px;"  id="searchInput">
+            <form class="form-inline" id="searchForm" action="/search" method="GET">
+                <input class="form-control mr-sm-2" type="search" id="searchInput" name="q" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="searchButton">Search</button>
+            </form>
+            
+          </nav>
+          <div id="searchResults"></div> -->
+        
+        
+        <table border="2" align="center">
+            <tr>
+                <th>Sr.No</th>
+                <th>Item Number </th>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Quantity </th>
+                
+               
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            {% for x in data %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{x.itemnumber}}</td>
+                <td>{{x.itemname}}</td>
+                <td>{{x.price}}</td>
+                <td>{{x.quantity}}</td>
+               
+              
+                <td><a href="/edit_inventory/{{ x.id }}" style="color: green;">Edit</a></td>
+                <td><a href="/delete_inventory/{{ x.id }}" style="color: red;">Delete</a></td>
+                
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+</script>
+
+</body>
+</html>

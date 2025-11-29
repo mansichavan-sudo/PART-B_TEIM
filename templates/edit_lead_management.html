@@ -1,0 +1,413 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+   
+    <title>TEIM CRM</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0fbff;
+            color: #333;
+        }
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+
+        }
+        .card-registration {
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255 );
+            width: 100%;
+            max-width: 800px;
+             margin-top: 80px;
+        }
+        h3 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: #03AED2;
+            margin-bottom: 30px;
+        }
+        h6 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            color: #007a99;
+            text-align: center;
+        }
+        .form-outline input,select {
+            border-radius: 10px;
+            border: 1px solid #b2e4ef;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+        }
+        .form-outline input:focus {
+            border-color: #03AED2;
+            outline: none;
+            box-shadow: 0 0 8px rgba(3, 174, 210, 0.2);
+        }
+        .btn-info {
+            background-color: #03AED2;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .btn-info:hover {
+            background-color: #027994;
+            box-shadow: 0 4px 15px rgba(3, 174, 210, 0.4);
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .card-body {
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container{
+                margin-top: 10px;
+            }
+            .card {
+                margin-left: 0;
+
+                max-width: 100%;
+                padding: 20px; /* Add some padding for better appearance */
+            }
+
+            .open-sidebar .card {
+                margin-left: 300px; /* Adjust content when sidebar is open */
+            }
+
+        }
+            .step-section {
+        display: none;
+    }
+    .step-section.active {
+        display: block;
+    }
+  </style>
+       
+</head>
+<body>
+  {% include 'sidebar.html' %}
+<div class="main-container">
+  <div class="card shadow-2-strong card-registration p-2">
+    <div class="card-body p-3">
+      <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i class="fas fa-house-chimney"></i></span>
+      <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4">X</span>
+      <h3 class="mb-3 mt-5">Lead Management</h3>
+
+      {% for x in data %}
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- Step 1 -->
+<div id="step1" class="step-section active">
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <label>Source of Lead<span class="star">*</span></label>
+      <select name="usourceoflead" class="form-control form-control-lg" required>
+        <option disabled {% if not x.usourceoflead %}selected{% endif %}>Source of Lead</option>
+        <option value="Google" {% if x.sourceoflead == "Google" %}selected{% endif %}>Google</option>
+        <option value="Justdial" {% if x.sourceoflead == "Justdial" %}selected{% endif %}>Justdial</option>
+        <option value="Indianmart" {% if x.sourceoflead == "Indianmart" %}selected{% endif %}>Indianmart</option>
+        <option value="Customer Reference" {% if x.sourceoflead == "Customer Reference" %}selected{% endif %}>Customer Reference<option>
+        <option value="BNI" {% if x.sourceoflead == "BNI" %}selected{% endif %}>BNI</option>
+        <option value="Lineclub" {% if x.sourceoflead == "Lineclub" %}selected{% endif %}>Lineclub</option>
+        <option value="Employee Reference" {% if x.sourceoflead == "Employee Reference" %}selected{% endif %}>Employee Reference</option>
+        <option value="Others" {% if x.sourceoflead == "Others" %}selected{% endif %}>Others</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-4">
+      <label>Enter Customer Name<span class="star">*</span></label>
+      <input type="text" name="ucustomername" class="form-control form-control-lg" value="{{ x.customername }}" />
+    </div>
+     
+    <div class="col-md-4 mb-4">
+      <label>Enter Customer Segment<span class="star">*</span></label>
+      <select name="ucustomersegment" class="form-control form-control-lg" required>
+        <option disabled {% if not x.customersegment %}selected{% endif %}>Customer Segment</option>
+        <option value="Residential" {% if x.customersegment == "Residential" %}selected{% endif %}>Residential</option>
+        <option value="Industrial / Commercial" {% if x.customersegment == "Industrial / Commercial" %}selected{% endif %}>Industrial / Commercial</option>
+        <option value="Institutional" {% if x.customersegment == "Institutional" %}selected{% endif %}>Institutional</option>
+        <option value="Irrelevant Lead" {% if x.customersegment == "Irrelevant Lead" %}selected{% endif %}>Irrelevant Lead</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-4">
+      <label>Type of Lead<span class="star">*</span></label>
+      <select name="utypeoflead" class="form-control form-control-lg">
+        <option disabled {% if not x.typeoflead %}selected{% endif %}>Type of Lead</option>
+        <option value="Hot" {% if x.typeoflead == "Hot" %}selected{% endif %}>Hot</option>
+        <option value="Warm" {% if x.typeoflead == "Warm" %}selected{% endif %}>Warm</option>
+        <option value="Cold" {% if x.typeoflead == "Cold" %}selected{% endif %}>Cold</option>
+        <option value="NotInterested" {% if x.typeoflead == "NotInterested" %}selected{% endif %}>Not Interested</option>
+        <option value="LossOfOrder" {% if x.typeoflead == "LossOfOrder" %}selected{% endif %}>Loss Of Order</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-4">
+      <label>Enquiry Date<span class="star">*</span></label>
+      <input type="date" name="uenquirydate" class="form-control form-control-lg" value="{{ x.enquirydate|date:'Y-m-d' }}" />
+    </div>
+
+
+
+    <div class="col-md-4 mb-4">
+      <label>Contacted By<span class="star">*</span></label>
+      <input type="text" name="ucontactedby" class="form-control form-control-lg" value="{{ x.contactedby }}" />
+    </div>
+    <div class="col-md-4 mb-4">
+      <label>Main Category<span class="star">*</span></label>
+      <input type="text" name="umaincategory" class="form-control form-control-lg" value="{{ x.maincategory }}" />
+    </div>
+    <div class="col-md-4 mb-4">
+      <label>Sub Category<span class="star">*</span></label>
+      <input type="text" name="usubcategory" class="form-control form-control-lg" value="{{ x.subcategory }}" />
+    </div>
+    <div class="col-md-4 mb-4">
+      <label>Customer Type<span class="star">*</span></label>
+      <select name="ucustomer_type" class="form-control" id="customer_type_select" onchange="toggleOrganizationFields()">
+        <option value="Individual" {% if x.customer_type == "Individual" %}selected{% endif %}>Individual</option>
+        <option value="Organization" {% if x.customer_type == "Organization" %}selected{% endif %}>Organization</option>
+      </select>
+    </div>
+    <div class="or_name col-md-4 mb-4" style="display: none;">
+      <label>Name <span class="star">*</span></label>
+      <input type="text" name="uor_name"  class="form-control" value="{{ x.or_name }}">
+  
+    </div>
+    <div class="or_contact col-md-4 mb-4" style="display: none;">
+      <label>Contact <span class="star">*</span></label>
+      <input type="number" name="uor_contact" class="form-control" value="{{ x.or_contact }}">
+    </div>
+ 
+  <div class="col-md-4 mb-4">
+    <label>Select Salesperson<span class="star">*</span></label>
+    <select name="usalesperson" class="form-control form-control-lg" required>
+        {% for sp in salespersons %}
+            <option value="{{ sp.id }}" {% if x.salesperson.id == sp.id %}selected{% endif %}>
+                {{ sp.full_name }}
+            </option>
+        {% endfor %}
+    </select>
+  </div>
+</div>
+<div class="text-center">
+  <button type="button" class="btn btn-primary" style="width: 200px;" onclick="nextStep(1)">Next</button>
+</div>
+  </div>
+
+
+  
+</div>
+
+<!-- Step 2 -->
+<!-- <div id="step2" class="step-section">
+  <div class="row">
+    
+  </div>
+
+  <div class="row">
+    
+    
+
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-3">
+            <button type="button" class="btn btn-secondary w-100" onclick="prevStep(0)">Previous</button>
+
+    </div>
+    <div class="col-md-3">
+            <button type="button" class="btn btn-primary w-100" onclick="nextStep(2)">Next</button>
+
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div> -->
+
+<!-- Step 3 -->
+<div id="step3" class="step-section">
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <label>Primary Contact No<span class="star">*</span></label>
+      <input type="number" name="uprimarycontact" class="form-control form-control-lg" value="{{ x.primarycontact }}"  required/>
+    </div>
+    <div class="col-md-6 mb-4">
+      <label>Secondary Contact No</label>
+      <input type="number" name="usecondarycontact" class="form-control form-control-lg" value="{{ x.secondarycontact }}" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <label>Customer Email<span class="star">*</span></label>
+      <input type="email" name="ucustomeremail" class="form-control form-control-lg" value="{{ x.customeremail }}" required/>
+    </div>
+    <div class="col-md-6 mb-4">
+      <label>Location</label>
+      <input type="url" name="ulocation" class="form-control form-control-lg" value="{{ x.location }}" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <label>City<span class="star">*</span></label>
+      <input type="text" name="ucity" class="form-control form-control-lg" value="{{ x.city }}" />
+    </div>
+    <div class="col-md-6 mb-4">
+      <label>Customer Address<span class="star">*</span></label>
+      <textarea name="ucustomeraddress" class="form-control form-control-lg">{{ x.customeraddress }}</textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-3">    
+        <button type="button" class="btn btn-secondary w-100" onclick="prevStep(1)">Previous</button>
+</div>
+    <div class="col-md-3">    <input type="submit" class="btn btn-success w-100" value="Submit" /></div>
+    <div class="col-md-3"></div>
+  </div>
+  <p class="mt-3 text-center text-danger">{{ msg1 }}</p>
+</div>
+
+        
+      </form>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- <script>
+function showStep(step) {
+  const steps = document.querySelectorAll('.step-section');
+  steps.forEach((s, i) => {
+    s.classList.remove('active');
+    if (i === step) s.classList.add('active');
+  });
+}
+
+function nextStep(current) {
+  showStep(current);
+}
+
+function prevStep(prev) {
+  showStep(prev);
+}
+
+// Show first step on load
+document.addEventListener("DOMContentLoaded", () => showStep(0));
+</script> -->
+<script>
+let currentStep = 0;
+
+function showStep(step) {
+  const steps = document.querySelectorAll('.step-section');
+  steps.forEach((s, i) => {
+    s.classList.remove('active');
+    if (i === step) s.classList.add('active');
+  });
+  currentStep = step; // update tracker
+}
+
+function nextStep() {
+  const steps = document.querySelectorAll('.step-section');
+  if (currentStep < steps.length - 1) {
+    showStep(currentStep + 1);
+  }
+}
+
+function prevStep() {
+  if (currentStep > 0) {
+    showStep(currentStep - 1);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => showStep(0));
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+</script>
+<script>
+  function toggleOrganizationFields() {
+    const selectValue = document.getElementById('customer_type_select').value;
+    const orgFields = document.querySelectorAll('.or_name, .or_contact');
+
+    orgFields.forEach(field => {
+      field.style.display = (selectValue === 'Organization') ? 'block' : 'none';
+    });
+  }
+
+  // Run on page load to set correct visibility
+  window.onload = function () {
+    toggleOrganizationFields();
+  };
+</script>
+
+<div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+    <div class="row p-3">
+        <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+            © 2025. Powered by
+            <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                style="height: 20px; vertical-align: middle;">
+            <a href="http://www.chronoanalytics.in/"
+                style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                Solution</a>
+            All Rights Reserved.
+        </p>
+      </div>
+        <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+            © 2025. Marketed by
+            <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+            <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+            All Rights Reserved.
+        </p></div>
+    </div>
+</div>
+</body>
+</html>

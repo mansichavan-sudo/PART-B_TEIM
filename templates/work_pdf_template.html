@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial, sans-serif';
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .header {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #000000;
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 5px;
+        }
+
+        .section {
+            margin-bottom: 5px;
+        }
+
+        .section p {
+            font-size: 14px;
+            margin: 10px 0;
+            padding: 5px;
+        }
+
+        .img-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            /* Ensure wrapping */
+            gap: 10px;
+            /* Add spacing between images */
+        }
+
+        .img-container div {
+            flex: 1 1 calc(40% - 20px);
+            /* Each image takes 50% width with spacing */
+            max-width: calc(40% - 20px);
+            /* Maximum width */
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* .img-container img {
+            width: 70%;  
+            height: auto;
+            border: 1px solid #1e1e1e;
+            border-radius: 8px;
+        } */
+        .img-container p {
+            margin-bottom: 0px;
+        }
+
+        .img-fluid {
+            width: 500px;
+            height: auto;
+            object-fit: cover;
+            border: 1px solid #1e1e1e;
+            border-radius: 8px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+
+                    <td style="width: 70%; text-align:left; vertical-align: middle;">
+                        <div style="padding: 0; margin: 0;">
+
+                            <h1
+                                style="margin: 0 0 10px 0; padding: 0; font-size: 50px; color: #3c99fc; line-height: 1;">
+                                Work Details</h1>
+
+                        </div>
+                    </td>
+                    <!-- Logo Section -->
+                    <td style="width: 30%; text-align: right; vertical-align: middle;margin-top: 0;">
+                        <img src="{{ logo_path }}" alt="Logo" style="max-width: 70px; height: auto;">
+                        
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+
+        {% for item in work.work.all %}
+        <div class="section">
+            <p><strong>Customer Name:</strong> {{ item.fullname }}</p>
+            <p><strong>Customer Phone Number:</strong> {{ item.customer_contact }}</p>
+            <p><strong>Customer Address:</strong> {{ item.customer_address }}</p>
+        </div>
+
+
+        <div class="section">
+            <div class="header">Technician Information</div>
+            <p><strong>Technician Name:</strong> {{ work.technician.first_name }} {{ work.technician.last_name }}</p>
+            <p><strong>Work Description:</strong> {{ item.work_description }}</p>
+            <p><strong>Payment Status:</strong> {{ item.customer_payment_status }}</p>
+            <p><strong>Payment Amount:</strong> {{ item.payment_amount }}</p>
+        </div>
+
+
+        <div class="section">
+            <div class="header">Work Information</div>
+            <p><strong>Status:</strong> {{ work.status }}</p>
+            <p><strong>Completion Date & Time:</strong> {{ work.completion_datetime }}</p>
+        </div>
+
+        <div class="section">
+            <div class="header">Photos</div>
+            <div class="img-container">
+                <div>
+                    <p><strong>Photo Before Service:</strong><br>
+                        {% if work.photos_before_service.all %}
+                    <div>
+                        {% for photo in work.photos_before_service.all %}
+                        <img src="{{ photo.file.path }}" alt="Photo before service" class="img-fluid"
+                            onclick="openModal('{{ photo.file.url }}')">
+                        <br>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No photos available for before service.</p>
+                    {% endif %}
+                    </p>
+                </div>
+                <div>
+                    <p><strong>Photo After Service:</strong><br>
+                        {% if work.photos_after_service.all %}
+                    <div>
+                        {% for photo in work.photos_after_service.all %}
+                        <img src="{{ photo.file.path }}" alt="Photo after service" class="img-fluid"
+                            onclick="openModal('{{ photo.file.url }}')">
+                        <br>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No photos available for after service.</p>
+                    {% endif %}
+                    </p>
+                </div>
+                <div>
+                    <p class="text-center"><strong>Customer Signature Photo</strong></p>
+                    {% if work.customer_signature_photo %}
+                    <img src="{{ work.customer_signature_photo.path }}" alt="Customer Signature Photo"
+                        class="img-fluid">
+                    {% else %}
+                    <p class="text-center">No photo available.</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <p><strong>Payment Photos:</strong><br>
+                        {% if work.payment_photos.all %}
+                    <div>
+                        {% for photo in work.payment_photos.all %}
+                        <img src="{{ photo.file.path }}" alt="Payment Photos" class="img-fluid"
+                            onclick="openModal('{{ photo.file.url }}')">
+                        <br>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No photos available for after service.</p>
+                    {% endif %}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for doing business with us! Please visit again!</p>
+        </div>
+    </div>
+</body>
+
+</html>

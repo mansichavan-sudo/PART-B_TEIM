@@ -1,0 +1,3 @@
+/* small helper styles */
+#campaignTable td { vertical-align: middle; }
+.schedule-fields { transition: all .2s ease; }

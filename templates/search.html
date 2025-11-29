@@ -1,0 +1,310 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <title>Customer Details</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container-table {
+    overflow-x: auto; /* Horizontal scrollbar */
+    width: calc(100% - 250px); /* Adjust width to account for scrollbar */
+    margin: auto;
+    max-width: 100%;
+    padding: 0 20px; /* Add padding for spacing */
+    margin-left: 250px; /* Offset scrollbar by 250px */
+}
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+            white-space: nowrap; /* Prevent wrapping */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            background-color: #ffffff;
+        }
+        .edit-delete-buttons {
+            white-space: nowrap; /* Prevent wrapping for buttons */
+            text-align: center; /* Center align buttons */
+        }
+        .edit-delete-buttons a {
+            display: inline-block; /* Ensure inline block to prevent overflow */
+            width: auto; /* Set width to auto */
+            margin-right: 5px;
+        }
+
+        
+        .btn-like {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        background-color: #28a745;
+        border: 1px solid transparent;
+        color: #fff;
+        border-radius: 0.25rem;
+        text-decoration: none; /* Remove underline */
+    }
+
+    .btn-like.delete-link {
+        background-color: #dc3545;
+    }
+
+    .btn-like:hover,
+    .btn-like.delete-link:hover {
+        background-color: #218838;
+    }
+
+
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .modal-buttons button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'sidebar.html' %}
+<h1 style="text-align: center;">Search Result</h1>
+
+<div class="table-wrapper">
+    <div class="container-table">
+      
+      
+        <nav class="navbar navbar-light bg-light" style="margin-bottom: 20px; width: 100%; padding: 10px;"  id="searchInput">
+            <form class="form-inline" id="searchForm" action="/search" method="GET">
+                <input class="form-control mr-sm-2" type="search" id="searchInput" name="q" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="searchButton">Search</button>
+            </form>
+            
+          </nav>
+          <div id="searchResults"></div>
+        
+          {% if page_obj %}
+         
+        <table border="2" align="center">
+            <tr>
+                <th>Sr.No</th>
+                <th>Customer ID</th>
+                <!-- <th>First Name</th> -->
+
+                <th>
+
+                    <!-- <a href="?sort={% if sort_order == 'asc' %}desc{% else %}asc{% endif %}">First Name -->
+                    <a href="?q={{ search_query }}&sort={% if sort_order == 'asc' %}-{% endif %}firstname">
+                        First Name
+                        {% if sort_field == 'firstname' %}
+                            {% if sort_order == 'asc' %}
+                                ↑
+                            {% else %}
+                                ↓
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                        
+                        
+                    
+                </th>
+                <th>Last Name</th>
+                <th>Primary Email</th>
+                <th>Secondary Email</th>
+                <th>Primary Contact No.</th>
+                <th>Secondary Contact No.</th>
+                <th>Contact Person Name</th>
+                <th>Customer Segment</th>
+                <th>Shift to Party Address</th>
+                <th>Shift to Party City</th>
+                <th>Shift to Party State</th>
+                <th>Shift to Party Postal/ Zip Code</th>
+                <th>Sold to Party Address</th>
+                <th>Sold to Party City</th>
+                <th>Sold to Party State</th>
+                <th>Sold to Party Postal/ Zip Code</th>
+                <!-- <th>Edit</th>
+                <th>Delete</th> -->
+            </tr>
+            {% for customer in page_obj %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{ customer.customerid }}</td>
+                <td>{{ customer.firstname }}</td>
+                <td>{{ customer.lastname }}</td>
+                <td>{{ customer.primaryemail }}</td>
+                <td>{{ customer.secondaryemail }}</td>
+                <td>{{ customer.primarycontact }}</td>
+                <td>{{ customer.secondarycontact }}</td>
+                <td>{{ customer.contactperson }}</td>
+                <td>{{ customer.customersegment }}</td>
+                <td>{{ customer.shifttopartyaddress }}</td>
+                <td>{{ customer.shifttopartycity }}</td>
+                <td>{{ customer.shifttopartystate }}</td>
+                <td>{{ customer.shifttopartypostal }}</td>
+                <td>{{ customer.soldtopartyaddress }}</td>
+                <td>{{ customer.soldtopartycity }}</td>
+                <td>{{ customer.soldtopartystate }}</td>
+                <td>{{ customer.soldtopartypostal }}</td>
+               
+
+                <!-- <td><a href="/edit_customer/{{ x.id }}" class="btn btn-success" role="button">Edit</a></td>
+                <td><a href="/delete_customer/{{ x.id }}" class="btn btn-danger delete-link" role="button">Delete</a></td> -->
+
+                
+            </tr>
+            {% endfor %}
+        </table>
+        {% elif message %}
+        <p>{{ message }}</p>
+    {% else %}
+        <p>No search results found.</p>
+    {% endif %}
+
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <li><a href="?page=1">&laquo; First</a></li>
+            <li><a href="?page={{ page_obj.previous_page_number }}">&lsaquo; Previous</a></li>
+        {% endif %}
+        
+        <span class="current">{{ page_obj.number }}</span>
+        
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">Next &rsaquo;</a></li>
+            <li><a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+        {% endif %}
+    </div>
+    
+    </div>
+</div>
+
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to delete this record?</p>
+        <div class="modal-buttons">
+            <button id="confirmDeleteButton" class="btn btn-danger">Yes</button>
+            <button id="cancelDeleteButton" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+
+
+    const deleteLinks = document.querySelectorAll('.delete-link');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+        const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+        let deleteUrl = '';
+
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                deleteUrl = this.getAttribute('href');
+                confirmationModal.style.display = 'block';
+            });
+        });
+
+        confirmDeleteButton.addEventListener('click', function() {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
+            }
+        });
+
+        cancelDeleteButton.addEventListener('click', function() {
+            confirmationModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target == confirmationModal) {
+                confirmationModal.style.display = 'none';
+            }
+        });
+
+</script>
+
+</body>
+</html>

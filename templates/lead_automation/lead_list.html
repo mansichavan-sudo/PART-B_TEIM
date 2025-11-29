@@ -1,0 +1,45 @@
+<!-- lead_automation/lead_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead List</title>
+</head>
+<body>
+    <h1>Lead List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Source of Lead</th>
+                <th>Salesperson</th>
+                <th>Visitor Name</th>
+                <th>Contact No</th>
+                <th>Email</th>
+                <th>Type of Lead</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td>{{ lead.sourceoflead }}</td>
+                <td>{{ lead.salesperson }}</td>
+                <!-- <td>{{ lead.visitorsname }}</td> -->
+                <!-- <td>{{ lead.contactno }}</td> -->
+                <td>{{ lead.customeremail }}</td>
+                <td>{{ lead.typeoflead }}</td>
+                <!-- <td>{{ lead.leadstatus }}</td> -->
+            </tr>
+            {% endfor %}
+        </tbody>
+
+
+        
+    </table>
+
+
+</body>
+</html>
+
+

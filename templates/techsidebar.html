@@ -1,0 +1,866 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
+    <title>Sidebar</title>
+    <style>
+        body {
+             color: #000000 !important;
+                         background-color: #f5fffa  !important;
+
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            color: rgb(0, 0, 0);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            position: fixed;
+            top: 0%;
+            box-shadow: 0px 5px 10px rgb(0, 0, 0);
+            padding: 25px;
+        }
+
+        .header .hamburger {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 290px;
+            position: fixed;
+            top: 0;
+            left: -300px;
+            /* Hidden by default */
+            background-color: #F4F4F5;
+            padding: 20px 0 0 0;
+            /* Only padding on the top for space */
+            overflow-y: auto;
+            color: black !important;
+             z-index: 2000;
+            /* Ensure sidebar is above overlay */
+
+            /* Curved bottom-right corner */
+            box-shadow: 2px 0px 10px rgba(30, 8, 158, 0.5);
+            /* Optional for better aesthetics */
+        }
+        .addnewshadow{
+      box-shadow: 0px 0px 10px rgb(125, 93, 93);
+            background-color: rgba(255, 255, 255, 0.945);
+
+}
+
+.formshdow{
+     background-color: #ffffff;
+            box-shadow: 04 px 20px rgba(3, 174, 210, 0.2);
+}
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Adjust opacity */
+            backdrop-filter: blur(5px);
+            /* Blurred effect for overlay */
+            z-index: 1500;
+            /* Should cover page content but not sidebar */
+        }
+
+        .open-sidebar .sidebar {
+            left: 0;
+            /* Slide sidebar into view */
+        }
+
+        .open-sidebar .overlay {
+            display: block;
+            /* Show the overlay */
+        }
+
+        .sidebar .logo img {
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            color: #000000;
+            /* Light shade for better contrast */
+            font-family: "Cardo", serif;
+            font-weight: 400;
+            font-size: 18px;
+            padding: 6.5px;
+            margin: 10px 0;
+            cursor: pointer;
+            position: relative;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #525354;
+            /* Slightly lighter shade for hover */
+            color: white;
+        }
+
+        .sidebar ul li a {
+            color: inherit;
+            font-size: 25px;
+            text-decoration: none;
+            display: block;
+            padding: 2px;
+        }
+
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+
+        .sidebar ul .has-submenu {
+            position: relative;
+        }
+
+        .submenu {
+            display: none;
+            background-color: #ffffff;
+            /* Submenu background adjusted */
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+            margin-top: 10px;
+            padding-left: 20px;
+            border-radius: 5px;
+        }
+
+
+
+        .submenu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .submenu ul li {
+            font-size: 16px;
+            padding: 2px 0;
+            margin: 7px 0;
+            color: #000000;
+            /* Submenu text updated */
+            cursor: pointer;
+        }
+
+        .submenu ul li:hover {
+            background-color: #fdfdfd;
+            color: black;
+            box-shadow: 0px 0px 1px rgb(57, 54, 54);
+            padding: 5px;
+            /* Slightly darker shade for hover */
+        }
+
+        .arrow-down {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid #acabab;
+            /* Adjusted arrow color */
+        }
+
+        .arrow-down:hover {
+            color: rgb(255, 255, 255);
+        }
+
+        .arrow-up:hover {
+            color: rgb(255, 255, 255);
+        }
+
+        .arrow-up {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid#acabab;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+            /* Reduced bottom margin */
+            padding: 0;
+            /* Remove any padding */
+        }
+
+        .logo img {
+            max-width: 70%;
+            /* Ensure the logo size is consistent */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            /* Center the logo horizontally */
+        }
+
+
+
+
+
+        .open-sidebar .sidebar {
+            left: 0;
+            /* Slide sidebar into view */
+        }
+
+        .open-sidebar .overlay {
+            display: block;
+            /* Show the overlay */
+        }
+
+        @media (max-width: 768px) {
+            .teimlms {
+                display: inline-block;
+                position: absolute;
+                left: 44% !important;
+                top: 30px !important;
+                font-weight: bold;
+                font-size: 15px !important;
+
+            }
+
+            .open-sidebar .overlay {
+                display: block;
+                /* Show overlay when sidebar is open */
+            }
+
+            .header {
+                padding: 13px;
+            }
+
+            .navbar-header_logo {
+                height: 80px !important;
+
+
+            }
+
+            .tem {
+                position: absolute !important;
+                right: 10px !important;
+                top: 0px !important;
+
+            }
+
+            .imgg {
+                height: 47px !important;
+
+            }
+
+
+            .sidebar {
+                left: -300px;
+                /* Sidebar hidden by default on smaller screens */
+            }
+
+            .header .hamburger {
+                display: block;
+                /* Show hamburger icon on smaller screens */
+            }
+
+            .open-sidebar .sidebar {
+                left: 0;
+                /* Slide sidebar into view when toggled */
+            }
+
+            .open-sidebar .overlay {
+                display: block;
+                /* Show overlay when sidebar is open */
+            }
+
+            .close-button {
+                display: block;
+                /* Show the button on small screens */
+            }
+        }
+
+
+        @media (min-width: 769px) {
+            .sidebar {
+                left: -300px;
+                /* Sidebar always visible on larger screens */
+            }
+
+            .overlay {
+                display: none;
+                /* No overlay needed on larger screens */
+            }
+
+            .header .hamburger {
+                display: inline-block;
+                /* Hide hamburger icon on larger screens */
+            }
+
+            .open-sidebar .open-sidebar {
+                display: block;
+                /* No overlay needed on larger screens */
+            }
+
+            .close-button {
+                display: block;
+                /* Show the button on small screens */
+            }
+
+
+        }
+
+        .logout-container {
+            display: flex;
+            flex-direction: column;
+            /* Arrange buttons vertically */
+            align-items: center;
+            /* Center buttons horizontally */
+            gap: 15px;
+            /* Space between buttons */
+            margin-top: auto;
+            /* Push buttons to the bottom */
+        }
+
+        .logout-button {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-left: 0px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            /* Updated to a red shade for logout */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            text-align: left;
+            text-decoration: none;
+        }
+
+
+
+        .logout-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .logout-button:hover i {
+            transform: rotate(360deg);
+        }
+
+        .logout-button:hover {
+            background-color: #a2a2a2;
+            /* Slightly darker shade for hover */
+        }
+
+        .close-button {
+            display: block;
+            /* Hidden by default */
+            font-size: 24px;
+            color: rgb(244, 80, 80);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            z-index: 2100;
+            /* Ensure it's above the sidebar content */
+        }
+
+        .close-button :hover {
+            color: rgb(255, 0, 0);
+            text-shadow: 0px 0px 5px rgb(255, 2, 2);
+            z-index: 1;
+
+        }
+
+        @media (max-width: 768px) {
+            .close-button {
+                display: block;
+                /* Show the button on small screens */
+            }
+        }
+
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .container1 {
+            margin-left: 25px;
+            margin-right: 10px;
+            padding: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            /* Arrange buttons vertically */
+            align-items: center;
+            /* Center buttons horizontally */
+            padding: 5px;
+            gap: 15px;
+            /* Space between buttons */
+            margin-top: auto;
+            /* Push buttons to the bottom */
+        }
+
+        .btn-custom {
+            display: flex;
+            align-items: center;
+            /* Center icon and text vertically */
+            justify-content: center;
+            /* Center content horizontally */
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: "Outfit", sans-serif;
+            background-color: #000000;
+            /* Green color for buttons */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            /* Rounded edges */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+            width: 80%;
+            /* Ensure consistent width for all buttons */
+            max-width: 180px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for depth */
+        }
+
+        .btn-custom:hover {
+            background-color: #1a1a1a;
+            /* Darker green on hover */
+            transform: translateY(-3px);
+            /* Lift effect on hover */
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+            /* Enhanced shadow */
+        }
+
+        .btn-custom i {
+            margin-right: 8px;
+            /* Space between icon and text */
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .btn-custom {
+                width: 90%;
+                /* Adjust width for smaller screens */
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* Make it responsive for smaller screens */
+        @media (max-width: 768px) {
+
+
+
+
+
+
+            .open-sidebar .pie-chart-container {
+                margin-left: 300px;
+                /* Adjust content when sidebar is open */
+            }
+
+            .open-sidebar .bar-chart-container {
+                margin-left: 300px;
+                /* Adjust content when sidebar is open */
+            }
+        }
+
+        #contractTypeChart {
+            max-width: 500px;
+            max-height: 500px;
+            margin: 0 auto;
+            /* Center the chart */
+        }
+
+     
+        
+        
+
+
+
+        .navbar-header_logo {
+            position: absolute;
+            left: 50px;
+            top: 0px;
+        }
+
+        .tem {
+            position: absolute;
+            right: 10px;
+         }
+
+        .teimlms {
+            display: inline-block;
+            position: absolute;
+            left: 47%;
+            top: 35px;
+            font-weight: bold;
+            font-size: 20px;
+
+        }
+
+        /* Cards Style*/
+
+        .cards {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgb(125, 93, 93);
+            box-shadow: inset 0px 0px 3px rgb(28, 17, 239);
+
+
+        }
+
+        .cardsmaincontainer {
+            margin-bottom: 200px;
+        }
+
+        h3 {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 1px solid rgb(80, 16, 177);
+            /*Script MT */
+            font-weight: 400;
+        }
+
+        label {
+            margin-top: 20px;
+            color: #3498db;
+
+        }
+
+        /* From Uiverse.io by satyamchaudharydev */
+        /* From Uiverse.io by satyamchaudharydev */
+        .logoutbtn {
+            --primary-color: #b4b4b8;
+            --secondary-color: #fff;
+            --hover-color: #111;
+            --arrow-width: 10px;
+            --arrow-stroke: 2px;
+            box-sizing: border-box;
+            border: 0;
+            border-radius: 20px;
+            color: var(--secondary-color);
+            padding: 0.5em 1.3em;
+            background: var(--primary-color);
+            display: flex;
+            transition: 0.2s background;
+            align-items: center;
+            gap: 0.6em;
+            font-weight: bold;
+            background-color: #ff4646;
+            margin-top: 50px !important;
+        }
+
+        .logoutbtn a {
+            list-style-type: none;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logoutbtn .arrow-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logoutbtn .arrow {
+            margin-top: 1px;
+            width: var(--arrow-width);
+            background: var(--primary-color);
+            height: var(--arrow-stroke);
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .logoutbtn .arrow::before {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            border: solid var(--secondary-color);
+            border-width: 0 var(--arrow-stroke) var(--arrow-stroke) 0;
+            display: inline-block;
+            top: -3px;
+            right: 2px;
+            transition: 0.2s;
+            padding: 3px;
+            transform: rotate(-45deg);
+        }
+
+        .logoutbtn:hover {
+            background-color: red;
+            box-shadow: 0px 10px 10px red;
+        }
+
+        .logoutbtn:hover .arrow {
+            background: var(--secondary-color);
+        }
+
+        .logoutbtn:hover .arrow:before {
+            right: 0;
+        }
+
+        .hamburger:hover {
+
+            color: #6a11cb;
+            text-shadow: 0px 0px 5px rgb(0, 0, 27);
+        }
+
+
+        .click-burst {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color:rgb(4, 128, 193);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  animation: burstAnimation 600ms ease-out forwards;
+}
+
+@keyframes burstAnimation {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0.5);
+    opacity: 0;
+  }
+}
+#particles-js canvas {
+    position: absolute;
+    display: block;
+  }
+  #particles-js {
+    position: fixed;   /* Fixes it to the screen */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;      /* Ensures the canvas takes the full height of the screen */
+    z-index: -1; 
+    color: #00e5ff;      /* Keeps it in the background */
+  }
+ 
+    .sidebar ul li.active {
+        background-color: #000000;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    .sidebar ul .has-submenu.active a {
+        color: #fff;
+    }
+ 
+    </style>
+</head>
+
+<body>
+    <div class="header">
+
+        <div class="hamburger" id="hamburger">
+            <i class="fas fa-bars"></i>
+
+        </div>
+        <div class="navbar-header ">
+            <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+            </button> -->
+            <a class="navbar-brand " href="#">
+                <img src="{% static 'images/Logo.webp' %}" alt="Logo" style="height: 120px;   margin-bottom: 10px; "
+                    class="navbar-header_logo">
+            </a>
+        </div>
+        <!-- <div class="teimlms">
+            <span>Dashboard</span>
+        </div> -->
+
+        <div class="navbar-header tem">
+            <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+            </button> -->
+            <a class="navbar-brand mt-3" href="https://chronoanalytics.in/">
+                <img src="{% static 'images/crono.png' %}" alt="Logo" style="height: 70px;   margin-bottom: 10px; "
+                    class="imgg">
+            </a>
+        </div>
+    </div>
+
+
+    
+    <div class="sidebar">
+
+        <div class="close-button" id="closeButton">
+            <i class="fas fa-times"></i>
+        </div>
+
+        <div class="logo">
+            <img src="{% static 'images/Logo.webp' %}" alt="Logo">
+        </div>
+        <ul>
+            <li onclick="window.location.href='/technician_dashboard'" style="cursor: pointer;">
+                <i class="fas fa-home"></i> Dashboard
+            </li>
+
+
+
+
+                 
+            <li class="has-submenu" onclick="window.location.href='/work_list'"><i class="far fa-list-alt"></i></i> Work List
+            </li>
+            <li class="has-submenu" onclick="window.location.href='/completed_work_list'"><i class="fa-solid fa-check-double"></i>Completed Work List</li>
+        </ul>
+
+        <!-- <div class="button-container">
+            <button class="btn-custom" onclick="window.location.href='/ocrapp/scan/'">
+                <i class="fas fa-id-card"></i> Scan Card
+            </button>
+            <button class="btn-custom" onclick="window.location.href='/schedule_meetings/schedule/'">
+                <i class="fas fa-calendar-plus"></i> Schedule Meet
+            </button>
+            <button class="btn-custom" onclick="window.location.href='/schedule_meetings/meeting_list/'">
+                <i class="fas fa-book"></i> Meet Notes
+            </button>
+        </div> -->
+
+        <div class="notification text-center" id="notification">
+            Meeting successfully scheduled!
+        </div>
+
+
+        <script>
+            // Check if the URL contains the schedule_success parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('schedule_success') === '1') {
+                // Show the notification for 3 seconds
+                const notification = document.getElementById('notification');
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000); // Hide after 3 seconds
+            }
+        </script>
+
+        <!-- 
+        
+        
+        -->
+        <center>
+            <button class="mb-5 mt-3 logoutbtn">
+                <a href="/logout">Logout</a>
+                <div class="arrow-wrapper"><div class="arrow"></div></div>
+            </button>
+        </center>
+
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', () => {
+            document.body.classList.toggle('open-sidebar');
+        });
+
+        overlay.addEventListener('click', () => {
+            document.body.classList.remove('open-sidebar');
+        });
+
+
+        const closeButton = document.getElementById('closeButton');
+
+        closeButton.addEventListener('click', () => {
+            document.body.classList.remove('open-sidebar');
+        });
+    </script>
+
+<!-- Particles JS Container -->
+<div id="particles-js" style="position: fixed; width: 100%; height: 100%; top: 20; left: 0; z-index: -5;"></div>
+
+<!-- Load the Particles.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+ 
+  
+
+    
+    <script>
+        function goBackAndRefresh() {
+          window.location.href = document.referrer;
+        }
+        
+      </script>
+
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #a69cac;
+    padding-top: 20px;
+}
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar ul li {
+    padding: 10px;
+    color: black;
+    cursor: pointer;
+    position: relative;
+}
+.sidebar ul li:hover {
+    background-color: #43a4ff;
+}
+.submenu {
+    display: none;
+    background-color: #dbc8c8;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+.submenu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.submenu ul li {
+    padding: 8px 20px;
+    color: white;
+    cursor: pointer;
+}
+.submenu ul li:hover {
+    background-color: #777;
+}
+.arrow-down {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 10px solid blue;
+}
+.arrow-up {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid white;
+}
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+    
+}
+.logo img {
+    margin-left: 40px;
+    max-width: 60%;
+    height: auto;
+    display: block;
+}
+
+
+.form-outline .form-control-lg{
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+}
+
+
+
+.gradient-custom {
+    
+    background-color: #a2ac9c;
+    
+    
+    .card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+    }
+    .card-registration .select-arrow {
+    top: 13px;
+    }
+
+
+}

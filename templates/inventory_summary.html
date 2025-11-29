@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Summary</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+     
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height:  100%;
+            
+        }
+    
+        .content {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            padding: 20px;
+            background-color: #f8f9fa;
+            overflow-y: auto;
+            margin-top: 150px;
+            border-radius: 10px;
+            box-shadow: inset 0px 0px 5px blue !important;
+            box-shadow:  0px 0px 15px rgb(255, 255, 255) !important;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 45px;
+            
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        nav.navbar {
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #7c7c7c;
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        th {
+            font-family: "Cardo", serif;
+            font-weight: 500;
+            font-size: 17px;
+            font-style: normal;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        td {
+            font-family: "Outfit", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #cbcaca;
+        }
+
+        tr:hover {
+            background-color: #e9e9e9;
+        }
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+        h3 {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+        .customer-summary {
+            cursor: pointer;
+            background-color: #e9e9e9;
+            padding: 10px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+        }
+        .customer-summary:hover {
+            background-color: #d9d9d9;
+        }
+        .customer-details {
+            display: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .customer-name {
+            font-weight: bold;
+        }
+        .serial-number {
+            margin-right: 10px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        @media (max-width: 768px) {
+        
+
+            .customer-details{
+                overflow: auto;
+            }
+
+        }
+        .container-fluid{
+            color: #000000 !important;
+           
+        }
+        h2 {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid rgb(80, 16, 177);
+        }
+    </style>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+    <div class="content container-fluid">
+       <div class="row">
+<div class="col-md-12 col-12">    
+    <span onclick="window.location.href='/index'" style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i class="fas fa-house-chimney"></i></span>
+    <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4">X</span>
+  
+    <h2 style="font-weight: 700;margin: 20px;" class="text-center mt-3 mb-3">Inventory Summary</h2>
+</div>
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <div id="searchResults">
+
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% else %}
+                    {% for summary in inventory_summary %}
+                        <div class="customer-summary">
+                            <div>
+                                <span class="serial-number">{{ forloop.counter }}</span>
+                                <span class="customer-name">{{ summary.customer.firstname }} {{ summary.customer.lastname }}</span>
+                            </div>
+                            <span>(ID: {{ summary.customer.customerid }})</span>
+                        </div>
+                        <div class="customer-details">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="background-color: #ffffff; color: rgb(0, 0, 0);">Product</th>
+                                        <th style="background-color: #ffffff; color: rgb(0, 0, 0);">Quantity</th>
+                                        <th style="background-color: #ffffff; color: rgb(0, 0, 0);">Price per Unit</th>
+                                        <th style="background-color: #ffffff; color: rgb(0, 0, 0);">Total Price</th>
+                                        <th style="background-color: #ffffff; color: rgb(0, 0, 0);">Date Added</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entry in summary.entries %}
+                                        <tr>
+                                            <td>{{ entry.product_name }}</td>
+                                            <td>{{ entry.quantity }}</td>
+                                            <td> Rs.{{ entry.price_per_unit }}</td>
+                                            <td> Rs.{{ entry.total_price }}</td>
+                                            <td>{{ entry.date_added }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="no-data">No products available.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <h3 style="background-color: rgb(60, 60, 60); display: inline; color: rgb(255, 255, 255);border-radius: 10px;padding: 7px;" >Total Price: Rs.{{ summary.total_price }}</h3>
+                        </div>
+                    {% empty %}
+                        <p class="text-center p-3">No inventory data available.</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+       </div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const customerSummaries = document.querySelectorAll('.customer-summary');
+            customerSummaries.forEach(summary => {
+                summary.addEventListener('click', function() {
+                    const details = this.nextElementSibling;
+                    if (details.style.display === 'none' || details.style.display === '') {
+                        details.style.display = 'block';
+                    } else {
+                        details.style.display = 'none';
+                    }
+                });
+            });
+
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+    </script>
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+        <div class="row p-3">
+            <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                © 2025. Powered by
+                <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                    style="height: 20px; vertical-align: middle;">
+                <a href="http://www.chronoanalytics.in/"
+                    style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                    Solution</a>
+                All Rights Reserved.
+            </p>
+          </div>
+            <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                © 2025. Marketed by
+                <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+                <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                All Rights Reserved.
+            </p></div>
+        </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!-- email_automation_celery/templates/email_automation_celery/automate_leads.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Automated Leads Emails</title>
+</head>
+<body>
+    <h1>Emails Sent to Leads (Celery)</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Visitor Name</th>
+                <th>Email</th>
+                <th>Type of Lead</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td>{{ lead.visitorsname }}</td>
+                <td>{{ lead.customeremail }}</td>
+                <td>{{ lead.typeoflead }}</td>
+                <td>Task Queued</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

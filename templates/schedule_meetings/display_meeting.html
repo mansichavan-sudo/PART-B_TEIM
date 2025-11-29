@@ -1,0 +1,513 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <title>TEIM CRM</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="{% static 'images/crono.png' %}" type="image/png">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+
+    <style>
+        /* Body Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #dedede;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Title Styling */
+        h1 {
+            color: #03AED2;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Content Layout */
+        .table-wrapper {
+        
+           
+            background-color: white;
+            border: 1px solid black;
+            padding: 20px;
+            /* border: 1px solid black ; */
+            margin-top: 86px !important;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgb(125, 93, 93);
+            box-shadow: inset 0px 0px 3px rgb(28, 17, 239);
+        }
+        .container-table {
+            margin-top: 10px !important;
+
+            overflow-x: auto; /* Horizontal scrollbar */
+            width: calc(100%); /* Adjust width to account for scrollbar */
+            margin: auto;
+            max-width: 100%;
+            padding:0px 6px 42px 0px; /* Add padding for spacing */
+            
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #7c7c7c;
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        th {
+            font-family: "Cardo", serif;
+            font-weight: 500;
+            font-size: 17px;
+            font-style: normal;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        td {
+            font-family: "Outfit", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #cbcaca;
+        }
+
+        /* Button Styling */
+        .btn-like {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: #fff;
+            background-color: #343434;
+            border: none;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .btn-like:hover {
+            background-color: #343434;
+        }
+
+        /* Search Bar Styling */
+        .navbar {
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .pagination li {
+            margin: 10px 5px;
+        }
+        .pagination a, .pagination span {
+            padding: 10px 12px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .pagination .current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-inline .form-control {
+            border: 1px solid #124ab1;
+            color: #0c0101;
+            border-radius: 7px;
+            background-color: #ffffff;
+        }
+        
+        .form-inline .btn-outline-success {
+            color: #000000;
+          
+        }
+
+        .form-inline .btn-outline-success:hover {
+            background-color: #01ca29;
+            color: #ffffff;
+        }
+
+        .edit-delete-buttons {
+            white-space: nowrap; /* Prevent wrapping for buttons */
+            text-align: center; /* Center align buttons */
+        }
+        .edit-delete-buttons a {
+            display: inline-block; /* Ensure inline block to prevent overflow */
+            width: auto; /* Set width to auto */
+            margin-right: 5px;
+        }
+
+        
+        .btn-like {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            background-color: #28a745;
+            border: 1px solid transparent;
+            color: #fff;
+            border-radius: 0.25rem;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .btn-like.delete-link {
+            background-color: #dc3545;
+        }
+
+        .btn-like:hover,
+        .btn-like.delete-link:hover {
+            background-color: #218838;
+        }
+
+
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Fixed position ensures it remains relative to the viewport */
+        z-index: 1; /* High z-index to overlay other content */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width for the overlay */
+        height: 100%; /* Full height for the overlay */
+        overflow: hidden; /* Prevent scrolling of background content */
+        background-color: rgba(0,0,0,0.6); /* Dark overlay */
+    }
+
+    .modal-content {
+        position: fixed; /* Fix the modal's position */
+        left: 50%; /* Center horizontally */
+        top: 50%; /* Center vertically */
+        transform: translate(-50%, -50%); /* Adjust for modal's own dimensions */
+        background-color: #ffffff; /* White background for content */
+        width: 50%; /* Adjust modal size */
+        max-width: 600px; /* Restrict maximum width */
+        padding: 30px; /* Padding inside the modal */
+        border-radius: 10px; /* Rounded corners for aesthetics */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Subtle shadow for prominence */
+        text-align: center; /* Center-align text */
+        animation: fadeIn 0.3s ease-in-out; /* Smooth fade-in animation */
+    }
+
+    .modal-buttons {
+        display: flex; /* Use flexbox for buttons */
+        justify-content: center; /* Center-align buttons */
+        gap: 15px; /* Spacing between buttons */
+    }
+
+    .modal-buttons button {
+        padding: 12px 25px; /* Larger buttons for better UI */
+        font-size: 1rem; /* Readable font size */
+        border-radius: 5px; /* Rounded button edges */
+    }
+
+        .view-btn {
+            background-color: #303030;
+            color: rgb(246, 246, 246);
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px;
+            border-color: #000000;
+        }
+        #modal {
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            right: -100%;
+            width: 40%;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 7px rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            transition: 0.3s;
+            overflow-y: auto;
+            padding: 20px;
+            
+        }
+
+        #modal.active {
+            right: 0;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+
+    /* Style for the dropdown content */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        /* box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); */
+        min-width: 50px;
+        z-index: 1;
+        border-radius: 30px;
+    }
+
+    .dropdown-content a {
+        color: rgb(0, 0, 0);
+        padding: 6px 10px;
+        text-decoration: none;
+        display: block;
+    }
+
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Smooth fade-in animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+
+/* On small screens, set margin to 0 when sidebar is hidden */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                margin-left: 0;
+                margin-top: 150px !important;
+               
+                padding: 20px; /* Add some padding for better appearance */
+            }
+
+            .open-sidebar .table-wrapper {
+                margin-left: 300px; /* Adjust content when sidebar is open */
+            }
+
+            #modal {
+                width: 80%;
+            }
+
+        }
+        h1{
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid rgb(80, 16, 177);
+            /*Script MT */
+        }
+        
+        a#linarbtn:hover {
+            box-shadow: 0px 0px 10px #6a11cb;
+        }
+        .innernlinearnames{
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+           /
+        
+        }
+        .form-group input{
+            width:200px !important;
+        }
+        .one-150-buttons{
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+
+    <div class="container-fluid" style="min-height: 100vh !important;">
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="col-12 mb-5">
+                    <div class="table-wrapper addnewshadow ">
+
+
+                        <h1>Meeting Log Records</h1>
+                    
+                        <div class="row">
+                            <div class="col-md-12 mb-5">
+                                <form method="GET" action="{% url 'schedule_meetings:display_meeting' %}" class="form-inline" style="margin-bottom: 20px;">
+                                    <div class="form-group">
+                                        <label for="customer_id" class="innernlinearnames ">Search by Customer ID:</label>
+                                        <input type="text" name="customer_id" id="customer_id" class="form-control ml-sm-2 mt-3 " placeholder="Enter Customer ID" value="{{ customer_id }}">
+                                    </div>
+                                    <div class="form-group ml-sm-3">
+                                        <label for="meeting_date" class="innernlinearnames ">Search by Date:</label>
+                                        <input type="date" name="meeting_date" id="meeting_date" class="form-control ml-sm-2 mt-3 " value="{{ meeting_date }}">
+                                    </div>&nbsp;
+                                    <div class="col- ">
+                                        <button type="submit" class="btn btn-outline-success  ml-2 one-150-buttons mt-3 ml-4" >Search</button>
+                                        <a href="{% url 'schedule_meetings:display_meeting' %}" class="btn  btn-outline-danger  ml-4 one-150-buttons mt-3">Reset</a>
+                                    </div>
+                                  
+                                </form>
+                            </div>
+                        </div>
+                        <div class="p mb-3">
+                            <p class="scroll-instruction">Scroll to view more content ➡️ </p>
+                        </div>
+                        <div class="container-table">
+                    
+                            <!-- <form method="GET" action="{% url 'schedule_meetings:display_meeting' %}">
+                                <input type="text" name="customer_id" placeholder="Customer ID" value="{{ customer_id }}">
+                                <input type="date" name="meeting_date" value="{{ meeting_date }}">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                                <a href="{% url 'schedule_meetings:display_meeting' %}" class="btn btn-secondary">Reset</a>
+                            </form> -->
+                            
+                              <table class="table table-bordered">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Customer ID</th>
+                                    <th>Meeting Date</th>
+                                    <th>Meeting Time</th>
+                                    <th>Participants</th>
+                                    <th>Meeting Agenda</th>
+                                    <th>Minutes of Meeting</th>
+                                </tr>
+                                {% for x in data %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ x.customer }}</td>
+                                    <td>{{ x.meeting_date }}</td>
+                                    <td>{{ x.meeting_time }}</td>
+                                    <td>{{ x.participants }}</td>
+                                    <td>{{ x.meeting_agenda }}</td>
+                                    <td>{{ x.minutes_of_meeting }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                         
+                        </div>
+                       
+                        
+                        {% include 'buttons.html' %}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+                    const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+                    menuItems.forEach(item => {
+                        item.addEventListener('click', function() {
+                            const submenu = this.querySelector('.submenu');
+                            const arrow = this.querySelector('.arrow-down');
+                            
+                            // Hide all other submenus
+                            menuItems.forEach(otherItem => {
+                                if (otherItem !== this) {
+                                    const otherSubmenu = otherItem.querySelector('.submenu');
+                                    const otherArrow = otherItem.querySelector('.arrow-down');
+                                    if (otherSubmenu) {
+                                        otherSubmenu.style.display = 'none';
+                                        if (otherArrow.classList.contains('arrow-up')) {
+                                            otherArrow.classList.remove('arrow-up');
+                                        }
+                                    }
+                                }
+                            });
+        
+                            // Toggle current submenu
+                            if (submenu) {
+                                submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                                arrow.classList.toggle('arrow-up');
+                            }
+                        });
+                    });
+                });
+        </script>
+        
+        <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+            <div class="row p-3">
+                <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+              </div>
+                <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p></div>
+            </div>
+    </div>
+</body>
+</html>

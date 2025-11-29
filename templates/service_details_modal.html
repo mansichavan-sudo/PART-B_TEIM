@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details Modal</title>
+    <style>
+        .detail-container{
+            padding: 10px;
+            margin-top: 5px;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        .detail-item strong {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .detail-box {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <div class="detail-item">
+            <strong>Customer ID:</strong>
+            <div class="detail-box">{{ service.customer }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Contact No.:</strong>
+            <div class="detail-box">{{ service.customer.primarycontact }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Email:</strong>
+            <div class="detail-box">{{ service.customer.primaryemail }}</div>
+        </div>
+
+        <div class="detail-item">
+            <strong>Selected Services:</strong>
+            <div class="detail-box">
+                {% for service in service.selected_services.all %}
+                    {{ service.product_name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+        </div>        
+
+        <div class="detail-item">
+            <strong>Total Price:</strong>
+            <div class="detail-box">{{ service.total_price }}</div>
+        </div>    
+        <div class="detail-item">
+            <strong>Total Price with GST:</strong>
+            <div class="detail-box">{{ service.total_price_with_gst }}</div>
+        </div>    
+        <div class="detail-item">
+            <strong>Contract type:</strong>
+            <div class="detail-box">{{ service.contract_type }}</div>
+        </div>    
+        <div class="detail-item">
+            <strong>Contract Status:</strong>
+            <div class="detail-box">{{ service.contract_status }}</div>
+        </div> 
+        <div class="detail-item">
+            <strong>Property Type:</strong>
+            <div class="detail-box">{{ service.property_type }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Warranty Period:</strong>
+            <div class="detail-box">{{ service.warranty_period }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>State:</strong>
+            <div class="detail-box">{{ service.state }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>City:</strong>
+            <div class="detail-box">{{ service.city }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Pincode:</strong>
+            <div class="detail-box">{{ service.pincode }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Address:</strong>
+            <div class="detail-box">{{ service.address }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>GPS Location:</strong>
+            <div class="detail-box"><a href="{{ service.gps_location }}" target="_blank">View Location</a></div>
+        </div>
+        <div class="detail-item">
+            <strong>GST Number:</strong>
+            <div class="detail-box">{{ service.gst_number }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Frequency Contact:</strong>
+            <div class="detail-box">{{ service.frequency_count }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Payment Terms:</strong>
+            <div class="detail-box">{{ service.payment_terms }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sales person Name:</strong>
+            <div class="detail-box">{{ service.sales_person_name }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Sales Person Contact No.:</strong>
+            <div class="detail-box">{{ service.sales_person_contact_no }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Delivery Time:</strong>
+            <div class="detail-box">{{ service.delivery_time }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Lead Date:</strong>
+            <div class="detail-box">{{ service.lead_date }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Service Date:</strong>
+            <div class="detail-box">{{ service.service_date }}</div>
+        </div>
+        
+    </div>
+</body>
+</html>
+ 

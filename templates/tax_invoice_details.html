@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details</title>
+    <style>
+        .product-container {
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        .product-card {
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            background-color: #f7f7f7;
+            border-radius: 5px;
+            box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-field {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-field label {
+            width: 100px;
+            font-weight: bold;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .product-field input {
+            flex: 1;
+            padding: 6px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            color: #222;
+        }
+    </style>
+</head>
+<body>
+    <div class="product-container">
+        {% if invoice.items.all %}
+            {% for item in invoice.items.all %}
+                <div class="product-card">
+                    <div class="product-field">
+                        <label>Product Name:</label>
+                        <input type="text" value="{{ item.product_name }}" readonly>
+                    </div>
+                    <div class="product-field">
+                        <label>HSN Code:</label>
+                        <input type="text" value="{{ item.hsn_code }}" readonly>
+                    </div>
+                    <div class="product-field">
+                        <label>Quantity:</label>
+                        <input type="text" value="{{ item.quantity }}" readonly>
+                    </div>
+                    <div class="product-field">
+                        <label>Unit:</label>
+                        <input type="text" value="{{ item.unit }}" readonly>
+                    </div>
+                    <div class="product-field">
+                        <label>Price:</label>
+                        <input type="text" value="₹{{ item.price }}" readonly>
+                    </div>
+                    <div class="product-field">
+                        <label>GST %:</label>
+                        <input type="text" value="{{ item.gst_percent }}%" readonly>
+                    </div>
+                    <div class="product-field">
+                        <label>GST Amount:</label>
+                        <input type="text" value="₹{{ item.gst_amount }}" readonly>
+                    </div>
+                    <div class="product-field">
+                        <label>Total:</label>
+                        <input type="text" value="₹{{ item.total }}" readonly>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No product items found for this invoice.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

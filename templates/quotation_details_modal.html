@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details Modal</title>
+    <style>
+        .detail-container{
+            padding: 10px;
+            margin-top: 5px;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        .detail-item strong {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .detail-box {
+            padding: 10px;
+            margin-top: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <div class="detail-item">
+            <strong>Customer ID:</strong>
+            <div class="detail-box">{{ quotation_var.customer }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Quantity:</strong>
+            <div class="detail-box">{{ quotation_var.quantity }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Price:</strong>
+            <div class="detail-box">{{ quotation_var.price }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Total Amount:</strong>
+            <div class="detail-box">{{ quotation_var.total_amount }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Discount:</strong>
+            <div class="detail-box">{{ quotation_var.discount }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Company Name:</strong>
+            <div class="detail-box">{{ quotation_var.company_name }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Company Email:</strong>
+            <div class="detail-box">{{ quotation_var.company_email }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Comapny Contact No.:</strong>
+            <div class="detail-box">{{ quotation_var.company_contact_no }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Quotation Date:</strong>
+            <div class="detail-box">{{ quotation_var.quotation_date }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Company Address:</strong>
+            <div class="detail-box">{{ quotation_var.company_address }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Subject:</strong>
+            <div class="detail-box">{{ quotation_var.subject }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Terms and Conditions:</strong>
+            <div class="detail-box">{{ quotation_var.termsandcondition }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Service Type:</strong>
+            <div class="detail-box">{{ quotation_var.servicetype_q }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>GST checkbox:</strong>
+            <div class="detail-box">{{ quotation_var.gst_checkbox }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Total Amount with GST:</strong>
+            <div class="detail-box">{{ quotation_var.total_amount_with_gst }}</div>
+        </div>
+        <div class="detail-item">
+            <strong>Quotation Version:</strong>
+            <div class="detail-box">{{ quotation_var.version }}</div>
+        </div>
+        
+    </div>
+</body>
+</html>
+ 

@@ -1,0 +1,209 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Person List</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    .sales-table th,
+    .sales-table td {
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .sales-table tbody tr:hover {
+      background-color: #f8f9fa;
+      transition: background-color 0.3s ease;
+    }
+
+   .add-btn {
+      float: right;
+    }
+
+    @media (max-width: 768px) {
+      .table-responsive {
+        font-size: 14px;
+      }
+          td{
+      min-width: 170px !important;
+    }
+   
+    }
+.salesrecordcon{
+  min-height: 40vh !important;
+}
+  </style>
+</head>
+<body>
+        {% include 'sidebar.html' %}
+
+  <div class="main">
+    <div class="container salesrecordcon bg-white p-4 rounded addnewshadow" style="margin-top: 100px;">
+    <!-- Header and Add Button -->
+    <<div class="d-flex justify-content-between align-items-center mb-3">
+  <!-- Left: Heading -->
+  <h3 class="text-primary mb-0">Sales Person List</h3>
+
+  <!-- Right: Buttons -->
+  <div class="d-flex gap-2">
+    <a href="{% url 'add_sales_person' %}" class="btn btn-success d-flex align-items-center">
+      <i class="bi bi-plus-lg me-1"></i> Add
+    </a>
+
+    <a href="{% url 'export_sales_person_csv' %}" class="btn btn-primary d-flex align-items-center">
+      <i class="bi bi-box-arrow-up me-1"></i> Export
+    </a>
+  </div>
+</div>
+
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped sales-table">
+        <thead class="table-dark">
+          <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Email</th>
+            <th>Joining</th>
+            <th>DOB</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for person in sales_persons %}
+          <tr>
+            <td>{{ person.full_name }}</td>
+            <td>{{ person.mobile_no }}</td>
+            <td>{{ person.email }}</td>
+            <td>{{ person.date_of_joining }}</td>
+            <td>{{ person.date_of_birth }}</td>
+            <td >
+              <a href="{% url 'edit_sales_person' person.id %}" class="btn btn-sm btn-warning me-1">
+                <i class="bi bi-pencil-square"></i> 
+              </a>
+              <a  href="{% url 'delete_sales_person' person.id %}" class="btn btn-sm btn-danger">
+                <i class="bi bi-trash"></i> 
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center text-muted">No salespersons found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+                            {% include 'buttons.html' %}
+
+  </div>
+  </div>
+ <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%;  ">
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+        const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+        let deleteUrl = '';
+
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                deleteUrl = this.getAttribute('href');
+                confirmationModal.style.display = 'block';
+            });
+        });
+
+        confirmDeleteButton.addEventListener('click', function () {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
+            }
+        });
+
+        cancelDeleteButton.addEventListener('click', function () {
+            confirmationModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target == confirmationModal) {
+                confirmationModal.style.display = 'none';
+            }
+        });
+
+        function openModal(service_id) {
+            fetch(`/get_service_details/${service_id}/`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('modal-content').innerHTML = html;
+                    document.getElementById('modal').classList.add('active');
+                });
+
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+    </script>
+  <!-- Bootstrap 5 JS Bundle (Optional) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

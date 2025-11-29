@@ -1,0 +1,30 @@
+<!-- email_senders/templates/email_senders/automate_leads.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Automated Leads Emails</title>
+</head>
+<body>
+    <h1>Emails Sent to Leads</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Visitor Name</th>
+                <th>Email</th>
+                <th>Type of Lead</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td>{{ lead.visitorsname }}</td>
+                <td>{{ lead.customeremail }}</td>
+                <td>{{ lead.typeoflead }}</td>
+                <td>Email Sent</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

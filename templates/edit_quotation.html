@@ -1,0 +1,1507 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Management Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0fbff;
+            color: #333333;
+        }
+
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+
+
+
+        }
+
+
+        .card-registration {
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(3, 174, 210, 0.2);
+            width: 100%;
+
+
+            margin-top: 50px;
+        }
+
+
+        h3 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            color: #03AED2;
+            margin-bottom: 30px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            margin-top: 10px;
+            width: 55px;
+            height: 26px;
+        }
+
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffffff;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+
+        input:checked+.slider {
+            background-color: #4caf50;
+        }
+
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+
+        .gst-toggle-label {
+            display: inline-block;
+            margin-left: 10px;
+            vertical-align: middle;
+            margin-bottom: 35px;
+        }
+
+
+        .form-check {
+            margin-bottom: 10px;
+        }
+
+
+        .form-check-input {
+            margin-right: 10px;
+        }
+
+
+        #gst-price-container,
+        #gst-number-container {
+            display: none;
+            /* Initially hidden, will show only when GST is checked */
+        }
+
+        /* Style for all form labels */
+        label {
+            font-family: 'Playfair Display', serif;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+
+        /* General style for all input fields, select boxes, textareas */
+
+        input[type="number"],
+        input[type="password"],
+        input[type="url"],
+        select,
+        textarea,
+        .product-unit-input {
+            width: 100%;
+            padding: 10px;
+
+            margin-bottom: 15px;
+
+            border: 1px solid #ffffff;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+        }
+
+
+
+
+        input[type="number"],
+        input[type="password"],
+        input[type="url"],
+        select,
+        textarea,
+        .product-unit-input {
+            border-color: #878787;
+            outline: none;
+            box-shadow: 0px 0px 8px rgba(255, 250, 250);
+        }
+
+
+        /* Style for select dropdowns */
+        select {
+            height: 40px;
+            background-color: #fff;
+
+        }
+
+
+        /* Style for textarea to allow resizing vertically */
+
+
+
+
+
+
+
+
+
+
+        /* Style for form wrapper to center form and add padding */
+        form {
+            justify-content: center;
+            {% comment %} max-width: 600px; {% endcomment %}
+            margin: auto;
+            padding: 10px;
+            background-color: #ffffff;
+        }
+
+
+        /* Style for error messages */
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+
+
+
+
+        /* Style for checkbox label */
+        .form-check-label {
+            margin-left: 5px;
+            font-size: 14px;
+        }
+
+
+
+
+
+        .btn-info {
+            background-color: #03AED2;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-info:hover {
+            background-color: #027994;
+            box-shadow: 0 4px 15px rgba(3, 174, 210, 0.4);
+        }
+
+        @media (min-width: 768px) {
+            .ApplyGStT {
+                margin-top: 50px !important;
+
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin-top: 30px;
+            }
+
+            .card {
+                margin-left: 0;
+
+                max-width: 100%;
+                /* Add some padding for better appearance */
+            }
+
+            .open-sidebar .card {
+
+                margin-left: 300px;
+                /* Adjust content when sidebar is open */
+            }
+
+        }
+
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .star {
+            color: red;
+        }
+
+        .overterm {
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        #products-container {
+            max-height: 300px;
+            /* Set your desired scroll height */
+            overflow-y: auto;
+            /* or use 'scroll' for always-visible scrollbar */
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+    <div class="main" style="min-height: 100vh;">
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 col-12">
+                    <div class="card shadow-2-strong card-registration">
+                        <div class="card-body">
+                            <span onclick="window.location.href='/index'"
+                                style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;"
+                                class="mb-4">
+                                <i class="fas fa-house-chimney"></i>
+                            </span>
+                            <span onclick="goBackAndRefresh()"
+                                style="float: right; cursor: pointer; color:red; font-size:20px;" class="mb-4">X</span>
+
+                            <h3 style="font-weight: 600; margin: 10px;" class="mt-5">Edit Quotation Management Record</h3>
+
+                            <form method="POST" id="quotation-management-form" action="{% url 'edit_quotation' quotation.id %}">
+                                {% csrf_token %}
+
+                                <!-- STEP 1 -->
+                                <div class="form-step active">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Customer Contact<span class="star">*</span></label>
+                                            <input type="text" id="customer_contact" name="contact_no" value="{{ quotation.customer.primarycontact }}" required  class="form-control">
+                                            <input type="hidden" name="customer_id" id="customer_id" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Customer Email<span class="star">*</span></label>
+                                            <input type="text" id="customer_email" name="customer_email" 
+                                            value="{{ quotation.customer.primaryemail }}"  required  class="form-control">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Secondary Email:</label>
+                                            <input type="email" name="secondary_email" value="{{ quotation.customer.secondaryemail | default:'' }}" class="form-control" >
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>Customer Full Name<span class="star">*</span></label>
+                                            <input type="text" name="customer_full_name" class="form-control" 
+                                            value="{{ quotation.customer.fullname }}" required >
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Secondary Contact No.:</label>
+                                            <input type="text" name="secondary_contact_no" value="{{ quotation.customer.secondarycontact | default:'' }}" class="form-control"><br>
+                                        </div>
+                                        <!-- <div class="col-md-6">
+                                            <label>Customer Type<span class="star">*</span></label>
+                                            <input type="text" class="form-control" name="customer_type" id="customer_type_select" 
+                                                   value="{{ quotation.customer.customer_type }}" readonly>
+                                        </div> -->
+                                        <div class="col-md-6">
+                                            <label>Customer Type<span class="star">*</span></label>
+                                            <select name="customer_type" id="customer_type_select" class="form-control" onchange="toggleOrganizationFields()">
+                                                <option value="">Select Customer Type</option>
+                                                <option value="Individual" {% if quotation.customer.customer_type == 'Individual' %}selected{% endif %}>Individual</option>
+                                                <option value="Organization" {% if quotation.customer.customer_type == 'Organization' %}selected{% endif %}>Organization</option>
+                                            </select>
+
+                                        </div>
+                                        
+
+                                        <div class="col-md-6 org-fields">
+                                            <label>Sub-Name</label>
+                                            <input type="text" name="or_name" class="form-control" value="{{ quotation.or_name }}">
+                                        </div>
+
+                                        <div class="col-md-6 org-fields">
+                                            <label>Sub-Contact No</label>
+                                            <input type="text" name="or_contact" class="form-control" value="{{ quotation.or_contact }}">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>Sales Person <span class="star">*</span></label>
+                                            <select name="contact_by" id="sales_person_select" class="form-control">
+                                                <option value="">Select Sales Person</option>
+                                                {% for sales_person in sales_person_list %}
+                                                    <option value="{{ sales_person.full_name }}" 
+                                                            data-contact="{{ sales_person.mobile_no }}"
+                                                            {% if sales_person.full_name == quotation.contact_by %}selected{% endif %}>
+                                                        {{ sales_person.full_name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Contact No<span class="star">*</span></label>
+                                            <input type="number" id="contact_by_no" name="contact_by_no"  required
+                                               value="{{ quotation.contact_by_no }}" class="form-control">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>Subject:</label>
+                                            <input type="text" name="subject" class="form-control" value="{{ quotation.subject }}"><br>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Quotation Date:</label>
+                                            <input type="date" name="quotation_date" class="form-control" 
+                                            value="{{ quotation.quotation_date|date:'Y-m-d' }}"><br>
+                                        </div>
+                                        <div class="col-12 position-relative">
+                                            <label>Thank you note<span class="star">*</span></label>
+                                            <textarea id="thank_u_note" name="thank_u_note" rows="2" >{{ quotation.thank_u_note }}</textarea>
+                                            <ul id="thank-suggestions" class="autocomplete-box" style="display: none;"></ul>
+                                        </div>
+                                        {{ thank_notes|json_script:"thank-notes-json" }}
+                                        <div class="col-12">
+                                            <label>Billing Address (Auto-filled from customer record):</label>
+                                            <textarea name="address" id="customer_address" class="form-control" rows="2"
+                                               required>{{ quotation.address }}</textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <label>Select Terms and Conditions:</label><br>
+                                            <!-- 🔍 Search Box -->
+                                            <div class="search mb-2">
+                                                <input type="search" id="term-search" class="form-control" placeholder="Search terms..." oninput="filterTerms()">
+                                            </div>
+
+                                            <!-- ✅ Term Checkboxes (with search support + checked logic) -->
+                                            <div class="overterm" id="terms-container">
+                                                <!-- Hidden input to store the ordered list -->
+                                                <input type="hidden" name="terms_and_conditions_ordered" id="terms_ordered_input">
+                                                {% for term in all_terms %}
+                                                    <div class="term-item">
+                                                        <label class="mt-1 d-block">
+                                                            <input type="checkbox" name="terms_and_conditions[]" value="{{ term.id }}"
+                                                                data-term-id="{{ term.id }}"
+                                                                {% if term in quotation.terms_and_conditions.all %}checked{% endif %}>
+                                                            {{ term.description|truncatewords:10 }}
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                                
+                                            </div>
+
+                                            <div class="add_terms_conditions mt-2">
+                                                <textarea name="add_terms_conditions" rows="4">{{ quotation.custom_terms|default_if_none:"" }}
+                                                </textarea>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <button type="button" class="btn btn-primary next-step mt-2"
+                                            style="width: 150px;">Next</button>
+                                        <a href="/display_quotation" class="btn btn-info mt-2"
+                                            style="width: 150px;">View
+                                            Records</a>
+                                    </div>
+                                </div>
+
+                                <!-- GST form -->
+
+
+                                <!-- STEP 2 -->
+                                <div class="form-step">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr No</th>
+                                                <th>Name</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Description</th>
+                                                <th>Unit</th>
+                                                <th>GST (%)</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for x in quotation.product_details_json %}
+                                            <tr data-product-id="{{ x.id }}" data-product-name="{{ x.name }}">
+                                               
+                                                <td>{{ x.id }}</td>
+
+                                                <td>{{ x.name }}</td>
+                                                 <td >
+                                                    <input type="number" name="product_price_{{ x.id }}" class="form-control"
+                                                        value="{{ x.price }}" step="0.01" min="0" 
+                                                        onchange="calculateQuotationSummary()" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="product_quantity_{{ x.id }}" class="form-control"
+                                                        value="{{ x.quantity }}" step="0.01" min="0" 
+                                                        onchange="calculateQuotationSummary()" />
+                                                </td>
+
+                                                <td>
+                                                  <textarea name="product_description_{{ x.id }}"
+                                                            class="form-control"
+                                                            rows="1"
+                                                            onchange="calculateQuotationSummary()">{{ x.description }}</textarea>
+                                                </td>
+
+
+                                                <td>
+                                                    <input type="text" name="product_unit_{{ x.id }}" class="form-control"
+                                                        value="{{ x.unit }}" onchange="calculateQuotationSummary()" />
+                                                </td>
+
+                                                <td>
+                                                    <input type="number" name="product_gst_{{ x.id }}" class="form-control"
+                                                        value="{{ x.gst }}" step="0.01" min="0" max="100" 
+                                                        onchange="calculateQuotationSummary()" />
+                                                </td>
+                                                <td>
+                                                     <i class="fa-solid fa-trash text-danger" style="cursor: pointer;" onclick="removeProductRow(this, '{{ x.id }}')" 
+                                                     onchange="calculateQuotationSummary()"></i>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!-- Hidden container to track deleted IDs -->
+                                    <div id="deleted-products-container"></div>
+                                    
+                                    <div class="row mt-4">
+                                        <div class="col-md-4">
+                                            <label>Total Price (Without GST)</label>
+                                            <input type="text" id="old_total_price_without_gst" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Total GST</label>
+                                            <input type="text" id="old_total_gst_amount" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Total Price (With GST)</label>
+                                            <input type="text" id="old_total_price_with_gst" class="form-control" readonly>
+                                        </div>
+                                    </div>
+
+                                  
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label>Service Type</label>
+                                            <select id="servicetype" name="servicetype" class="form-control"
+                                                onchange="fetchProducts(this)">
+                                                <option value="">Select service types</option>
+                                                {% for category, display_name in category_choices %}
+                                                <option value="{{ category }}">{{ display_name }}</option>
+                                                {% endfor %}
+                                            </select>
+
+                                            <div class="form-check mt-3 mb-3">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       id="enable_gst"
+                                                       name="enable_gst"
+                                                       onchange="toggleGSTFields()"
+                                                       {% if quotation.gst_status == 'GST' %}checked{% endif %}>
+
+                                                <label for="enable_gst" class="form-check-label">
+                                                    Enable GST for this quotation
+                                                </label>
+                                            </div>
+
+
+
+                                            <label>Select Products</label>
+                                            <div class="search mb-2">
+                                                <input type="search" id="product-search" class="form-control" placeholder="Search products..." oninput="filterProducts()">
+                                            </div>
+                                            <div id="products-container"></div>
+
+                                            <label>Selected Services</label>
+                                            <ul id="selected_services" class="selected-products-list"></ul>
+                                            <input type="hidden" name="selected_services_names"
+                                                id="selected_services_ids">
+                                            <input type="hidden" name="product_details_json" id="product_details_json">
+
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Total Price (without GST)</label>
+                                            <input type="number" id="total_price" name="total_price" step="0.01"
+                                                readonly class="form-control">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>GST Type</label>
+                                            <select id="gst_type" name="gst_type" class="form-control" onchange="calculateGST()" >
+                                                <option value="cgst_sgst" {% if quotation.cgst != 0 %}selected{% endif %} >CGST + SGST</option>
+                                                <option value="igst" {% if quotation.cgst == 0 %}selected{% endif %} >IGST</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Total GST Amount</label>
+                                            <input type="number" id="total_gst" name="total_gst" step="0.01" readonly
+                                                class="form-control">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Total Price (with GST)</label>
+                                            <input type="number" id="total_with_gst" name="total_price_with_gst"
+                                                step="0.01" readonly class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-4">
+                                        <div class="col-md-4">
+                                            <label>Grand Total Without GST</label>
+                                            <input type="text" id="grand_total_without_gst" class="form-control" name="grand_total_without_gst" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Grand GST Amount</label>
+                                            <input type="text" id="grand_total_gst" class="form-control" name="grand_total_gst" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Grand Total With GST</label>
+                                            <input type="text" id="grand_total_with_gst" class="form-control" name="grand_total_with_gst" readonly>
+                                        </div>
+                                    </div>
+
+
+                                    
+
+                                    <div class="text-center mt-4">
+                                        <button type="button" class="btn btn-secondary prev-step mt-2"
+                                            style="width: 150px;">Previous</button>
+                                        <button type="button" class="btn btn-primary next-step mt-2"
+                                            style="width: 150px;">Next</button>
+                                    </div>
+                                </div>
+                               
+
+
+                                <!-- GST form End  -->
+
+                                <!-- STEP 3 -->
+                                <!-- start -->
+
+
+                                <!-- STEP 3 -->
+                                <div class="form-step">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label>Select Branch<span class="star">*</span></label>
+                                            <select id="branch_select" name="branch_id" class="form-control" required onchange="fetchBranchDetails(this.value)">
+                                                <option value="">Select Branch</option>
+                                                {% for branch in branches %}
+                                                    <option value="{{ branch.id }}" {% if branch.id == quotation.branch_id %}selected{% endif %}>{{ branch.branch_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <!-- These fields will be auto-filled and read-only -->
+                                        <div class="col-md-6 mb-3">
+                                            <label>Contact 1</label>
+                                            <input type="text" id="branch_contact_1" value="{{ branch.contact_1 }}" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label>Contact 2</label>
+                                            <input type="text" id="branch_contact_2" value="{{ branch.contact_1 }}" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label>Email 1</label>
+                                            <input type="email" id="branch_email_1" value="{{ branch.email_1 }}" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label>Email 2</label>
+                                            <input type="email" id="branch_email_2" value="{{ branch.email_1 }}" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label>GST Number</label>
+                                            <input type="text" id="branch_gst" value="{{ branch.gst_number }}" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label>PAN Number</label>
+                                            <input type="text" id="branch_pan" value="{{ branch.pan_number }}" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label>Full Address</label>
+                                            <textarea id="branch_address" class="form-control"  rows="2"
+                                                readonly>{{ branch.full_address }}</textarea>
+                                        </div>
+                                    </div>
+                                    <form id="quotation-management-form" method="post"
+                                        action="{% url 'edit_quotation' quotation.id %} ">
+                                        <div class="text-center mt-3">
+                                            <button type="button" class="btn btn-secondary prev-step mt-2"
+                                                style="width: 150px;">Previous</button>
+                                            <button class="btn btn-info mt-2" type="submit"
+                                                style="width: 150px;">Submit</button>
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+
+            </div>
+        </div>
+    </div>
+<!-- Store terms checkbox order -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const checkboxes = document.querySelectorAll('#terms-container input[type="checkbox"][name="terms_and_conditions[]"]');
+    const hiddenInput = document.getElementById('terms_ordered_input');
+
+    let checkedOrder = [];
+
+    function updateOrder() {
+        const activeIds = checkedOrder.filter(id => {
+            const checkbox = document.querySelector(`#terms-container input[type="checkbox"][value="${id}"]`);
+            return checkbox && checkbox.checked;
+        });
+
+        hiddenInput.value = activeIds.join(',');
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', function () {
+            const id = cb.value;
+            if (cb.checked) {
+                if (!checkedOrder.includes(id)) {
+                    checkedOrder.push(id);  // Add newly checked item to order
+                }
+            } else {
+                // Remove unchecked item
+                checkedOrder = checkedOrder.filter(existingId => existingId !== id);
+            }
+
+            updateOrder();
+        });
+
+        // Prepopulate for already checked boxes
+        if (cb.checked && !checkedOrder.includes(cb.value)) {
+            checkedOrder.push(cb.value);
+        }
+    });
+
+    updateOrder(); // init on load
+});
+</script>
+
+
+
+    <!-- JavaScript for Multistep Form -->
+<script>
+  function toggleOrganizationFields() {
+    const selectValue = document.getElementById('customer_type_select').value;
+    const orgFields = document.querySelectorAll('.org-fields');
+
+    orgFields.forEach(field => {
+      field.style.display = (selectValue === 'Organization') ? 'block' : 'none';
+    });
+  }
+
+  // Run on page load
+  window.onload = function () {
+    toggleOrganizationFields();
+  }
+</script>
+
+
+<script>
+function calculateQuotationSummary() {
+    let totalWithoutGST = 0;
+    let totalGST = 0;
+
+    const rows = document.querySelectorAll('table tbody tr');
+
+    rows.forEach(row => {
+        // Query inputs *within the current row only*
+        const price = parseFloat(row.querySelector(`[name^="product_price_"]`)?.value || 0);
+        const quantity = parseFloat(row.querySelector(`[name^="product_quantity_"]`)?.value || 0);
+        const gst = parseFloat(row.querySelector(`[name^="product_gst_"]`)?.value || 0);
+
+        const subtotal = price * quantity;
+        const gstAmount = (subtotal * gst) / 100;
+
+        totalWithoutGST += subtotal;
+        totalGST += gstAmount;
+    });
+
+    const totalWithGST = totalWithoutGST + totalGST;
+
+    document.getElementById("old_total_price_without_gst").value = totalWithoutGST.toFixed(2);
+    document.getElementById("old_total_gst_amount").value = totalGST.toFixed(2);
+    document.getElementById("old_total_price_with_gst").value = totalWithGST.toFixed(2);
+
+    showCombinedGrandTotal();
+}
+
+function removeProductRow(element, productId) {
+    element.closest("tr").remove();
+
+    // Track deleted IDs if needed
+    const deletedContainer = document.getElementById("deleted-products-container");
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "delete_product_ids[]";
+    input.value = productId;
+    deletedContainer.appendChild(input);
+
+    // Recalculate totals
+    calculateQuotationSummary();
+}
+
+</script>
+<script>
+function showCombinedGrandTotal() {
+    const oldWithoutGST = parseFloat(document.getElementById("old_total_price_without_gst")?.value || 0);
+    const oldGST = parseFloat(document.getElementById("old_total_gst_amount")?.value || 0);
+    const oldWithGST = parseFloat(document.getElementById("old_total_price_with_gst")?.value || 0);
+
+    const newWithoutGST = parseFloat(document.getElementById("total_price")?.value || 0);
+    const newGST = parseFloat(document.getElementById("total_gst")?.value || 0);
+    const newWithGST = parseFloat(document.getElementById("total_with_gst")?.value || 0);
+
+    const grandWithoutGST = oldWithoutGST + newWithoutGST;
+    const grandGST = oldGST + newGST;
+    const grandWithGST = oldWithGST + newWithGST;
+
+    // Show these in new readonly fields
+    document.getElementById("grand_total_without_gst").value = grandWithoutGST.toFixed(2);
+    document.getElementById("grand_total_gst").value = grandGST.toFixed(2);
+    document.getElementById("grand_total_with_gst").value = grandWithGST.toFixed(2);
+}
+</script>
+
+<!-- Terms and condition search -->
+ <script>
+    function filterTerms() {
+        const input = document.getElementById("term-search").value.toLowerCase();
+        const terms = document.querySelectorAll("#terms-container .term-item");
+
+        terms.forEach(term => {
+            const text = term.textContent.toLowerCase();
+            term.style.display = text.includes(input) ? "block" : "none";
+        });
+    }
+</script>
+
+
+<!-- Thank You Notes -->
+<script>
+    const THANK_NOTES = {{ thank_notes|safe }};
+    
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const textarea = document.getElementById('thank_u_note');
+        const suggestionBox = document.getElementById('thank-suggestions');
+
+        textarea.addEventListener('input', function () {
+            const input = this.value.toLowerCase().trim();
+            suggestionBox.innerHTML = '';
+
+            if (input.length < 1) {
+                suggestionBox.style.display = 'none';
+                return;
+            }
+
+            const filtered = THANK_NOTES.filter(note =>
+                note.toLowerCase().includes(input)
+            ).slice(0, 5);  // limit to 5 suggestions
+
+            if (filtered.length === 0) {
+                suggestionBox.style.display = 'none';
+                return;
+            }
+
+            filtered.forEach(note => {
+                const li = document.createElement('li');
+                li.textContent = note;
+                li.style.padding = '5px';
+                li.style.cursor = 'pointer';
+                li.style.borderBottom = '1px solid #eee';
+                li.addEventListener('click', () => {
+                    textarea.value = note;
+                    suggestionBox.style.display = 'none';
+                });
+                suggestionBox.appendChild(li);
+            });
+
+            const rect = textarea.getBoundingClientRect();
+            suggestionBox.style.display = 'block';
+            suggestionBox.style.position = 'absolute';
+            suggestionBox.style.backgroundColor = 'white';
+            suggestionBox.style.border = '1px solid #ccc';
+            suggestionBox.style.maxHeight = '150px';
+            suggestionBox.style.overflowY = 'auto';
+            suggestionBox.style.width = textarea.offsetWidth + 'px';
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!suggestionBox.contains(e.target) && e.target !== textarea) {
+                suggestionBox.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+
+
+
+<!-- sales person contact number -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const salesPersonSelect = document.getElementById('sales_person_select');
+        const contactInput = document.getElementById('contact_by_no');
+
+        salesPersonSelect.addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const contactNumber = selectedOption.getAttribute('data-contact');
+
+            if (contactNumber) {
+                contactInput.value = contactNumber;
+            } else {
+                contactInput.value = '';
+            }
+        });
+
+        // Auto-trigger in case form_data already selected a person
+        const initialSelected = salesPersonSelect.querySelector('option[selected]');
+        if (initialSelected) {
+            contactInput.value = initialSelected.getAttribute('data-contact') || '';
+        }
+    });
+</script>
+
+
+<!-- Branch Details -->
+<script>
+        function fetchBranchDetails(branchId) {
+            if (!branchId) {
+                // Clear all fields if no branch is selected
+                document.getElementById('branch_contact_1').value = '';
+                document.getElementById('branch_contact_2').value = '';
+                document.getElementById('branch_email_1').value = '';
+                document.getElementById('branch_email_2').value = '';
+                document.getElementById('branch_gst').value = '';
+                document.getElementById('branch_pan').value = '';
+                document.getElementById('branch_address').value = '';
+                return;
+            }
+
+            fetch(`/get_branch_details/${branchId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Fill in the branch details
+                    document.getElementById('branch_contact_1').value = data.contact_1 || '';
+                    document.getElementById('branch_contact_2').value = data.contact_2 || '';
+                    document.getElementById('branch_email_1').value = data.email_1 || '';
+                    document.getElementById('branch_email_2').value = data.email_2 || '';
+                    document.getElementById('branch_gst').value = data.gst_number || '';
+                    document.getElementById('branch_pan').value = data.pan_number || '';
+                    document.getElementById('branch_address').value = data.full_address || '';
+                })
+                .catch(error => {
+                    console.error('Error fetching branch details:', error);
+                    alert('Error fetching branch details');
+                });
+        }
+</script>
+
+
+    <script>
+        const steps = document.querySelectorAll('.form-step');
+        const nextBtns = document.querySelectorAll('.next-step');
+        const prevBtns = document.querySelectorAll('.prev-step');
+        let currentStep = 0;
+
+        function showStep(index) {
+            steps.forEach((step, i) => {
+                step.classList.toggle('active', i === index);
+            });
+        }
+
+        nextBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            });
+        });
+
+        prevBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (currentStep > 0) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+        });
+
+        showStep(currentStep); // Initialize first step
+
+
+    </script>
+
+    <!-- Change to your actual view -->
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+
+
+    <!-- Customer Details -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const customerIdField = document.getElementById("customer_id");
+            const contactInput = document.querySelector('input[name="contact_no"]');
+            const emailField = document.querySelector('input[name="customer_email"]');
+            const nameField = document.querySelector('input[name="customer_full_name"]');
+            const addressField = document.querySelector('textarea[name="address"]');
+
+            contactInput.addEventListener('blur', function () {
+                const contactNo = this.value.trim();
+                if (!contactNo) return;
+
+                fetch(`/get_customer_details/?contact_no=${encodeURIComponent(contactNo)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Customer not found');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+
+                        if (data.customer_id) {
+                            customerIdField.value = data.customer_id;
+                        }
+
+                        // Only update fields that are empty
+                        if (!emailField.value && data.customer_email) {
+                            emailField.value = data.customer_email;
+                        }
+
+                        if (!nameField.value && data.customer_full_name) {
+                            nameField.value = data.customer_full_name;
+                        }
+                        console.log(data.pincode)
+                        if (!addressField.value && data.soldtopartyaddress) {
+                            const pincode = data.sold_pincode;
+                            const fullAddress = `${data.soldtopartyaddress}, ${data.sold_city} - ${pincode}`;
+                            addressField.value = fullAddress;
+                            // Visual indicator
+                            addressField.style.borderLeft = "4px solid #03AED2";
+                            addressField.title = "Auto-filled from customer records";
+                            setTimeout(() => {
+                                addressField.style.borderLeft = "";
+                                addressField.title = "";
+                            }, 5000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+
+
+
+
+
+
+    <!--  -->
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            calculateQuotationSummary();
+            document.getElementById('quotation-management-form').addEventListener('submit', function (e) {
+                // Ensure all calculations are up-to-date before submission
+
+                calculateTotal();
+
+                
+            });
+        });
+
+
+        {% comment %} sidebar {% endcomment %}
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+    <!-- before saving gst to data base -->
+
+
+
+
+
+    <script>
+        function updateCustomerDetails() {
+            const customerSelect = document.getElementById("customer_id");
+            const selectedOption = customerSelect.options[customerSelect.selectedIndex];
+
+            const contact = selectedOption.getAttribute("data-contact");
+            const email = selectedOption.getAttribute("data-email");
+
+            document.getElementById("customer_contact").value = contact || '';
+            document.getElementById("customer_email").value = email || '';
+        }
+    </script>
+
+
+{% comment %} Product {% endcomment %}
+
+
+<script>
+    let selectedProducts = [];
+    let totalPrice = 0;
+    let gstEnabled = false;
+    let productCounter = 0;
+
+    // Initialize GST fields based on initial state
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleGSTFields();
+    });
+
+    function toggleGSTFields() {
+        gstEnabled = document.getElementById('enable_gst').checked;
+        const gstFields = document.querySelectorAll('[id^="gst_"]');
+        gstFields.forEach(field => {
+            field.style.display = gstEnabled ? 'block' : 'none';
+        });
+
+        const gstInputs = document.querySelectorAll('.product-gst-input, .product-gst-group');
+        gstInputs.forEach(input => {
+            input.style.display = gstEnabled ? 'block' : 'none';
+        });
+
+        calculateTotal();
+    }
+    
+    function filterProducts() {
+        const searchValue = document.getElementById('product-search').value.toLowerCase();
+        const productItems = document.querySelectorAll('#products-container .product-item');
+
+        productItems.forEach(item => {
+            const name = item.getAttribute('data-name') || '';
+            if (name.includes(searchValue)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function fetchProducts(selectElement) {
+        document.getElementById('products-container').innerHTML = '';
+        const selectedCategories = Array.from(selectElement.selectedOptions).map(option => option.value);
+
+        if (selectedCategories.length > 0) {
+            const categoriesQuery = selectedCategories.join(',');
+            fetch(`/get_products?categories=${categoriesQuery}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.products.forEach(product => {
+                        const rowId = `row_${productCounter++}`;
+                        const productDiv = document.createElement('div');
+                        productDiv.className = 'product-item mb-3 p-2 border rounded';
+                        productDiv.setAttribute('data-name', product.product_name.toLowerCase());
+                        productDiv.innerHTML = `
+                            <div class="d-flex align-items-center mb-2">
+                                <strong>${product.product_name}</strong>
+                            </div>
+                        
+                            <div class="row g-2">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Price</label>
+                                        <input type="number" class="form-control product-price" 
+                                            placeholder="Price" value="${product.price}" step="0.01">
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <label>Quantity</label>
+                                        <input type="number" class="form-control product-quantity"
+                                               placeholder="Quantity"
+                                               value="1"
+                                               step="0.01" min="0.01">
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <label>Unit</label>
+                                        <input type="text" class="form-control product-unit" placeholder="Unit">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 product-gst-group" style="display: ${gstEnabled ? 'block' : 'none'}">
+                                    <label>GST %</label>
+                                    <input type="number" class="form-control product-gst" 
+                                        placeholder="GST %" value="18" step="0.01">
+                                </div>
+                                <div class="col-md-7">
+                                    <label>Description</label>
+                                    <textarea class="form-control product-description" placeholder="Description" rows="2"></textarea>
+                                </div>
+                            
+                                <div class="col-md-2 align-self-end">
+                                    <button type="button" class="btn btn-sm btn-primary mt-2" 
+                                    onclick='addProductManually(${JSON.stringify(product)}, this)'>
+                                        + Add
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        document.getElementById('products-container').appendChild(productDiv);
+                    });
+                });
+        }
+    }
+
+    function addProductManually(productInfo, buttonElement) {
+        const container = buttonElement.closest('.row');
+        const price = parseFloat(container.querySelector('.product-price').value) || 0;
+        const quantity = parseFloat(container.querySelector('.product-quantity').value) || 1;
+        const description = container.querySelector('.product-description').value || '';
+        const unit = container.querySelector('.product-unit').value || '';
+        const gstInput = container.querySelector('.product-gst');
+        const gst = gstInput ? parseFloat(gstInput.value) || 0 : 0;
+            
+        selectedProducts.push({
+            id: productInfo.product_id,
+            name: productInfo.product_name,
+            price: price,
+            quantity: quantity,
+            unit: unit,
+            description: description,
+            gst: gst,
+            uniqueKey: Date.now() + Math.random() // So each entry is unique
+        });
+    
+        updateSelectedServicesList();
+        calculateTotal();
+    }
+
+    function updateSelectedServices(checkbox) {
+        setTimeout(() => {
+            if (checkbox.checked) {
+                const productId = checkbox.value;
+                const productName = checkbox.getAttribute('data-name');
+                const rowId = checkbox.getAttribute('data-row-id');
+            
+                const priceInput = document.querySelector(`input[data-product-id="${productId}"].product-price-input`);
+                const quantityInput = document.querySelector(`input[data-product-id="${productId}"].product-quantity-input`);
+                const unitInput = document.querySelector(`input[data-product-id="${productId}"].product-unit-input`);
+                const gstInput = document.querySelector(`input[data-product-id="${productId}"].product-gst-input`);
+                const descriptionInput = document.querySelector(`textarea[data-product-id="${productId}"].product-description-input`);
+            
+                const productPrice = priceInput ? parseFloat(priceInput.value) : 0;
+                const productQuantity = quantityInput ? parseFloat(quantityInput.value) : 1;
+                const productGST = gstInput ? parseFloat(gstInput.value) : 0;
+                const productUnit = unitInput ? unitInput.value : '';
+                const productDesc = descriptionInput ? descriptionInput.value : '';
+            
+                selectedProducts.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    quantity: productQuantity,
+                    unit: productUnit,
+                    description: productDesc,
+                    gst: productGST,
+                    uniqueKey: Date.now() + Math.random(),
+                    row_id: rowId
+                });
+            
+                updateSelectedServicesList();
+                calculateTotal();
+            }
+        }, 0);
+    }
+
+    function updateProductPrice(input, productId) {
+        const newPrice = parseFloat(input.value) || 0;
+        const rowId = input.getAttribute('data-row-id');
+        
+        // Find product by row_id if available, otherwise by productId
+        const product = rowId ? 
+            selectedProducts.find(p => p.row_id === rowId) : 
+            selectedProducts.find(p => p.id === productId);
+            
+        if (product) {
+            product.price = newPrice;
+        }
+        updateSelectedServicesList();
+        calculateTotal();
+    }
+
+    function updateProductQuantity(input, productId) {
+        const newQuantity = parseFloat(input.value) || 1;
+        const rowId = input.getAttribute('data-row-id');
+        
+        const product = rowId ? 
+            selectedProducts.find(p => p.row_id === rowId) : 
+            selectedProducts.find(p => p.id === productId);
+            
+        if (product) {
+            product.quantity = newQuantity;
+        }
+        updateSelectedServicesList();
+        calculateTotal();
+    }
+
+    function updateProductUnit(input, productId) {
+        const newUnit = input.value || '';
+        const rowId = input.getAttribute('data-row-id');
+        
+        const product = rowId ? 
+            selectedProducts.find(p => p.row_id === rowId) : 
+            selectedProducts.find(p => p.id === productId);
+            
+        if (product) {
+            product.unit = newUnit;
+        }
+        updateSelectedServicesList();
+    }
+
+    function updateProductDescription(input, productId) {
+        const newDesc = input.value || '';
+        const rowId = input.getAttribute('data-row-id');
+        
+        const product = rowId ? 
+            selectedProducts.find(p => p.row_id === rowId) : 
+            selectedProducts.find(p => p.id === productId);
+            
+        if (product) {
+            product.description = newDesc;
+        }
+        updateSelectedServicesList();
+    }
+
+    function updateProductGST(input, productId) {
+        const newGST = parseFloat(input.value) || 0;
+        const rowId = input.getAttribute('data-row-id');
+        
+        const product = rowId ? 
+            selectedProducts.find(p => p.row_id === rowId) : 
+            selectedProducts.find(p => p.id === productId);
+            
+        if (product) {
+            product.gst = newGST;
+        }
+        calculateTotal();
+    }
+
+    function calculateTotal() {
+        totalPrice = selectedProducts.reduce((total, product) => total + (product.price * product.quantity), 0);
+        document.getElementById('total_price').value = totalPrice.toFixed(2);
+
+        if (gstEnabled) {
+            const gstType = document.getElementById('gst_type').value;
+            let totalGST = 0;
+
+            selectedProducts.forEach(product => {
+                const productGSTAmount = (product.price * product.quantity * product.gst) / 100;
+                totalGST += productGSTAmount;
+            });
+
+            const totalWithGST = totalPrice + totalGST;
+
+            document.getElementById('total_gst').value = totalGST.toFixed(2);
+            document.getElementById('total_with_gst').value = totalWithGST.toFixed(2);
+        } else {
+            document.getElementById('total_gst').value = '0.00';
+            document.getElementById('total_with_gst').value = totalPrice.toFixed(2);
+        }
+    }
+
+    function updateSelectedServicesList() {
+        const selectedServicesList = document.getElementById('selected_services');
+        const selectedServicesNamesInput = document.getElementById('selected_services_ids');
+        const productDetailsJsonInput = document.getElementById('product_details_json');
+
+        selectedServicesList.innerHTML = '';
+        let selectedServiceNames = [];
+
+        selectedProducts.forEach((product, index) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'd-flex justify-content-between align-items-center';
+            listItem.innerHTML = `
+                <span>${product.name} (${parseFloat(product.quantity).toFixed(2)} x ₹${parseFloat(product.price).toFixed(2)})</span>
+                <span>
+                    ₹${(product.price * product.quantity).toFixed(2)}
+                    <button type="button" class="btn btn-sm btn-danger ms-2" onclick="removeSelectedProduct(${index})">×</button>
+                </span>
+            `;
+            selectedServicesList.appendChild(listItem);
+            selectedServiceNames.push(product.name);
+        });
+    
+        selectedServicesNamesInput.value = selectedServiceNames.join(',');
+        productDetailsJsonInput.value = JSON.stringify(selectedProducts);
+    
+        if (selectedProducts.length === 0) {
+            const emptyMessage = document.createElement('li');
+            emptyMessage.textContent = 'No products selected';
+            selectedServicesList.appendChild(emptyMessage);
+        }
+    }
+
+    function removeSelectedProduct(index) {
+        selectedProducts.splice(index, 1);
+        updateSelectedServicesList();
+        calculateTotal();
+    }
+
+    function clearGSTFields() {
+        document.getElementById('gst_price').value = '';
+        document.getElementById('total_with_gst').value = '';
+    }
+
+    document.querySelector('form').addEventListener('submit', function () {
+        document.getElementById('product_details_json').value = JSON.stringify(selectedProducts);
+    });
+
+    function updateCustomerDetails() {
+        const customerSelect = document.getElementById("customer_id");
+        const selectedOption = customerSelect.options[customerSelect.selectedIndex];
+
+        const contact = selectedOption.getAttribute("data-contact");
+        const email = selectedOption.getAttribute("data-email");
+
+        document.getElementById("customer_contact").value = contact || '';
+        document.getElementById("customer_email").value = email || '';
+    }
+</script>   
+
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        calculateQuotationSummary();
+    });
+</script> -->
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>

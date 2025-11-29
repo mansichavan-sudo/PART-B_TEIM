@@ -1,0 +1,548 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '\images' %}">
+    <link rel="stylesheet" href="{% static 'css\customer.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <title>TEIM CRM</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="{% static 'images/crono.png' %}" type="image/png">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Cardo:ital@0;1&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+
+  <style>
+    /* === Body & Typography === */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #dedede;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(to right, #2575fc, #6a11cb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border-bottom: 3px solid rgb(80, 16, 177);
+}
+
+/* === Layout Wrappers === */
+.table-wrapper {
+    padding: 20px;
+    margin-top: 91px !important;
+    border-radius: 15px;
+}
+
+.container-table {
+    margin-top: 10px !important;
+    overflow-x: auto;
+    width: 100%;
+    padding: 0 20px;
+}
+
+/* === Table Styling === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #7c7c7c;
+    white-space: nowrap;
+}
+
+th {
+    font-family: "Cardo", serif;
+    font-weight: bold;
+    font-size: 17px;
+    color: #ffffff;
+}
+
+td {
+    font-family: "Outfit", sans-serif;
+    font-weight: 400;
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(even) td {
+    background-color: #cbcaca;
+}
+
+/* === Buttons === */
+.btn-like {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-like.delete-link {
+    background-color: #dc3545;
+}
+
+.btn-like:hover,
+.btn-like.delete-link:hover {
+    background-color: #218838;
+}
+
+/* === Pagination === */
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 10px 5px;
+}
+
+.pagination .current {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* === Modal Styling === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0; top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    width: 50%;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-buttons button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+/* === Sidebar Modal Panel (optional panel) === */
+#modal {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    z-index: 1000;
+    width: 40%;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 7px rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
+    transition: 0.3s;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+#modal.active {
+    right: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+    float: right;
+}
+
+/* === Dropdown === */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 50px;
+    z-index: 1;
+    border-radius: 30px;
+}
+
+.dropdown-content a {
+    color: rgb(0, 0, 0);
+    padding: 6px 10px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .table-wrapper {
+        margin-left: 0;
+        margin-top: 90px !important;
+        padding: 20px;
+    }
+
+    #modal {
+        width: 80%;
+    }
+}
+
+  </style>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+
+    <div class="container" style="min-height: 100vh;">
+        <div class="row">
+            
+            
+              <div class="col-md-1"></div>
+                <div class="col-10">
+                    <div class="table-wrapper bg-light shadow  ">
+                        <h4 class="text-center text-dark">Product Details</h4>
+                
+                        <!-- Filter Section -->
+                        <div class="filter-container d-flex justify-content-between align-items-center flex-wrap gap-2 my-3">
+
+                            <!-- Filter by Category -->
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="category-select" class="mb-0 fw-bold">Filter by Category:</label>
+                                <select id="category-select" onchange="filterByCategory()" class="form-select"
+                                        style="width: 180px;">
+                                    <option value="all" {% if selected_category == 'all' %}selected{% endif %}>All Categories</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>
+                                            {{ category }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        
+                            <!-- Export Button -->
+                            <div>
+                                <a href="{% url 'export_product_list_csv' %}">
+                                    <button class="btn btn-primary">📤 Export Product List</button>
+                                </a>
+                            </div>
+                        
+                        </div>
+
+                        <p class="text-primary text-end me-3">
+                           {{ page_obj.paginator.count }} product{{ page_obj.paginator.count|pluralize }} 
+                        </p>
+                
+                        <!-- Table -->
+                        <div class="p mb-3">
+                        </div>
+                        <div class="container-table bg-light">
+                            <table id="product-table" class="table table-bordered" style="border-top: 1px solid black !important;">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="text-center">Sr No</th>
+                                        <th class="text-center">Category</th>
+                                        <th class="text-center">Product Name</th>
+                                        <th class="text-center" >Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in page_obj %}
+                                        <tr>
+                                            <td class="text-center">
+                                                 {{ page_obj.start_index|add:forloop.counter0 }}
+                                            </td>
+                                            <td class="text-center">{{ product.category }}</td>
+                                            <td class="text-center">{{ product.product_name }}</td>
+                                            <td class="text-center">
+                                            <div  >
+                                                <!-- Edit Button -->
+                                                <a href="{% url 'update_product' product.product_id %}" class="btn btn-warning btn-sm" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                            
+                                                <!-- Delete Button -->
+                                                <form id="delete-form-{{ product.product_id }}" action="{% url 'delete_product' product.product_id %}" method="POST" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteModal('{{ product.product_id }}')" title="Delete">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                
+                        <!-- Delete Confirmation Modal -->
+                        <div class="modal fade " id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog  " style="margin-top: 300px;" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                       <h5 class="modal-title text-dark   " id="deleteModalLabel">Confirm Delete</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span>&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-info">
+                                        Are you sure you want to delete this product?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-danger" onclick="submitDelete()">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Pagination -->
+                       <div class="pagination text-center mt-3">
+                            <ul class="pagination justify-content-center">
+                            
+                                {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&category={{ selected_category }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">&laquo;</span>
+                                </li>
+                                {% endif %}
+                            
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                    </span>
+                                </li>
+                            
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&category={{ selected_category }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">&raquo;</span>
+                                </li>
+                                {% endif %}
+                            
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+              <div class="col-md-1"></div>
+                
+                <!-- Scripts -->
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                
+                <script>
+                    let formIdToDelete = null;
+                
+                    function confirmDeleteModal(productId) {
+                        formIdToDelete = `delete-form-${productId}`;
+                        $('#deleteModal').modal('show');
+                    }
+                
+                    function submitDelete() {
+                        if (formIdToDelete) {
+                            document.getElementById(formIdToDelete).submit();
+                        }
+                    }
+                
+                    function filterByCategory() {
+                        const selectedCategory = document.getElementById('category-select').value;
+                        window.location.href = `/products/?category=${encodeURIComponent(selectedCategory)}`;
+                    }
+                </script>
+                
+              
+        </div>
+    </div>
+
+
+   
+
+   
+
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; ">
+        <div class="row p-3">
+            <div class="col-md-12 text-center"> <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                © 2025. Powered by
+                <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                    style="height: 20px; vertical-align: middle;">
+                <a href="http://www.chronoanalytics.in/"
+                    style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                    Solution</a>
+                All Rights Reserved.
+            </p>
+          </div>
+            <div class="col-md-12 text-center">  <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                © 2025. Marketed by
+                <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo" style="height: 20px; vertical-align: middle;">
+                <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                All Rights Reserved.
+            </p></div>
+        </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const submenu = this.querySelector('.submenu');
+                const arrow = this.querySelector('.arrow-down');
+                
+                // Hide all other submenus
+                menuItems.forEach(otherItem => {
+                    if (otherItem !== this) {
+                        const otherSubmenu = otherItem.querySelector('.submenu');
+                        const otherArrow = otherItem.querySelector('.arrow-down');
+                        if (otherSubmenu) {
+                            otherSubmenu.style.display = 'none';
+                            if (otherArrow.classList.contains('arrow-up')) {
+                                otherArrow.classList.remove('arrow-up');
+                            }
+                        }
+                    }
+                });
+
+                // Toggle current submenu
+                if (submenu) {
+                    submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                    arrow.classList.toggle('arrow-up');
+                }
+            });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const productsPerPage = 8;
+        let currentPage = 1;
+
+        const productRows = document.querySelectorAll('.product-row');
+        const totalProducts = productRows.length;
+        const totalPages = Math.ceil(totalProducts / productsPerPage);
+        const pageInfo = document.getElementById('page-info');
+
+        function updatePagination() {
+            const start = (currentPage - 1) * productsPerPage;
+            const end = start + productsPerPage;
+
+            productRows.forEach((row, index) => {
+                row.style.display = (index >= start && index < end) ? '' : 'none';
+            });
+
+            document.getElementById('prev-btn').disabled = (currentPage === 1);
+            document.getElementById('next-btn').disabled = (currentPage === totalPages);
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
+        document.getElementById('prev-btn').addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+            }
+        });
+
+        document.getElementById('next-btn').addEventListener('click', function() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePagination();
+            }
+        });
+
+        // Category filtering
+        document.getElementById('category-select').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            productRows.forEach(row => {
+                const rowCategory = row.getAttribute('data-category');
+                if (selectedCategory === 'all' || rowCategory === selectedCategory) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            // Reset pagination
+            currentPage = 1;
+            totalProducts = document.querySelectorAll('.product-row:visible').length;
+            totalPages = Math.ceil(totalProducts / productsPerPage);
+            updatePagination();
+        });
+
+        updatePagination(); // Initial call
+    });
+</script>
+</body>
+</html>

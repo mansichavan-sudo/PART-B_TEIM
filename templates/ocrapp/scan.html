@@ -1,0 +1,266 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Visiting Card</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+
+
+            min-height: 100%;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        .row {
+
+            box-sizing: inherit;
+            border-radius: 10px;
+        }
+
+        .container-fluid {
+
+            margin-top: 120px;
+
+        }
+
+        h2 {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            /* Gradient definition */
+            -webkit-background-clip: text;
+            /* Clip the gradient to the text boundaries */
+            -webkit-text-fill-color: transparent;
+            border-bottom: 3px solid rgb(80, 16, 177);
+        }
+
+
+
+        /* Styling the file input */
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+            font-size: 15px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+        }
+
+        /* Styling the submit button */
+        button[type="submit"] {
+            background-color: #5c6bc0;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #3f51b5;
+            box-shadow: 0 4px 10px rgba(63, 81, 181, 0.2);
+        }
+
+        /* Supported formats */
+        .supported-formats {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 500px) {
+
+            .spann {
+                margin-left: 100px;
+            }
+
+            .col-md-6.col-10.col-sm-8.bg-light.mainnn.p-5.container-flud {
+                padding: 1rem !important;
+            }
+
+        }
+        @media (max-width: 500px) {
+
+           
+
+            .col-md-6.col-10.col-sm-8.bg-light.mainnn.p-5.container-flud {
+                padding: 1rem !important;
+            }
+            h2.text-center.mt-3 {
+                margin-top: 35px !important;
+            }
+
+        }
+input{
+    color: #000000;
+}
+
+        .mainnn {
+            border-radius: 10px;
+            padding: 30px;
+           
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'sidebar.html' %}
+    <!-- <div class="container">
+        <h1>Scan Visiting Card</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload & Scan</button>
+        </form>
+        <p class="supported-formats">Supported formats: JPG, PNG, PDF</p>
+    </div> -->
+    <div style="min-height: 100vh !important;">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-md-3 col-1 col-sm-2 "></div>
+                <div class="col-md-6 col-10 col-sm-8   mainnn p-5   formshdow">
+                    <span onclick="window.location.href='/index'"
+                        style="float: left; cursor: pointer; color:rgb(75, 162, 255); font-size:20px;" class="mb-4"><i
+                            class="fas fa-house-chimney"></i></span>
+                    <span onclick="goBackAndRefresh()" style="float: right; cursor: pointer; color:red; font-size:20px;"
+                        class="mb-4">X</span>
+
+                    <h2 class="text-center mt-3">Scan Visiting Card</h2>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Upload & Scan</button>
+                    </form>
+                    <p class="supported-formats">Supported formats: JPG, PNG, PDF</p>
+                    <div class="spann  mt-5">
+                    </div>
+                </div>
+                <div class="col-md-3 col-1 col-sm-2"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid footer  " style="background-color: #f7f7f7; width:100%; margin-top:200px;">
+        <div class="row p-3">
+            <div class="col-md-12 text-center">
+                <p style="margin: 0; font-weight: 600; word-wrap: break-word;color:#000000">
+                    © 2025. Powered by
+                    <img src="{% static 'images/crono.png' %}" alt="Chronoanalytics Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://www.chronoanalytics.in/"
+                        style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb);-webkit-background-clip: text;-webkit-text-fill-color: transparent; font-size: 1.1rem;">Chronoanalytics
+                        Solution</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+            <div class="col-md-12 text-center">
+                <p style="font-weight: 600; word-wrap: break-word;color:#000000 ">
+                    © 2025. Marketed by
+                    <img src="{% static 'images/TeimLogo.png' %}" alt="Teim Logo"
+                        style="height: 20px; vertical-align: middle;">
+                    <a href="http://teim.in/" style="text-decoration: none;  background: linear-gradient(to right, #2575fc, #6a11cb); /* Gradient definition */
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; font-size: 1.1rem;">TEIM</a>
+                    All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuItems = document.querySelectorAll('.sidebar ul li.has-submenu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const submenu = this.querySelector('.submenu');
+                    const arrow = this.querySelector('.arrow-down');
+
+                    // Hide all other submenus
+                    menuItems.forEach(otherItem => {
+                        if (otherItem !== this) {
+                            const otherSubmenu = otherItem.querySelector('.submenu');
+                            const otherArrow = otherItem.querySelector('.arrow-down');
+                            if (otherSubmenu) {
+                                otherSubmenu.style.display = 'none';
+                                if (otherArrow.classList.contains('arrow-up')) {
+                                    otherArrow.classList.remove('arrow-up');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle current submenu
+                    if (submenu) {
+                        submenu.style.display = (submenu.style.display === 'block' ? 'none' : 'block');
+                        arrow.classList.toggle('arrow-up');
+                    }
+                });
+            });
+        });
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+        const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+        let deleteUrl = '';
+
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                deleteUrl = this.getAttribute('href');
+                confirmationModal.style.display = 'block';
+            });
+        });
+
+        confirmDeleteButton.addEventListener('click', function () {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
+            }
+        });
+
+        cancelDeleteButton.addEventListener('click', function () {
+            confirmationModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target == confirmationModal) {
+                confirmationModal.style.display = 'none';
+            }
+        });
+
+        function openModal(service_id) {
+            fetch(`/get_service_details/${service_id}/`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('modal-content').innerHTML = html;
+                    document.getElementById('modal').classList.add('active');
+                });
+
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>
