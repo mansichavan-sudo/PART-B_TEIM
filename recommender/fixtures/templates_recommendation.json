@@ -1,0 +1,103 @@
+[
+  {
+    "model": "crmapp.messagetemplates",
+    "pk": 1,
+    "fields": {
+      "name": "Lead Hot – Recommendation",
+      "message_type": "whatsapp",
+      "category": "lead",
+      "lead_status": "hot",
+      "subject": null,
+      "body": "Hi {{customer_name}}, thank you for showing strong interest in {{product}}. Based on your requirements, we highly recommend {{recommended_product}} for best results. Would you like to proceed?",
+      "attachment": null,
+      "is_active": true,
+      "created_at": "2025-11-27T00:00:00Z",
+      "updated_at": "2025-11-27T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "crmapp.messagetemplates",
+    "pk": 2,
+    "fields": {
+      "name": "Lead Warm – Recommendation Follow-up",
+      "message_type": "whatsapp",
+      "category": "lead",
+      "lead_status": "warm",
+      "subject": null,
+      "body": "Hello {{customer_name}}, based on your enquiry for {{product}}, we recommend {{recommended_product}}. Let me know if you'd like more details.",
+      "attachment": null,
+      "is_active": true,
+      "created_at": "2025-11-27T00:00:00Z",
+      "updated_at": "2025-11-27T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "crmapp.messagetemplates",
+    "pk": 3,
+    "fields": {
+      "name": "Lead Cold – Gentle Suggestion",
+      "message_type": "whatsapp",
+      "category": "lead",
+      "lead_status": "cold",
+      "subject": null,
+      "body": "Hi {{customer_name}}, we noticed your earlier interest in {{product}}. If helpful, we recommend {{recommended_product}} as a better option.",
+      "attachment": null,
+      "is_active": true,
+      "created_at": "2025-11-27T00:00:00Z",
+      "updated_at": "2025-11-27T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "crmapp.messagetemplates",
+    "pk": 4,
+    "fields": {
+      "name": "Quotation – Recommendation",
+      "message_type": "email",
+      "category": "quotation",
+      "lead_status": null,
+      "subject": "Recommended Add-on for Your Quotation",
+      "body": "Hello {{customer_name}}, thank you for reviewing the quotation for {{product}}. We recommend {{recommended_product}} for improved results. Let us know if you’d like an updated quotation.",
+      "attachment": null,
+      "is_active": true,
+      "created_at": "2025-11-27T00:00:00Z",
+      "updated_at": "2025-11-27T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "crmapp.messagetemplates",
+    "pk": 5,
+    "fields": {
+      "name": "Service Scheduled – Recommendation",
+      "message_type": "whatsapp",
+      "category": "service",
+      "lead_status": null,
+      "subject": null,
+      "body": "Hello {{customer_name}}, your service for {{product}} is scheduled on {{service_date}}. We also recommend {{recommended_product}} to enhance results.",
+      "attachment": null,
+      "is_active": true,
+      "created_at": "2025-11-27T00:00:00Z",
+      "updated_at": "2025-11-27T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "crmapp.messagetemplates",
+    "pk": 6,
+    "fields": {
+      "name": "Payment Reminder – Recommendation",
+      "message_type": "whatsapp",
+      "category": "payment",
+      "lead_status": null,
+      "subject": null,
+      "body": "Dear {{customer_name}}, your payment of ₹{{amount_due}} for {{product}} is due on {{due_date}}. Meanwhile, we recommend {{recommended_product}} for better performance.",
+      "attachment": null,
+      "is_active": true,
+      "created_at": "2025-11-27T00:00:00Z",
+      "updated_at": "2025-11-27T00:00:00Z"
+    }
+  }
+]
